@@ -102,25 +102,26 @@ canvas{display:block;cursor:pointer}
 .login-tab{flex:1;padding:8px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;color:#8d6e63;font-weight:bold;font-size:13px;transition:all .2s}
 .login-tab.active{color:#ffe082;border-bottom-color:#ffe082}
 @media screen and (max-height:500px){
-  .hud{height:32px;padding:2px 8px;font-size:11px}
-  .hud-clock{font-size:14px}.hud-info{font-size:10px}.hud-money{font-size:13px}
-  .hud-btn{padding:2px 8px;font-size:10px}
-  .toolbar{height:42px;padding:3px 6px}
-  .tb{padding:4px;font-size:11px}
-  .tb-icon{font-size:20px}.tb-label{font-size:8px}
-  .modal{max-height:85vh;padding:10px;max-width:500px}
-  .info-panel{top:36px;width:150px;font-size:10px;padding:5px 8px}
-  .mission-box{bottom:48px;width:190px}
-  .toast{bottom:50px;font-size:12px}
-  .login-bg{flex-direction:row;padding:8px}
-  .login-box{width:260px;padding:12px;max-height:90vh;overflow-y:auto}
-  .login-logo{font-size:28px;margin-bottom:6px}
-  .login-box .field{margin-bottom:6px}
-  .login-box label{font-size:10px;margin-bottom:2px}
-  .login-box input{padding:7px 8px;font-size:12px}
-  .login-box .login-btn{padding:8px;font-size:12px}
-  .login-tab{font-size:11px;padding:5px}
-  .login-tabs{margin-bottom:10px}
+  .hud{height:28px;padding:2px 6px;font-size:10px;gap:4px}
+  .hud-clock{font-size:12px}.hud-info{font-size:9px}.hud-money{font-size:11px}
+  .hud-btn{padding:2px 6px;font-size:9px}
+  .hud-whole{display:none}
+  .toolbar{height:38px;padding:2px 4px}
+  .tb{padding:3px;font-size:10px}
+  .tb-icon{font-size:18px}.tb-label{font-size:7px}
+  .modal{max-height:85vh;padding:8px;max-width:95%}
+  .info-panel{top:32px;width:140px;font-size:9px;padding:4px 6px}
+  .mission-box{bottom:44px;width:180px}
+  .toast{bottom:44px;font-size:11px}
+  .login-bg{flex-direction:row;padding:6px}
+  .login-box{width:240px;padding:10px;max-height:90vh;overflow-y:auto}
+  .login-logo{font-size:24px;margin-bottom:4px}
+  .login-box .field{margin-bottom:4px}
+  .login-box label{font-size:9px;margin-bottom:2px}
+  .login-box input{padding:6px 7px;font-size:11px}
+  .login-box .login-btn{padding:7px;font-size:11px}
+  .login-tab{font-size:10px;padding:4px}
+  .login-tabs{margin-bottom:8px}
 }
 @media screen and (max-width:480px){
   .hud{height:30px;padding:2px 6px;gap:4px;flex-wrap:nowrap;overflow-x:auto}
@@ -139,6 +140,17 @@ canvas{display:block;cursor:pointer}
   .hud-clock{font-size:12px}.hud-info{font-size:8px}.hud-money{font-size:11px}
   .toolbar{height:36px;padding:2px 4px}
   .tb-icon{font-size:16px}.tb-label{display:none}
+}
+@media screen and (orientation:landscape) and (max-height:420px){
+  .hud{height:24px;padding:1px 4px;font-size:9px;gap:3px}
+  .hud-clock{font-size:11px}.hud-info{font-size:8px}.hud-money{font-size:10px}
+  .hud-btn{padding:1px 5px;font-size:8px}
+  .hud-whole,.hud-info:nth-child(n+5){display:none}
+  .toolbar{height:32px;padding:2px 3px}
+  .tb{padding:2px;font-size:9px}
+  .tb-icon{font-size:16px}.tb-label{font-size:6px}
+  .info-panel{display:none}
+  .mission-box{display:none!important}
 }
 @media screen and (orientation:portrait) and (max-width:400px){
   .login-box{width:95vw;padding:16px}
@@ -252,6 +264,8 @@ window.addEventListener('load',function(){
 });
 const CV=document.getElementById('c'),X=CV.getContext('2d');
 let W,H;
+const _origArc=X.arc.bind(X);
+X.arc=function(cx,cy,r){return _origArc(cx,cy,Math.max(0,r),...Array.prototype.slice.call(arguments,3))};
 const ROWS=5,COLS=10;
 const SEASONS=['Ilkbahar','Yaz','Sonbahar','Kis'];
 const FACTS=['Bir tavuk yilda ~250 yumurta verir.','Inekler gunde 8-10 lt sut verebilir.','Marulun %95\'i sudur.','Patates dunyanin en onemli gidasidir.','Salatalik yazin cok yetisir.','Tarlayi sulamak urunu %20 artirir.','Ilaclama bocekleri engeller.','Biber C vitamini acisindan zengindir.','Misir lif bakimindan faydalidir.','Kabak omega-3 icerir.','Sogan antibakteriyel ozellige sahiptir.','Patlican kalp sagligina iyi gelir.','Ruzgar degirmeni enerji uretir!','Sera kis bile ekim yapmaya olanak saglar.'];
@@ -304,14 +318,24 @@ let rainDrops=[],snowFlakes=[];
 const WEATHERS=['gunesli','bulutlu','yagmurlu','karli'];
 const WEATHER_ICONS={gunesli:'\u2600\uFE0F',bulutlu:'\u2601\uFE0F',yagmurlu:'\uD83C\uDF27\uFE0F',karli:'\u2744\uFE0F'};
 let lampPositions=[];
+let ISLANDSCAPE=false;
 function calcLayout(){
   let toolbarH=48,hudH=38;
-  let areaH=H-hudH-toolbarH-10;
-  let areaW=W-20;
-  CL=Math.min(Math.floor(areaW/15),Math.floor(areaH/10),38);
-  sceneTop=hudH+Math.floor(areaH*0.22);
-  GX=(W-COLS*CL)/2+CL*1;
-  GY=hudH+Math.floor(areaH*0.35);
+  ISLANDSCAPE=W>H;
+  let areaH=H-hudH-toolbarH-4;
+  let areaW=W-8;
+  if(ISLANDSCAPE){
+    CL=Math.min(Math.floor(areaW/17),Math.floor(areaH/9),40);
+    sceneTop=hudH+Math.floor(areaH*0.16);
+    GX=(W-COLS*CL)/2;
+    GY=hudH+Math.floor(areaH*0.28);
+  }else{
+    let pad=Math.floor(W*0.22);
+    CL=Math.min(Math.floor((areaW-pad*2)/COLS),Math.floor(areaH/13),34);
+    sceneTop=hudH+Math.floor(areaH*0.06);
+    GX=pad+Math.floor((areaW-pad*2-COLS*CL)/2);
+    GY=hudH+Math.floor(areaH*0.40);
+  }
 }
 calcLayout();window.addEventListener('resize',()=>{calcLayout()});
 
@@ -1496,8 +1520,12 @@ function draw(){
   let gridRight=GX+COLS*CL;
 
   // ====== EV - sol, buyuk ======
-  let houseX=W*0.12,houseY=sceneTop+ROWS*CL*0.4;
-  let houseS=CL*2.8;
+  let houseScale=ISLANDSCAPE?2.8:2.0;
+  let houseS=CL*houseScale;
+  let houseGap=CL*1.2;
+  let houseX=Math.min(GX-houseGap, W*0.16+houseS);
+  houseX=Math.max(houseS+CL*0.3, houseX);
+  let houseY=sceneTop+Math.floor((GY-sceneTop)*0.05);
   drawHouse(houseX,houseY,houseS);
 
   // ====== GRID ETRAFINA CIT ======
@@ -1508,8 +1536,10 @@ function draw(){
   drawFenceSegment(GX-fPad,gridBottom+fPad,GX-fPad,GY-fPad);
 
   // ====== AHIR - sag ust, buyuk ======
-  barnX=W*0.88;barnY=sceneTop+ROWS*CL*0.15;
   barnS=CL*2.5;
+  let barnMinX=gridRight+CL*1.0;
+  barnX=Math.max(barnMinX, Math.min(W*0.88, gridRight+barnS+CL*0.5));
+  barnY=sceneTop+Math.floor((H-86)*0.02);
   if(S.built.ahir){
     drawBarn(barnX,barnY,barnS);
   }else{
@@ -1517,8 +1547,9 @@ function draw(){
   }
 
   // ====== KUMES - ahır formatında, sag alt ======
-  kumesX=W*0.88;kumesY=sceneTop+ROWS*CL*1.3;
   kumesS=CL*2.0;
+  kumesX=barnX;
+  kumesY=barnY+barnS*2.2;
   if(S.built.kumes){
     drawKumes(kumesX,kumesY,kumesS);
   }else{
@@ -1599,23 +1630,26 @@ function draw(){
 
   // ====== KUYU - grid'in altinda, biraz asagida ======
   wellX=gridCX;
-  wellY=gridBottom+CL*2.1;
   wellS=CL*2.1;
+  let maxWellY=H-48-CL*1.2;
+  wellY=Math.min(gridBottom+CL*1.5, maxWellY);
   if(S.built.kuyu){
     drawWell(wellX,wellY,wellS);
   }else{
     drawPlaceholder(wellX,wellY,wellS*1.2,'KUYU');
   }
 
-  // ====== DEGIRMEN - evin altinda, daha asagida ======
+  // ====== DEGIRMEN - evin altinda ======
+  let wmS=houseS*0.8;
+  let wmY=houseY+houseS*1.5;
   if(S.built.degirmen){
-    drawWindmill(houseX,houseY+houseS*2.0,houseS);
+    drawWindmill(houseX,wmY,wmS);
   }else{
-    drawPlaceholder(houseX,houseY+houseS*2.0,houseS*1.2,'DEĞİRMEN');
+    drawPlaceholder(houseX,wmY,wmS*1.2,'DEĞİRMEN');
   }
 
   // ====== ALT SINIR - basit yesil serit ======
-  let forestTop=H-48-CL*0.8;
+  let forestTop=H-48-CL*0.3;
   let g2=X.createLinearGradient(0,forestTop,0,H-48);
   g2.addColorStop(0,'#5a8a3a');g2.addColorStop(1,'#4a7a2a');
   X.fillStyle=g2;X.fillRect(0,forestTop,W,H-48-forestTop);
