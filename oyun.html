@@ -2,6 +2,9 @@
 <html lang="tr">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
 <title>Ciftlik Simulasyonu</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
@@ -81,9 +84,78 @@ canvas{display:block;cursor:pointer}
 .animal-card .ac-name{font-size:10px;color:#ffe082;margin-top:3px;font-weight:bold}
 .animal-card .ac-info{font-size:8px;color:#bbb;text-align:center}
 .animal-card .ac-price{font-size:9px;color:#8bc34a;font-weight:bold;margin-top:3px}
+@media screen and (orientation:landscape) and (max-height:500px){
+  .hud{height:32px;padding:2px 8px;font-size:11px}
+  .hud-clock{font-size:14px}.hud-info{font-size:10px}.hud-money{font-size:13px}
+  .hud-btn{padding:2px 8px;font-size:10px}
+  .toolbar{height:42px;padding:3px 6px}
+  .tb{padding:4px;font-size:11px}
+  .tb-icon{font-size:20px}.tb-label{font-size:8px}
+  .modal{max-height:85vh;padding:10px;max-width:500px}
+  .info-panel{top:36px;width:150px;font-size:10px;padding:5px 8px}
+  .mission-box{bottom:48px;width:190px}
+  .toast{bottom:50px;font-size:12px}
+}
+@media screen and (orientation:portrait) and (max-width:480px){
+  .hud{height:30px;padding:2px 6px;gap:4px;flex-wrap:nowrap;overflow-x:auto}
+  .hud-clock{font-size:13px}.hud-info{font-size:9px}.hud-money{font-size:12px}
+  .hud-btn{padding:2px 6px;font-size:9px}
+  .hud-whole,.hud-info:nth-child(n+4){display:none}
+  .toolbar{height:44px;padding:3px 4px;gap:3px}
+  .tb{padding:4px 2px;font-size:10px}
+  .tb-icon{font-size:18px}.tb-label{font-size:7px}
+  .modal{max-height:80vh;padding:8px;width:96%}
+  .info-panel{display:none}
+  .mission-box{width:170px;font-size:10px}
+}
+@media screen and (max-height:350px){
+  .hud{height:28px;padding:1px 6px}
+  .hud-clock{font-size:12px}.hud-info{font-size:8px}.hud-money{font-size:11px}
+  .toolbar{height:36px;padding:2px 4px}
+  .tb-icon{font-size:16px}.tb-label{display:none}
+}
+.login-bg{position:fixed;inset:0;background:linear-gradient(135deg,#1a0f07,#2d1a0a);z-index:500;display:flex;align-items:center;justify-content:center;flex-direction:column}
+.login-box{background:linear-gradient(135deg,#4a3520,#3a2815);border:3px solid #c8956c;border-radius:12px;padding:24px;width:320px;max-width:90vw;box-shadow:0 8px 32px rgba(0,0,0,0.6)}
+.login-box h2{color:#ffe082;text-align:center;margin-bottom:16px;font-size:20px;text-shadow:1px 1px 2px rgba(0,0,0,0.5)}
+.login-box .field{margin-bottom:12px}
+.login-box label{display:block;color:#d7ccc8;font-size:12px;margin-bottom:4px}
+.login-box input{width:100%;padding:10px;border:2px solid #8d6e63;border-radius:6px;background:rgba(0,0,0,0.3);color:#fff;font-size:14px;outline:none;transition:border-color .2s}
+.login-box input:focus{border-color:#ffe082}
+.login-box .login-btn{width:100%;padding:12px;border:none;border-radius:6px;font-weight:bold;font-size:14px;cursor:pointer;transition:transform .1s;margin-top:4px}
+.login-box .login-btn:active{transform:scale(0.97)}
+.login-box .login-btn.primary{background:linear-gradient(180deg,#5a8c3a,#3d6b24);color:#fff;border:2px solid #8bc34a}
+.login-box .login-btn.secondary{background:linear-gradient(180deg,#8b5e3c,#6d4c30);color:#ffe082;border:2px solid #c8956c;margin-top:8px}
+.login-box .login-btn:hover{transform:scale(1.02)}
+.login-logo{font-size:48px;margin-bottom:12px;text-align:center}
+.login-error{color:#ef9a9a;font-size:11px;margin-top:6px;display:none;text-align:center}
+.login-tabs{display:flex;gap:0;margin-bottom:16px}
+.login-tab{flex:1;padding:8px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;color:#8d6e63;font-weight:bold;font-size:13px;transition:all .2s}
+.login-tab.active{color:#ffe082;border-bottom-color:#ffe082}
 </style>
 </head>
 <body>
+<div class="login-bg" id="loginBg">
+  <div class="login-box">
+    <div class="login-logo">🌾🐄</div>
+    <div class="login-tabs">
+      <div class="login-tab active" onclick="showLoginTab('login')">Giris Yap</div>
+      <div class="login-tab" onclick="showLoginTab('register')">Kayit Ol</div>
+    </div>
+    <div id="loginForm">
+      <div class="field"><label>Kullanici Adi</label><input type="text" id="loginUser" placeholder="Kullanici adi"></div>
+      <div class="field"><label>Sifre</label><input type="password" id="loginPass" placeholder="Sifre"></div>
+      <div class="login-error" id="loginErr"></div>
+      <button class="login-btn primary" onclick="doLogin()">Giris Yap</button>
+    </div>
+    <div id="registerForm" style="display:none">
+      <div class="field"><label>Kullanici Adi</label><input type="text" id="regUser" placeholder="Kullanici adi (min 3 karakter)"></div>
+      <div class="field"><label>Sifre</label><input type="password" id="regPass" placeholder="Sifre (min 4 karakter)"></div>
+      <div class="field"><label>Sifre Tekrar</label><input type="password" id="regPass2" placeholder="Sifre tekrar"></div>
+      <div class="login-error" id="regErr"></div>
+      <button class="login-btn primary" onclick="doRegister()">Kayit Ol</button>
+    </div>
+  </div>
+</div>
 <canvas id="c"></canvas>
 <div class="hud">
     <div class="hud-clock" id="clock">06:00</div>
@@ -120,6 +192,51 @@ canvas{display:block;cursor:pointer}
 <div class="toast" id="toast"></div>
 
 <script>
+function getUsers(){try{return JSON.parse(localStorage.getItem('farm_users')||'{}')}catch(e){return{}}}
+function saveUsers(u){localStorage.setItem('farm_users',JSON.stringify(u))}
+function showLoginTab(t){
+  document.querySelectorAll('.login-tab').forEach(el=>el.classList.remove('active'));
+  document.getElementById('loginForm').style.display=t==='login'?'block':'none';
+  document.getElementById('registerForm').style.display=t==='register'?'block':'none';
+  document.querySelectorAll('.login-tab')[t==='login'?0:1].classList.add('active');
+  document.getElementById('loginErr').style.display='none';
+  document.getElementById('regErr').style.display='none';
+}
+function showErr(id,msg){let e=document.getElementById(id);e.textContent=msg;e.style.display='block'}
+function doLogin(){
+  let u=document.getElementById('loginUser').value.trim();
+  let p=document.getElementById('loginPass').value;
+  if(!u||!p){showErr('loginErr','Kullanici adi ve sifre gerekli');return}
+  let users=getUsers();
+  if(!users[u]){showErr('loginErr','Boyle bir kullanici yok');return}
+  if(users[u]!==p){showErr('loginErr','Sifre hatali');return}
+  sessionStorage.setItem('farm_user',u);
+  startGame();
+}
+function doRegister(){
+  let u=document.getElementById('regUser').value.trim();
+  let p=document.getElementById('regPass').value;
+  let p2=document.getElementById('regPass2').value;
+  if(!u||u.length<3){showErr('regErr','Kullanici adi en az 3 karakter');return}
+  if(!p||p.length<4){showErr('regErr','Sifre en az 4 karakter');return}
+  if(p!==p2){showErr('regErr','Sifreler eslesmiyor');return}
+  let users=getUsers();
+  if(users[u]){showErr('regErr','Bu kullanici adi zaten var');return}
+  users[u]=p;saveUsers(users);
+  sessionStorage.setItem('farm_user',u);
+  startGame();
+}
+function startGame(){
+  document.getElementById('loginBg').style.display='none';
+}
+window.addEventListener('load',function(){
+  let u=sessionStorage.getItem('farm_user');
+  if(u)startGame();
+  else{
+    document.getElementById('loginPass').addEventListener('keydown',function(e){if(e.key==='Enter')doLogin()});
+    document.getElementById('regPass2').addEventListener('keydown',function(e){if(e.key==='Enter')doRegister()});
+  }
+});
 const CV=document.getElementById('c'),X=CV.getContext('2d');
 let W,H;
 const ROWS=5,COLS=10;
