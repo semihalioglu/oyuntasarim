@@ -367,7 +367,7 @@ let S={money:100000,day:1,sea:0,yr:1,h:6,m:0,
   longPressTimer:null,buildingMenu:null,animateBuilding:null,
   tutorial:{active:false,step:0,type:'bread',completed:false},invUN:0,invEKMEK:0
 };
-if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null};
+if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null,fırın:null};
 Object.keys(CROPS).forEach(k=>{S.inv[k]=0;S.dailyHarvest[k]=0});S.inv.YUMURTA=0;S.inv.SUT=0;S.inv.YUN=0;S.dailyAnimal.YUMURTA=0;S.dailyAnimal.SUT=0;S.dailyAnimal.YUN=0;
 for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0,harvestCount:0});
 for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plowed.push(r*COLS+c);
@@ -1808,20 +1808,20 @@ function draw(){
   }
   frameCount++;
   // Zoom transform DISINDA tam ekran arka plan (zoom out'ta bosluk kalmasin)
-  let dl=getDaylight();
+  let bgDl=getDaylight();
   let skyH=sceneTop-5;
   let bgG=X.createLinearGradient(0,0,0,H);
   if(S.weather==='yağmurlu'){
-    bgG.addColorStop(0,`rgba(120,130,145,${0.4+dl*0.6})`);bgG.addColorStop(0.15,`rgba(160,170,165,${0.4+dl*0.6})`);
+    bgG.addColorStop(0,`rgba(120,130,145,${0.4+bgDl*0.6})`);bgG.addColorStop(0.15,`rgba(160,170,165,${0.4+bgDl*0.6})`);
   }else if(S.weather==='karlı'){
-    bgG.addColorStop(0,`rgba(180,195,210,${0.3+dl*0.7})`);bgG.addColorStop(0.15,`rgba(210,220,215,${0.3+dl*0.7})`);
+    bgG.addColorStop(0,`rgba(180,195,210,${0.3+bgDl*0.7})`);bgG.addColorStop(0.15,`rgba(210,220,215,${0.3+bgDl*0.7})`);
   }else if(S.weather==='bulutlu'){
-    bgG.addColorStop(0,`rgba(170,190,210,${0.5+dl*0.5})`);bgG.addColorStop(0.15,`rgba(200,215,200,${0.5+dl*0.5})`);
+    bgG.addColorStop(0,`rgba(170,190,210,${0.5+bgDl*0.5})`);bgG.addColorStop(0.15,`rgba(200,215,200,${0.5+bgDl*0.5})`);
   }else{
-    bgG.addColorStop(0,`rgba(40,60,${80+dl*100},${0.3+dl*0.7})`);
-    bgG.addColorStop(0.12,`rgba(135,206,235,${0.3+dl*0.7})`);
-    bgG.addColorStop(0.2,`rgba(176,224,255,${0.3+dl*0.7})`);
-    bgG.addColorStop(0.25,`rgba(200,230,200,${0.3+dl*0.7})`);
+    bgG.addColorStop(0,`rgba(40,60,${80+bgDl*100},${0.3+bgDl*0.7})`);
+    bgG.addColorStop(0.12,`rgba(135,206,235,${0.3+bgDl*0.7})`);
+    bgG.addColorStop(0.2,`rgba(176,224,255,${0.3+bgDl*0.7})`);
+    bgG.addColorStop(0.25,`rgba(200,230,200,${0.3+bgDl*0.7})`);
   }
   bgG.addColorStop(0.3,'#5da832');bgG.addColorStop(1,'#3d8a22');
   X.fillStyle=bgG;X.fillRect(0,0,W,H);
