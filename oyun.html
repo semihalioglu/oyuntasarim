@@ -337,7 +337,7 @@ const UPGRADE_DESC={
   degirmen:{name:'Değirmen',effect:l=>`Öğütme hızı x${(1+l*0.1).toFixed(1)}`,icon:'⚙️'},
   fırın:{name:'Fırın',effect:l=>`Pişirme hızı x${(1+l*0.1).toFixed(1)}`,icon:'🔥'}
 };
-function getUpgradeCost(key){let lv=S.buildingLevel[key]||1;return Math.floor(UPGRADE_COST[key]*lv*1.5)}
+function getUpgradeCost(key){let lv=S.buildingLevel?S.buildingLevel[key]||1:1;return Math.floor(UPGRADE_COST[key]*lv*1.5)}
 const MISSION_TEMPLATES=[
   {type:'harvest',crop:'DOMATES',target:6,text:'6 kg Domates topla'},{type:'harvest',crop:'PATATES',target:8,text:'8 kg Patates topla'},
   {type:'harvest',crop:'SALATALIK',target:5,text:'5 kg Salatalık topla'},{type:'harvest',crop:'MARUL',target:4,text:'4 kg Marul topla'},
@@ -359,6 +359,7 @@ let S={money:10000,day:1,sea:0,yr:1,h:6,m:0,
   irrigating:false,irrigStartH:0,irrigStartM:0,irrigEndH:0,irrigEndM:0,
   irrigDrops:[],
   built:{degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false,fırın:false},
+  buildingLevel:{ahır:1,kümes:1,kuyu:1,degirmen:1,fırın:1},
   buildingPos:null,dragging:null,dragOffset:{x:0,y:0},
   longPressTimer:null,buildingMenu:null,animateBuilding:null,
   tutorial:{active:false,step:0,type:'bread',completed:false},invUN:0,invEKMEK:0
@@ -1542,6 +1543,13 @@ function drawWell(x,y,s){
   X.beginPath();X.moveTo(-s*0.04,s*0.02);X.lineTo(-s*0.05,s*0.08);
   X.lineTo(s*0.05,s*0.08);X.lineTo(s*0.04,s*0.02);X.closePath();X.fill();
 
+  // Seviye göstergesi
+  let wLv=S.buildingLevel?S.buildingLevel.kuyu||1:1;
+  if(wLv>=2){
+    X.fillStyle='rgba(0,0,0,0.4)';X.beginPath();X.roundRect(-s*0.1,-s*0.45,s*0.2,s*0.1,3);X.fill();
+    X.fillStyle='#ffd54f';X.font=`bold ${s*0.06}px "Nunito",Arial,sans-serif`;X.textAlign='center';X.fillText('Lv.'+wLv,0,-s*0.38);
+  }
+
   X.restore();
 }
 
@@ -2389,7 +2397,7 @@ function openTesisler(){
         btn.onclick=function(e){e.stopPropagation();buyBuilding(key,tesisFiyat[t.name],t.name);openTesisler()};
         d.appendChild(btn);
       }else{
-        let lv=S.buildingLevel[key]||1;
+        let lv=S.buildingLevel?S.buildingLevel[key]||1:1;
         let lvDiv=document.createElement('div');lvDiv.style.cssText='font-size:11px;color:#ffeb3b;margin-top:3px;font-weight:bold';
         lvDiv.textContent='Seviye: '+lv+'/'+BUILDING_MAX_LEVEL;
         d.appendChild(lvDiv);
