@@ -86,8 +86,11 @@ canvas{display:block;cursor:pointer}
 .animal-card .ac-name{font-size:10px;color:#ffe082;margin-top:3px;font-weight:bold}
 .animal-card .ac-info{font-size:8px;color:#bbb;text-align:center}
 .animal-card .ac-price{font-size:9px;color:#8bc34a;font-weight:bold;margin-top:3px}
-.tutorial-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center}
-.tutorial-box{background:rgba(30,18,8,0.82);border:2px solid #8bc34a;border-radius:12px;padding:20px 24px;max-width:420px;width:90vw;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.6);backdrop-filter:blur(4px)}
+.tutorial-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center;pointer-events:none}
+.tutorial-box{background:rgba(30,18,8,0.82);border:2px solid #8bc34a;border-radius:12px;padding:20px 24px;max-width:420px;width:90vw;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.6);backdrop-filter:blur(4px);pointer-events:auto}
+.tutorial-box.minimized{max-width:180px;padding:8px 12px;cursor:pointer}
+.tutorial-box.minimized .tutorial-title{font-size:12px;margin-bottom:4px}
+.tutorial-box.minimized .tutorial-chain,.tutorial-box.minimized .tutorial-btn,.tutorial-box.minimized .tutorial-close{display:none}
 .tutorial-title{color:#8bc34a;font-size:18px;font-weight:bold;margin-bottom:16px}
 .tutorial-chain{display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:16px;flex-wrap:wrap}
 .tutorial-chain .tc-item{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid #5d4037;background:rgba(0,0,0,0.3);transition:all .3s}
@@ -97,7 +100,8 @@ canvas{display:block;cursor:pointer}
 .tutorial-btn{background:linear-gradient(180deg,#5a8c3a,#3d6b24);color:#fff;border:2px solid #8bc34a;padding:10px 32px;border-radius:8px;font-size:15px;font-weight:bold;cursor:pointer;margin-top:8px}
 .tutorial-btn:hover{transform:scale(1.03)}
 .tutorial-close{position:absolute;top:8px;right:12px;background:none;border:none;color:#999;font-size:18px;cursor:pointer}
-.tutorial-step-popup{position:fixed;right:16px;top:50%;transform:translateY(-50%);background:rgba(30,18,8,0.75);border:2px solid #ff9800;border-radius:10px;padding:14px 18px;max-width:220px;z-index:210;box-shadow:0 4px 16px rgba(0,0,0,0.5);backdrop-filter:blur(4px)}
+.tutorial-minimize{position:absolute;top:4px;left:8px;background:none;border:none;color:#ff9800;font-size:16px;cursor:pointer;z-index:5}
+.tutorial-step-popup{position:fixed;right:16px;top:50%;transform:translateY(-50%);background:rgba(30,18,8,0.75);border:2px solid #ff9800;border-radius:10px;padding:14px 18px;max-width:220px;z-index:210;box-shadow:0 4px 16px rgba(0,0,0,0.5);backdrop-filter:blur(4px);pointer-events:none}
 .tutorial-step-num{color:#ff9800;font-size:12px;font-weight:bold;margin-bottom:6px}
 .tutorial-step-text{color:#ffe082;font-size:13px;line-height:1.4}
 .tutorial-step-text .step-action{display:inline-block;margin-top:8px;padding:6px 14px;background:#2e7d32;color:#fff;border-radius:6px;font-size:11px;font-weight:bold}
@@ -236,7 +240,8 @@ canvas{display:block;cursor:pointer}
 <div class="modal-bg" id="mTesisler"><div class="modal"><h2>Tesisler</h2><div class="tesis-grid" id="tesisGrid"></div><div class="mbtns"><button class="bc" onclick="closeM('tesisler')">Kapat</button></div></div></div>
 <div class="toast" id="toast"></div>
 <div class="tutorial-overlay" id="tutorialOverlay" style="display:none">
-  <div class="tutorial-box">
+  <div class="tutorial-box" id="tutorialBox">
+    <div class="tutorial-minimize" id="tutorialMinBtn" onclick="toggleTutorialMinimize()" title="Küçült/Büyüt">➖</div>
     <div class="tutorial-title" id="tutorialTitle">Birlikte Ekmek Üretelim Mi?</div>
     <div class="tutorial-chain" id="tutorialChain"></div>
     <button class="tutorial-btn" id="tutorialBtn" onclick="tutorialNext()">Devam</button>
@@ -1583,6 +1588,20 @@ const TUTORIAL_STEPS={
   ]
 };
 let tutorialStepDone=false;
+let tutorialMinimized=false;
+
+function toggleTutorialMinimize(){
+  tutorialMinimized=!tutorialMinimized;
+  let box=document.getElementById('tutorialBox');
+  let minBtn=document.getElementById('tutorialMinBtn');
+  if(tutorialMinimized){
+    box.classList.add('minimized');
+    minBtn.textContent='➕';
+  }else{
+    box.classList.remove('minimized');
+    minBtn.textContent='➖';
+  }
+}
 
 function speakTR(text){
   if(!window.speechSynthesis)return;
@@ -1593,15 +1612,21 @@ function speakTR(text){
 }
 
 function openTutorial(){
-  if(!S.tutorial)S.tutorial={active:false,step:0,type:'bread',completed:false};
-  S.tutorial.active=true;S.tutorial.step=0;S.tutorial.type='bread';
-  tutorialStepDone=false;
+  if(!S.tutorial)S.tutorial={active:true,step:0,type:'bread',completed:false};
+  S.tutorial.active=true;
+  if(S.tutorial.completed){S.tutorial.step=0;S.tutorial.completed=false}
+  tutorialStepDone=false;tutorialMinimized=false;
+  let box=document.getElementById('tutorialBox');
+  if(box){box.classList.remove('minimized')}
+  let minBtn=document.getElementById('tutorialMinBtn');
+  if(minBtn){minBtn.textContent='➖'}
+  skipCompletedSteps();
   renderTutorial();
-  speakTR(TUTORIAL_STEPS.bread[0].speak);
+  let st=TUTORIAL_STEPS.bread[S.tutorial.step];
+  if(st)speakTR(st.speak);
 }
 
 function closeTutorial(){
-  S.tutorial.active=false;
   document.getElementById('tutorialOverlay').style.display='none';
   document.getElementById('tutorialStep').style.display='none';
   speechSynthesis.cancel();
@@ -1651,14 +1676,23 @@ function renderTutorial(){
   }else{stepEl.style.display='none'}
 }
 
+function isStepDone(action){
+  if(action==='build_grid')return S.built.grid;
+  if(action==='plow')return S.plowed.length>0;
+  if(action==='plant_bugday')return S.plots.some(p=>p.crop==='BUGDAY');
+  if(action==='build_kuyu')return S.built.kuyu;
+  if(action==='water')return S.plots.some(p=>p.crop==='BUGDAY'&&p.w);
+  if(action==='harvest_bugday')return(S.inv.BUGDAY||0)>0;
+  if(action==='grind')return(S.invUN||0)>0;
+  if(action==='bake')return(S.invEKMEK||0)>0;
+  return false;
+}
 function skipCompletedSteps(){
   while(S.tutorial.step<TUTORIAL_STEPS.bread.length-1){
     let st=TUTORIAL_STEPS.bread[S.tutorial.step];
     if(!st)break;
-    let act=st.action;
-    if(!act)break;
-    if(act==='build_grid'&&S.built.grid){S.tutorial.step++;tutorialStepDone=false;continue}
-    if(act==='build_kuyu'&&S.built.kuyu){S.tutorial.step++;tutorialStepDone=false;continue}
+    if(st.action&&isStepDone(st.action)){S.tutorial.step++;tutorialStepDone=false;continue}
+    if(S.tutorial.step>0&&!st.action){S.tutorial.step++;tutorialStepDone=false;continue}
     break;
   }
 }
