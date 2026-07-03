@@ -213,6 +213,9 @@ canvas{display:block;cursor:pointer}
     <div class="hud-info" id="hWeather" style="font-size:13px">Güneşli</div>
     <div class="hud-info" id="hWind" style="font-size:12px">Rüzgar: 5 km/h</div>
     <button class="hud-btn" onclick="advanceTime()">+10 DK</button>
+    <button class="hud-btn" onclick="zoomTarget=Math.max(0.5,zoomTarget-0.2);zoomCX=W/2;zoomCY=H/2;draw()" title="Uzaklaştır">➖</button>
+    <button class="hud-btn" onclick="zoomTarget=1;zoomCX=W/2;zoomCY=H/2;draw()" title="Sıfırla">🔄</button>
+    <button class="hud-btn" onclick="zoomTarget=Math.min(3,zoomTarget+0.2);zoomCX=W/2;zoomCY=H/2;draw()" title="Yakınlaştır">➕</button>
     <button class="hud-btn" onclick="doLogout()" title="Çıkış">🚪</button>
     <div class="hud-money" id="hMoney">5.000 TL</div>
 </div>
@@ -384,6 +387,8 @@ let lampPositions=[];
 let ISLANDSCAPE=false;
 const GRID_LINKED_KUYU=true;
 const SELL_RATIO=0.6;
+let zoomLevel=1,zoomTarget=1,zoomCX=W/2,zoomCY=H/2;
+let pinchDist0=0,pinchZoom0=1;
 function calcLayout(){
   let toolbarH=48,hudH=38;
   ISLANDSCAPE=W>H;
@@ -403,6 +408,8 @@ function calcLayout(){
   }
 }
 calcLayout();window.addEventListener('resize',()=>{calcLayout()});
+function screenToScene(sx,sy){return{x:(sx-zoomCX)/zoomLevel+zoomCX,y:(sy-zoomCY)/zoomLevel+zoomCY}}
+function sceneToScreen(sx,sy){return{x:(sx-zoomCX)*zoomLevel+zoomCX,y:(sy-zoomCY)*zoomLevel+zoomCY}}
 
 const P={px:W*0.42,py:0};let frameCount=0;let windmillAngle=0;let lastFrameTime=Date.now();
 
@@ -1791,12 +1798,17 @@ function checkTutorialAction(action){
 function draw(){
   X.clearRect(0,0,W,H);
   calcLayout();
+  // Zoom
+  zoomLevel+=(zoomTarget-zoomLevel)*0.15;
+  if(Math.abs(zoomLevel-zoomTarget)<0.005)zoomLevel=zoomTarget;
   // Pozisyon override - taşıma sonrasi
   if(S.buildingPos.grid){
     let off=S.buildingPos.grid;
     GX=off.x;GY=off.y;
   }
   frameCount++;
+  X.save();
+  X.translate(zoomCX,zoomCY);X.scale(zoomLevel,zoomLevel);X.translate(-zoomCX,-zoomCY);
   drawSky();
   drawMountains();
   drawGrassBackground();
@@ -2233,7 +2245,7 @@ if(S.built.grid){
   X.fillText('EV: Dinlen | MAGAZA: Alışveriş | HAYVAN: Bakım | DEPO: Ürünler | Traktör: Sur',16,H-22);
 
   // ====== SURUKLEME ONIZLEME ======
-  if(S.dragging){
+    if(S.dragging){
     let dx=S.dragX,dy=S.dragY;
     let valid=isValidPlacement(S.dragging,dx,dy);
     X.globalAlpha=0.5;
@@ -2257,6 +2269,7 @@ if(S.built.grid){
   }
 
   // ====== BINA MENU ======
+  X.restore();
   drawBuildingMenu();
 
   // ====== MOD INDICATORS ======
@@ -2694,12 +2707,13 @@ let harvestModeActive=false;
 CV.addEventListener('click',e=>{
   if(S.dragging||S.buildingMenu)return;
   let mx=e.clientX,my=e.clientY;
-  let gx=mx-GX,gy=my-GY;
+  let sc=screenToScene(mx,my);
+  let gx=sc.x-GX,gy=sc.y-GY;
   let c=Math.floor(gx/CL),r=Math.floor(gy/CL);
 
   // Ahıra tıklama - süt sağma (günlük 2 kez)
   if(typeof barnX!=='undefined'){
-    let bDx=mx-barnX,bDy=my-barnY;
+    let bDx=sc.x-barnX,bDy=sc.y-barnY;
     if(Math.abs(bDx)<barnS*0.6&&Math.abs(bDy)<barnS*0.6){
       if(!S.built.ahır){toast('Önce ahır inşa et!');return}
       if(S.co>0){
@@ -2714,7 +2728,7 @@ CV.addEventListener('click',e=>{
   }
   // Kümüse tıklama - yumurta toplama (günlük 1 kez)
   if(typeof kümesX!=='undefined'){
-    let kDx=mx-kümesX,kDy=my-kümesY;
+    let kDx=sc.x-kümesX,kDy=sc.y-kümesY;
     if(Math.abs(kDx)<kümesS*0.6&&Math.abs(kDy)<kümesS*0.6){
       if(!S.built.kümes){toast('Önce kümes inşa et!');return}
       if(S.ch>0){
@@ -2729,7 +2743,7 @@ CV.addEventListener('click',e=>{
   }
   // Kuyuya tıklama - sulama başlat/durdur
   if(typeof wellX!=='undefined'){
-    let wDx=mx-wellX,wDy=my-wellY;
+    let wDx=sc.x-wellX,wDy=sc.y-wellY;
     if(Math.abs(wDx)<wellS*0.6&&Math.abs(wDy)<wellS*0.6){
       if(!S.built.kuyu){toast('Önce kuyu inşa et!');return}
       let kuyuLv=S.buildingLevel.kuyu||1;
@@ -2761,7 +2775,7 @@ CV.addEventListener('click',e=>{
 
   // Değirmene tıklama - buğday öğüt
   if(typeof wmX!=='undefined'){
-    let dDx=mx-wmX,dDy=my-wmY;
+    let dDx=sc.x-wmX,dDy=sc.y-wmY;
     if(S.built.degirmen&&Math.abs(dDx)<wmS*0.6&&Math.abs(dDy)<wmS*0.6){
       let bugday=S.inv.BUGDAY||0;
       let wmLv=S.buildingLevel.degirmen||1;
@@ -2775,7 +2789,7 @@ CV.addEventListener('click',e=>{
   }
   // Fırına tıklama - un pişir
   if(typeof firinX!=='undefined'){
-    let fDx=mx-firinX,fDy=my-firinY;
+    let fDx=sc.x-firinX,fDy=sc.y-firinY;
     if(S.built.fırın&&Math.abs(fDx)<firinS*0.6&&Math.abs(fDy)<firinS*0.6){
       let un=S.invUN||0;
       let fLv=S.buildingLevel.fırın||1;
@@ -3009,32 +3023,33 @@ const BUILDING_NAMES={ahır:'AHİR',kümes:'KÜMES',degirmen:'DEĞİRMEN',kuyu:'
 const BUILDING_PRICES={ahır:2500,kümes:1500,degirmen:3000,kuyu:2000,grid:100,fırın:2500};
 
 function getBuildingAt(mx,my){
+  let sc=screenToScene(mx,my);let sx=sc.x,sy=sc.y;
   let keys=Object.keys(BUILDING_NAMES);
   for(let i=keys.length-1;i>=0;i--){
     let k=keys[i];
     if(k==='grid'){
       if(!S.built.grid)continue;
-      if(mx>=GX&&mx<=GX+COLS*CL&&my>=GY&&my<=GY+ROWS*CL)return k;
+      if(sx>=GX&&sx<=GX+COLS*CL&&sy>=GY&&sy<=GY+ROWS*CL)return k;
     }else if(k==='kuyu'){
       if(!S.built.kuyu)continue;
       if(typeof wellS==='undefined')continue;
-      if(Math.abs(mx-wellX)<wellS*0.7&&Math.abs(my-wellY)<wellS*0.7)return k;
+      if(Math.abs(sx-wellX)<wellS*0.7&&Math.abs(sy-wellY)<wellS*0.7)return k;
     }else if(k==='ahır'){
       if(!S.built.ahır)continue;
       if(typeof barnS==='undefined')continue;
-      if(Math.abs(mx-barnX)<barnS*0.7&&Math.abs(my-barnY)<barnS*0.7)return k;
+      if(Math.abs(sx-barnX)<barnS*0.7&&Math.abs(sy-barnY)<barnS*0.7)return k;
     }else if(k==='kümes'){
       if(!S.built.kümes)continue;
       if(typeof kümesS==='undefined')continue;
-      if(Math.abs(mx-kümesX)<kümesS*0.7&&Math.abs(my-kümesY)<kümesS*0.7)return k;
+      if(Math.abs(sx-kümesX)<kümesS*0.7&&Math.abs(sy-kümesY)<kümesS*0.7)return k;
     }else if(k==='degirmen'){
       if(!S.built.degirmen)continue;
       if(typeof wmS==='undefined')continue;
-      if(Math.abs(mx-wmX)<wmS*0.7&&Math.abs(my-wmY)<wmS*0.7)return k;
+      if(Math.abs(sx-wmX)<wmS*0.7&&Math.abs(sy-wmY)<wmS*0.7)return k;
     }else if(k==='fırın'){
       if(!S.built.fırın)continue;
       if(typeof firinS==='undefined')continue;
-      if(Math.abs(mx-firinX)<firinS*0.7&&Math.abs(my-firinY)<firinS*0.7)return k;
+      if(Math.abs(sx-firinX)<firinS*0.7&&Math.abs(sy-firinY)<firinS*0.7)return k;
     }
   }
   return null;
@@ -3171,7 +3186,7 @@ CV.addEventListener('mousedown',e=>{
   mouseDownTime=Date.now();
   mouseDownPos={x:mx,y:my};
   if(S.dragging){
-    S.dragX=mx;S.dragY=my;
+    let sc=screenToScene(mx,my);S.dragX=sc.x;S.dragY=sc.y;
     finishDrag();
     return;
   }
@@ -3201,7 +3216,7 @@ CV.addEventListener('mousemove',e=>{
   let mx=e.clientX,my=e.clientY;
   if(S.dragging){
     e.preventDefault();
-    S.dragX=mx;S.dragY=my;
+    let sc=screenToScene(mx,my);S.dragX=sc.x;S.dragY=sc.y;
     draw();
     return;
   }
@@ -3210,7 +3225,7 @@ CV.addEventListener('mousemove',e=>{
     if(Math.sqrt(dx*dx+dy*dy)>10){
       clearTimeout(longPressTimer);longPressTimer=null;
       let b=getBuildingAt(mouseDownPos.x,mouseDownPos.y);
-      if(b){mouseDownTime=0;startDrag(b);S.dragX=mx;S.dragY=my;draw()}
+      if(b){mouseDownTime=0;startDrag(b);let sc=screenToScene(mx,my);S.dragX=sc.x;S.dragY=sc.y;draw()}
     }
   }
 });
@@ -3221,6 +3236,15 @@ CV.addEventListener('mouseup',e=>{
 });
 
 CV.addEventListener('touchstart',e=>{
+  if(e.touches.length===2){
+    clearTimeout(longPressTimer);longPressTimer=null;
+    let t1=e.touches[0],t2=e.touches[1];
+    pinchDist0=Math.hypot(t2.clientX-t1.clientX,t2.clientY-t1.clientY);
+    pinchZoom0=zoomTarget;
+    zoomCX=(t1.clientX+t2.clientX)/2;
+    zoomCY=(t1.clientY+t2.clientY)/2;
+    mouseDownTime=0;return;
+  }
   let t=e.touches[0];let mx=t.clientX,my=t.clientY;
   mouseDownTime=Date.now();mouseDownPos={x:mx,y:my};
   longPressTimer=setTimeout(()=>{
@@ -3230,10 +3254,20 @@ CV.addEventListener('touchstart',e=>{
 },{passive:true});
 
 CV.addEventListener('touchmove',e=>{
+  if(e.touches.length===2){
+    e.preventDefault();
+    let t1=e.touches[0],t2=e.touches[1];
+    let dist=Math.hypot(t2.clientX-t1.clientX,t2.clientY-t1.clientY);
+    let newZoom=Math.max(0.5,Math.min(3,pinchZoom0*(dist/pinchDist0)));
+    zoomTarget=newZoom;
+    zoomCX=(t1.clientX+t2.clientX)/2;
+    zoomCY=(t1.clientY+t2.clientY)/2;
+    draw();return;
+  }
   let t=e.touches[0];let mx=t.clientX,my=t.clientY;
   if(S.dragging){
     e.preventDefault();
-    S.dragX=mx;S.dragY=my;
+    let sc=screenToScene(mx,my);S.dragX=sc.x;S.dragY=sc.y;
     draw();return;
   }
   if(mouseDownTime>0&&Date.now()-mouseDownTime>300){
@@ -3241,7 +3275,7 @@ CV.addEventListener('touchmove',e=>{
     if(Math.sqrt(dx*dx+dy*dy)>10){
       clearTimeout(longPressTimer);longPressTimer=null;
       let b=getBuildingAt(mouseDownPos.x,mouseDownPos.y);
-      if(b){mouseDownTime=0;startDrag(b);S.dragX=mx;S.dragY=my;draw()}
+      if(b){mouseDownTime=0;startDrag(b);let sc=screenToScene(mx,my);S.dragX=sc.x;S.dragY=sc.y;draw()}
     }
   }
 },{passive:false});
@@ -3255,7 +3289,17 @@ CV.addEventListener('touchend',e=>{
 document.addEventListener('keydown',e=>{
   if(e.key==='Escape'&&S.dragging){cancelDrag()}
   if(e.key==='Escape'&&S.buildingMenu){S.buildingMenu=null;draw()}
+  if(e.key==='+'||e.key==='='){zoomTarget=Math.min(3,zoomTarget+0.2);zoomCX=W/2;zoomCY=H/2;draw()}
+  if(e.key==='-'){zoomTarget=Math.max(0.5,zoomTarget-0.2);zoomCX=W/2;zoomCY=H/2;draw()}
+  if(e.key==='0'){zoomTarget=1;zoomCX=W/2;zoomCY=H/2;draw()}
 });
+CV.addEventListener('wheel',e=>{
+  e.preventDefault();
+  let delta=e.deltaY>0?-0.15:0.15;
+  zoomTarget=Math.max(0.5,Math.min(3,zoomTarget+delta));
+  zoomCX=e.clientX;zoomCY=e.clientY;
+  draw();
+},{passive:false});
 
 const SAVE_VERSION=11;
 function save(){S._v=SAVE_VERSION;localStorage.setItem('farm5',JSON.stringify(S))}
