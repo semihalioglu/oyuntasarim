@@ -2987,7 +2987,7 @@ function buyBuilding(k,price,name){
     }
   }
   S.animateBuilding={key:k,t:Date.now()};
-  toast(name+' inşa edildi!');updateHUD();
+  toast(name+' inşa edildi!');updateHUD();draw();
   if(k==='grid')checkTutorialAction('build_grid');
   if(k==='kuyu')checkTutorialAction('build_kuyu');
   if(k==='degirmen')checkTutorialAction('build_degirmen');
@@ -3001,7 +3001,7 @@ function upgradeBuilding(k){
   if(S.money<cost){toast('Yeterli paran yok! ('+cost.toLocaleString()+' TL)');return}
   S.money-=cost;S.buildingLevel[k]=lv+1;
   toast(UPGRADE_DESC[k].name+' seviye '+(lv+1)+' oldu!');
-  updateHUD();
+  updateHUD();draw();
 }
 
 function updateHUD(){
