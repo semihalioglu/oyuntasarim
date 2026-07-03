@@ -316,16 +316,16 @@ const ROWS=5,COLS=10;
 const SEASONS=['İlkbahar','Yaz','Sonbahar','Kış'];
 const FACTS=['Bir tavuk yılda ~250 yumurta verir.','İnekler günde 8-10 lt süt verebilir.','Marulun %95\'i sudur.','Patates dünyanın en önemli gıdasıdır.','Salatalık yazın çok yetiştirir.','Tarlayi sulamak ürünu %20 artırır.','İlaçlama bocekleri engeller.','Biber C vitamini açısından zengindir.','Mısır lif bakımından faydalıdır.','Kabak omega-3 içerir.','Soğan antibakteriyel özelliğe sahiptir.','Patlıcan kalp sağlığına iyi gelir.','Rüzgar değirmeni enerji üretir!','Sera kış bile ekim yapmaya olanak sağlar.'];
 const CROPS={
-DOMATES:{name:'Domates',my:1,mk:0.6,buy:8,sell:9,sea:[.3,1,.7,0],col:['#c62828','#e53935'],harvestInt:3},
-PATATES:{name:'Patates',my:1,mk:0.8,buy:6,sell:7,sea:[.5,.9,1,0],col:['#6d4c41','#8d6e63'],harvestInt:3},
-SALATALIK:{name:'Salatalık',my:1,mk:0.5,buy:10,sell:10,sea:[.4,1,.8,0],col:['#2e7d32','#43a047'],harvestInt:3},
-MARUL:{name:'Marul',my:0.5,mk:0.4,buy:12,sell:12,sea:[.7,1,.5,0],col:['#558b2f','#7cb342'],harvestInt:3},
-BIBER:{name:'Biber',my:1,mk:0.5,buy:9,sell:10,sea:[.3,1,.6,0],col:['#c62828','#ff5722'],harvestInt:3},
-PATLICAN:{name:'Patlıcan',my:1.2,mk:0.7,buy:11,sell:12,sea:[.2,1,.7,0],col:['#4a148c','#6a1b9a'],harvestInt:3},
-MISIR:{name:'Mısır',my:1,mk:0.8,buy:7,sell:8,sea:[.4,1,.8,0],col:['#f9a825','#fdd835'],harvestInt:3},
-KABAK:{name:'Kabak',my:1,mk:0.6,buy:8,sell:9,sea:[.3,1,.7,0],col:['#e65100','#ff9800'],harvestInt:3},
-SOGAN:{name:'Soğan',my:0.8,mk:0.5,buy:5,sell:6,sea:[.5,.9,1,.1],col:['#8d6e63','#a1887f'],harvestInt:3},
-BUGDAY:{name:'Buğday',my:0.8,mk:0.4,buy:4,sell:5,sea:[.6,.9,.3,0],col:['#d4a017','#c68f00'],harvestInt:4}
+DOMATES:{name:'Domates',my:1,mk:0.6,buy:8,sell:9,sea:[.3,1,.7,0],col:['#c62828','#e53935'],harvestInt:3,maxHarvest:3},
+PATATES:{name:'Patates',my:1,mk:0.8,buy:6,sell:7,sea:[.5,.9,1,0],col:['#6d4c41','#8d6e63'],harvestInt:3,maxHarvest:3},
+SALATALIK:{name:'Salatalık',my:1,mk:0.5,buy:10,sell:10,sea:[.4,1,.8,0],col:['#2e7d32','#43a047'],harvestInt:3,maxHarvest:3},
+MARUL:{name:'Marul',my:0.5,mk:0.4,buy:12,sell:12,sea:[.7,1,.5,0],col:['#558b2f','#7cb342'],harvestInt:3,maxHarvest:2},
+BIBER:{name:'Biber',my:1,mk:0.5,buy:9,sell:10,sea:[.3,1,.6,0],col:['#c62828','#ff5722'],harvestInt:3,maxHarvest:3},
+PATLICAN:{name:'Patlıcan',my:1.2,mk:0.7,buy:11,sell:12,sea:[.2,1,.7,0],col:['#4a148c','#6a1b9a'],harvestInt:3,maxHarvest:3},
+MISIR:{name:'Mısır',my:1,mk:0.8,buy:7,sell:8,sea:[.4,1,.8,0],col:['#f9a825','#fdd835'],harvestInt:3,maxHarvest:1},
+KABAK:{name:'Kabak',my:1,mk:0.6,buy:8,sell:9,sea:[.3,1,.7,0],col:['#e65100','#ff9800'],harvestInt:3,maxHarvest:2},
+SOGAN:{name:'Soğan',my:0.8,mk:0.5,buy:5,sell:6,sea:[.5,.9,1,.1],col:['#8d6e63','#a1887f'],harvestInt:3,maxHarvest:1},
+BUGDAY:{name:'Buğday',my:0.8,mk:0.4,buy:4,sell:5,sea:[.6,.9,.3,0],col:['#d4a017','#c68f00'],harvestInt:4,maxHarvest:1}
 };
 const ANIM={TAVUK:{name:'Tavuk',price:50,int:2,adet:3,prod:'Yumurta',feed:15,sell:2,unit:'adet'},INEK:{name:'İnek',price:200,int:10,litre:8,prod:'Süt',feed:45,sell:12,unit:'litre'},KOYUN:{name:'Koyun',price:150,int:3,adet:1,prod:'Yün',feed:25,sell:8,unit:'adet'}};
 const MISSION_TEMPLATES=[
@@ -355,7 +355,7 @@ let S={money:10000,day:1,sea:0,yr:1,h:6,m:0,
 };
 if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null};
 Object.keys(CROPS).forEach(k=>{S.inv[k]=0;S.dailyHarvest[k]=0});S.inv.YUMURTA=0;S.inv.SUT=0;S.inv.YUN=0;S.dailyAnimal.YUMURTA=0;S.dailyAnimal.SUT=0;S.dailyAnimal.YUN=0;
-for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0});
+for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0,harvestCount:0});
 for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plowed.push(r*COLS+c);
 function resize(){W=window.innerWidth;H=window.innerHeight;CV.width=W;CV.height=H}
 window.addEventListener('resize',resize);resize();
@@ -2690,7 +2690,7 @@ CV.addEventListener('click',e=>{
     let cr=CROPS[plantMode];
     if(!cr){plantMode=null;return}
     if(S.money<cr.buy){toast('Yeterli paran yok! ('+cr.buy+' TL)');return}
-    S.money-=cr.buy;p.crop=plantMode;p.age=0;p.w=false;p.p=false;p.nextHarvest=plantMode==='BUGDAY'?120:480;S.plantCount++;
+    S.money-=cr.buy;p.crop=plantMode;p.age=0;p.w=false;p.p=false;p.nextHarvest=plantMode==='BUGDAY'?120:480;p.harvestCount=0;S.plantCount++;
     toast(`${cr.name} ekildi! (+${cr.buy} TL)`);if(plantMode==='BUGDAY')checkTutorialAction('plant_bugday');
     draw();return;
   }
@@ -2708,9 +2708,10 @@ CV.addEventListener('click',e=>{
     let cap=500+S.st.DEPO*200,used=Object.values(S.inv).reduce((a,b)=>a+b,0);
     if((used+y)<=cap){
       S.inv[p.crop]=(S.inv[p.crop]||0)+y;S.dailyHarvest[p.crop]=(S.dailyHarvest[p.crop]||0)+y;
-      p.age+=5;p.w=false;p.p=false;p.nextHarvest=p.crop==='BUGDAY'?120:480;
-      toast(`${cr.name} hasat edildi! +${y.toFixed(1)} kg`);
-      if(p.crop==='BUGDAY')checkTutorialAction('harvest_bugday');
+      p.harvestCount=(p.harvestCount||0)+1;let mh=cr.maxHarvest||1;
+      if(p.harvestCount>=mh){let cn=cr.name;p.crop=null;p.age=0;p.w=false;p.p=false;p.nextHarvest=0;p.harvestCount=0;toast(`${cn} bitkiniz tükendi! Yeni tohum ek.`)}
+      else{p.age+=5;p.w=false;p.p=false;p.nextHarvest=p.crop==='BUGDAY'?120:480;toast(`${cr.name} hasat edildi! +${y.toFixed(1)} kg (Kalan: ${mh-p.harvestCount})`)}
+      if(p.crop&&p.crop==='BUGDAY')checkTutorialAction('harvest_bugday');
     }else{toast('Depo dolu!')}
     draw();return;
   }
@@ -2746,7 +2747,8 @@ function openPlotM(r,c){let p=getP(r,c),cr=CROPS[p.crop];if(!cr)return;
   if(!canHarvest){let hrs=Math.floor(p.nextHarvest/60);let mins=p.nextHarvest%60;harvestText=`<div>Siradaki hasat: <b>${hrs}sa ${mins}dk</b></div>`}
   else{harvestText=`<div style="color:#8bc34a;font-weight:bold">Hasat hazir!</div>`}
   document.getElementById('plotT').textContent=cr.name;
-  document.getElementById('plotI').innerHTML=`<div>Yas: <b>${age} yil</b></div><div>Tahmini: <b>${ys} kg</b></div>${harvestText}<div>Sulama: <b>${p.w?'Evet':'Yok'}</b></div><div>İlaçlama: <b>${p.p?'Evet':'Yok'}</b></div>`;
+  let hc=p.harvestCount||0;let mh=cr.maxHarvest||1;
+  document.getElementById('plotI').innerHTML=`<div>Yas: <b>${age} yil</b></div><div>Tahmini: <b>${ys} kg</b></div>${harvestText}<div>Hasat: <b>${mh===1?'Tek seferlik':(mh-hc)+'/'+mh+' kaldi'}</b></div><div>Sulama: <b>${p.w?'Evet':'Yok'}</b></div><div>İlaçlama: <b>${p.p?'Evet':'Yok'}</b></div>`;
   let bH=document.getElementById('bH');bH.disabled=!canHarvest;bH.style.opacity=canHarvest?1:.4;
   document.getElementById('bW').disabled=p.w;document.getElementById('bW').style.opacity=p.w?.4:1;
   document.getElementById('bP').disabled=p.p;document.getElementById('bP').style.opacity=p.p?.4:1;openM('plot')}
@@ -2759,8 +2761,10 @@ function harvestP(){let p=getP(selR,selC);if(!p||!p.crop)return;
   y=Math.max(0.1,y);
   let cap=500+S.st.DEPO*200,used=Object.values(S.inv).reduce((a,b)=>a+b,0);
   if(y>0&&(used+y)<=cap){S.inv[p.crop]=(S.inv[p.crop]||0)+y;S.dailyHarvest[p.crop]=(S.dailyHarvest[p.crop]||0)+y;
-    p.age+=5;p.w=false;p.p=false;p.nextHarvest=p.crop==='BUGDAY'?120:480;
-    toast(`${cr.name} hasat edildi! +${y.toFixed(1)} kg`);if(p.crop==='BUGDAY')checkTutorialAction('harvest_bugday')}
+    p.harvestCount=(p.harvestCount||0)+1;let mh=cr.maxHarvest||1;
+    if(p.harvestCount>=mh){let cn=cr.name;p.crop=null;p.age=0;p.w=false;p.p=false;p.nextHarvest=0;p.harvestCount=0;toast(`${cn} bitkiniz tükendi! Yeni tohum ek.`)}
+    else{p.age+=5;p.w=false;p.p=false;p.nextHarvest=p.crop==='BUGDAY'?120:480;toast(`${cr.name} hasat edildi! +${y.toFixed(1)} kg (Kalan: ${mh-p.harvestCount})`)}
+    if(p.crop&&p.crop==='BUGDAY')checkTutorialAction('harvest_bugday')}
   else if(y>0){toast('Depo dolu!')}
   harvestModeActive=true;closeM('plot');toast('Hasat modu! Diğer hazır tarlalara tıkla. Çıkmak için boş yere tıkla.');draw();checkMissions()}
 function waterP(){let p=getP(selR,selC);if(p&&!p.w){p.w=true;S.waterCount++;advanceTime();closeM('plot');toast('Sulama yapıldı!');draw();checkMissions()}}
@@ -2856,7 +2860,7 @@ function buyBuilding(k,price,name){
   S.money-=price;S.built[k]=true;
   if(k==='grid'){
     for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
-      if(!S.plots.find(p=>p.r===r&&p.c===c))S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0});
+      if(!S.plots.find(p=>p.r===r&&p.c===c))S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0,harvestCount:0});
       if(!S.plowed.includes(r*COLS+c))S.plowed.push(r*COLS+c);
     }
   }
@@ -2998,7 +3002,7 @@ function sellBuilding(key){
   S.buildingPos[key]=null;
   if(key==='grid'){
     S.plots=[];S.plowed=[];
-    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0});
+    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0,harvestCount:0});
     for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plowed.push(r*COLS+c);
     S.irrigating=false;S.sel=-1;
   }
