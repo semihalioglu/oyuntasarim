@@ -2213,7 +2213,13 @@ function advanceTime(){S.m+=10;while(S.m>=60){S.m-=60;S.h++}if(S.h>=22){newDay()
   }
   Object.keys(S.lastHarvestTime).forEach(k=>{if(S.lastHarvestTime[k]>0)S.lastHarvestTime[k]--});
   S.plots.forEach(p=>{if(p.crop&&p.nextHarvest>0)p.nextHarvest--});
-  checkWhole();updateHUD();checkMissions()}
+  checkWhole();updateHUD();checkMissions();
+  let plotModal=document.getElementById('mPlot');
+  if(plotModal&&plotModal.classList.contains('active')&&S.sel>=0){
+    let _r=Math.floor(S.sel/COLS),_c=S.sel%COLS;
+    let sp=getP(_r,_c);
+    if(sp&&sp.crop)openPlotM(_r,_c);
+  }}
 
 function changeWeather(){
   let weights;
