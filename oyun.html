@@ -102,25 +102,26 @@ canvas{display:block;cursor:pointer}
 .login-tab{flex:1;padding:8px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;color:#8d6e63;font-weight:bold;font-size:13px;transition:all .2s}
 .login-tab.active{color:#ffe082;border-bottom-color:#ffe082}
 @media screen and (max-height:500px){
-  .hud{height:32px;padding:2px 8px;font-size:11px}
-  .hud-clock{font-size:14px}.hud-info{font-size:10px}.hud-money{font-size:13px}
-  .hud-btn{padding:2px 8px;font-size:10px}
-  .toolbar{height:42px;padding:3px 6px}
-  .tb{padding:4px;font-size:11px}
-  .tb-icon{font-size:20px}.tb-label{font-size:8px}
-  .modal{max-height:85vh;padding:10px;max-width:500px}
-  .info-panel{top:36px;width:150px;font-size:10px;padding:5px 8px}
-  .mission-box{bottom:48px;width:190px}
-  .toast{bottom:50px;font-size:12px}
-  .login-bg{flex-direction:row;padding:8px}
-  .login-box{width:260px;padding:12px;max-height:90vh;overflow-y:auto}
-  .login-logo{font-size:28px;margin-bottom:6px}
-  .login-box .field{margin-bottom:6px}
-  .login-box label{font-size:10px;margin-bottom:2px}
-  .login-box input{padding:7px 8px;font-size:12px}
-  .login-box .login-btn{padding:8px;font-size:12px}
-  .login-tab{font-size:11px;padding:5px}
-  .login-tabs{margin-bottom:10px}
+  .hud{height:28px;padding:2px 6px;font-size:10px;gap:4px}
+  .hud-clock{font-size:12px}.hud-info{font-size:9px}.hud-money{font-size:11px}
+  .hud-btn{padding:2px 6px;font-size:9px}
+  .hud-whole{display:none}
+  .toolbar{height:38px;padding:2px 4px}
+  .tb{padding:3px;font-size:10px}
+  .tb-icon{font-size:18px}.tb-label{font-size:7px}
+  .modal{max-height:85vh;padding:8px;max-width:95%}
+  .info-panel{top:32px;width:140px;font-size:9px;padding:4px 6px}
+  .mission-box{bottom:44px;width:180px}
+  .toast{bottom:44px;font-size:11px}
+  .login-bg{flex-direction:row;padding:6px}
+  .login-box{width:240px;padding:10px;max-height:90vh;overflow-y:auto}
+  .login-logo{font-size:24px;margin-bottom:4px}
+  .login-box .field{margin-bottom:4px}
+  .login-box label{font-size:9px;margin-bottom:2px}
+  .login-box input{padding:6px 7px;font-size:11px}
+  .login-box .login-btn{padding:7px;font-size:11px}
+  .login-tab{font-size:10px;padding:4px}
+  .login-tabs{margin-bottom:8px}
 }
 @media screen and (max-width:480px){
   .hud{height:30px;padding:2px 6px;gap:4px;flex-wrap:nowrap;overflow-x:auto}
@@ -139,6 +140,17 @@ canvas{display:block;cursor:pointer}
   .hud-clock{font-size:12px}.hud-info{font-size:8px}.hud-money{font-size:11px}
   .toolbar{height:36px;padding:2px 4px}
   .tb-icon{font-size:16px}.tb-label{display:none}
+}
+@media screen and (orientation:landscape) and (max-height:420px){
+  .hud{height:24px;padding:1px 4px;font-size:9px;gap:3px}
+  .hud-clock{font-size:11px}.hud-info{font-size:8px}.hud-money{font-size:10px}
+  .hud-btn{padding:1px 5px;font-size:8px}
+  .hud-whole,.hud-info:nth-child(n+5){display:none}
+  .toolbar{height:32px;padding:2px 3px}
+  .tb{padding:2px;font-size:9px}
+  .tb-icon{font-size:16px}.tb-label{font-size:6px}
+  .info-panel{display:none}
+  .mission-box{display:none!important}
 }
 @media screen and (orientation:portrait) and (max-width:400px){
   .login-box{width:95vw;padding:16px}
@@ -167,6 +179,7 @@ canvas{display:block;cursor:pointer}
       <div class="login-error" id="regErr"></div>
       <button class="login-btn primary" onclick="doRegister()">Kayit Ol</button>
     </div>
+    <button class="login-btn secondary" onclick="doGuestLogin()" style="width:100%;margin-top:12px">🎭 Misafir Girişi</button>
   </div>
 </div>
 <canvas id="c"></canvas>
@@ -239,6 +252,11 @@ function doRegister(){
   sessionStorage.setItem('farm_user',u);
   startGame();
 }
+function doGuestLogin(){
+  localStorage.removeItem('farm5');
+  sessionStorage.setItem('farm_user','Misafir');
+  location.reload();
+}
 function startGame(){
   document.getElementById('loginBg').style.display='none';
 }
@@ -252,6 +270,8 @@ window.addEventListener('load',function(){
 });
 const CV=document.getElementById('c'),X=CV.getContext('2d');
 let W,H;
+const _origArc=X.arc.bind(X);
+X.arc=function(cx,cy,r){return _origArc(cx,cy,Math.max(0,r),...Array.prototype.slice.call(arguments,3))};
 const ROWS=5,COLS=10;
 const SEASONS=['Ilkbahar','Yaz','Sonbahar','Kis'];
 const FACTS=['Bir tavuk yilda ~250 yumurta verir.','Inekler gunde 8-10 lt sut verebilir.','Marulun %95\'i sudur.','Patates dunyanin en onemli gidasidir.','Salatalik yazin cok yetisir.','Tarlayi sulamak urunu %20 artirir.','Ilaclama bocekleri engeller.','Biber C vitamini acisindan zengindir.','Misir lif bakimindan faydalidir.','Kabak omega-3 icerir.','Sogan antibakteriyel ozellige sahiptir.','Patlican kalp sagligina iyi gelir.','Ruzgar degirmeni enerji uretir!','Sera kis bile ekim yapmaya olanak saglar.'];
@@ -288,8 +308,11 @@ let S={money:10000,day:1,sea:0,yr:1,h:6,m:0,
   weather:'gunesli',weatherTimer:0,windSpeed:5,
   irrigating:false,irrigStartH:0,irrigStartM:0,irrigEndH:0,irrigEndM:0,
   irrigDrops:[],
-  built:{degirmen:false,kuyu:false,ahir:false,kumes:false}
+  built:{degirmen:false,kuyu:false,ahir:false,kumes:false,grid:false},
+  buildingPos:null,dragging:null,dragOffset:{x:0,y:0},
+  longPressTimer:null,buildingMenu:null,animateBuilding:null
 };
+if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahir:null,kumes:null,degirmen:null};
 Object.keys(CROPS).forEach(k=>{S.inv[k]=0;S.dailyHarvest[k]=0});S.inv.YUMURTA=0;S.inv.SUT=0;S.inv.YUN=0;S.dailyAnimal.YUMURTA=0;S.dailyAnimal.SUT=0;S.dailyAnimal.YUN=0;
 for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0});
 for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plowed.push(r*COLS+c);
@@ -299,19 +322,32 @@ window.addEventListener('resize',resize);resize();
 let GX,GY,CL,sceneTop;
 let barnX=0,barnY=0,barnS=0,kumesX=0,kumesY=0,kumesS=0;
 let wellX=0,wellY=0,wellS=0;
+let wmX=0,wmY=0,wmS=0;
 let sutCount=0,yumurtaCount=0;
 let rainDrops=[],snowFlakes=[];
 const WEATHERS=['gunesli','bulutlu','yagmurlu','karli'];
 const WEATHER_ICONS={gunesli:'\u2600\uFE0F',bulutlu:'\u2601\uFE0F',yagmurlu:'\uD83C\uDF27\uFE0F',karli:'\u2744\uFE0F'};
 let lampPositions=[];
+let ISLANDSCAPE=false;
+const GRID_LINKED_KUYU=true;
+const SELL_RATIO=0.6;
 function calcLayout(){
   let toolbarH=48,hudH=38;
-  let areaH=H-hudH-toolbarH-10;
-  let areaW=W-20;
-  CL=Math.min(Math.floor(areaW/15),Math.floor(areaH/10),38);
-  sceneTop=hudH+Math.floor(areaH*0.22);
-  GX=(W-COLS*CL)/2+CL*1;
-  GY=hudH+Math.floor(areaH*0.35);
+  ISLANDSCAPE=W>H;
+  let areaH=H-hudH-toolbarH-4;
+  let areaW=W-8;
+  if(ISLANDSCAPE){
+    CL=Math.min(Math.floor(areaW/17),Math.floor(areaH/9),40);
+    sceneTop=hudH+Math.floor(areaH*0.16);
+    GX=(W-COLS*CL)/2;
+    GY=hudH+Math.floor(areaH*0.28);
+  }else{
+    let pad=Math.floor(W*0.22);
+    CL=Math.min(Math.floor((areaW-pad*2)/COLS),Math.floor(areaH/13),34);
+    sceneTop=hudH+Math.floor(areaH*0.06);
+    GX=pad+Math.floor((areaW-pad*2-COLS*CL)/2);
+    GY=hudH+Math.floor(areaH*0.40);
+  }
 }
 calcLayout();window.addEventListener('resize',()=>{calcLayout()});
 
@@ -1485,6 +1521,11 @@ function drawOrganicPath(points,width){
 function draw(){
   X.clearRect(0,0,W,H);
   calcLayout();
+  // Pozisyon override - tasima sonrasi
+  if(S.buildingPos.grid){
+    let off=S.buildingPos.grid;
+    GX=off.x;GY=off.y;
+  }
   frameCount++;
   drawSky();
   drawMountains();
@@ -1495,21 +1536,33 @@ function draw(){
   let gridBottom=GY+ROWS*CL;
   let gridRight=GX+COLS*CL;
 
-  // ====== EV - sol, buyuk ======
-  let houseX=W*0.12,houseY=sceneTop+ROWS*CL*0.4;
-  let houseS=CL*2.8;
+  // ====== EV - sabit, tasima yok ======
+  let houseScale=ISLANDSCAPE?2.8:2.0;
+  let houseS=CL*houseScale;
+  let houseGap=CL*1.2;
+  let houseX=Math.min(GX-houseGap, W*0.16+houseS);
+  houseX=Math.max(houseS+CL*0.3, houseX);
+  let houseY=sceneTop+Math.floor((GY-sceneTop)*0.05);
   drawHouse(houseX,houseY,houseS);
 
-  // ====== GRID ETRAFINA CIT ======
-  let fPad=CL*0.3;
-  drawFenceSegment(GX-fPad,GY-fPad,gridRight+fPad,GY-fPad);
-  drawFenceSegment(gridRight+fPad,GY-fPad,gridRight+fPad,gridBottom+fPad);
-  drawFenceSegment(gridRight+fPad,gridBottom+fPad,GX-fPad,gridBottom+fPad);
-  drawFenceSegment(GX-fPad,gridBottom+fPad,GX-fPad,GY-fPad);
+  // ====== GRID ETRAFINA CIT (sadece grid insa edildiyse) ======
+  if(S.built.grid){
+    let fPad=CL*0.3;
+    drawFenceSegment(GX-fPad,GY-fPad,gridRight+fPad,GY-fPad);
+    drawFenceSegment(gridRight+fPad,GY-fPad,gridRight+fPad,gridBottom+fPad);
+    drawFenceSegment(gridRight+fPad,gridBottom+fPad,GX-fPad,gridBottom+fPad);
+    drawFenceSegment(GX-fPad,gridBottom+fPad,GX-fPad,GY-fPad);
+  }
 
   // ====== AHIR - sag ust, buyuk ======
-  barnX=W*0.88;barnY=sceneTop+ROWS*CL*0.15;
   barnS=CL*2.5;
+  if(S.buildingPos.ahir){
+    barnX=S.buildingPos.ahir.x;barnY=S.buildingPos.ahir.y;
+  }else{
+    let barnMinX=gridRight+CL*1.0;
+    barnX=S.built.grid?Math.max(barnMinX,Math.min(W*0.88,gridRight+barnS+CL*0.5)):W*0.88;
+    barnY=sceneTop+Math.floor((H-86)*0.02);
+  }
   if(S.built.ahir){
     drawBarn(barnX,barnY,barnS);
   }else{
@@ -1517,8 +1570,13 @@ function draw(){
   }
 
   // ====== KUMES - ahır formatında, sag alt ======
-  kumesX=W*0.88;kumesY=sceneTop+ROWS*CL*1.3;
   kumesS=CL*2.0;
+  if(S.buildingPos.kumes){
+    kumesX=S.buildingPos.kumes.x;kumesY=S.buildingPos.kumes.y;
+  }else{
+    kumesX=barnX;
+    kumesY=barnY+barnS*2.2;
+  }
   if(S.built.kumes){
     drawKumes(kumesX,kumesY,kumesS);
   }else{
@@ -1598,24 +1656,37 @@ function draw(){
   X.fillStyle='#e57373';X.beginPath();X.ellipse(dogX+CL*0.2,dogY-CL*0.01,CL*0.01,CL*0.02,.2,0,Math.PI*2);X.fill();
 
   // ====== KUYU - grid'in altinda, biraz asagida ======
-  wellX=gridCX;
-  wellY=gridBottom+CL*2.1;
   wellS=CL*2.1;
+  if(S.buildingPos.kuyu){
+    wellX=S.buildingPos.kuyu.x;wellY=S.buildingPos.kuyu.y;
+  }else if(S.built.grid){
+    wellX=gridCX;
+    let maxWellY=H-48-CL*1.2;
+    wellY=Math.min(gridBottom+CL*1.5,maxWellY);
+  }else{
+    wellX=W*0.5;wellY=GY+CL*3;
+  }
   if(S.built.kuyu){
     drawWell(wellX,wellY,wellS);
   }else{
     drawPlaceholder(wellX,wellY,wellS*1.2,'KUYU');
   }
 
-  // ====== DEGIRMEN - evin altinda, daha asagida ======
-  if(S.built.degirmen){
-    drawWindmill(houseX,houseY+houseS*2.0,houseS);
+  // ====== DEGIRMEN - evin altinda ======
+  wmS=houseS*0.8;
+  if(S.buildingPos.degirmen){
+    wmX=S.buildingPos.degirmen.x;wmY=S.buildingPos.degirmen.y;
   }else{
-    drawPlaceholder(houseX,houseY+houseS*2.0,houseS*1.2,'DEĞİRMEN');
+    wmX=houseX;wmY=houseY+houseS*1.5;
+  }
+  if(S.built.degirmen){
+    drawWindmill(wmX,wmY,wmS);
+  }else{
+    drawPlaceholder(wmX,wmY,wmS*1.2,'DEĞİRMEN');
   }
 
   // ====== ALT SINIR - basit yesil serit ======
-  let forestTop=H-48-CL*0.8;
+  let forestTop=H-48-CL*0.3;
   let g2=X.createLinearGradient(0,forestTop,0,H-48);
   g2.addColorStop(0,'#5a8a3a');g2.addColorStop(1,'#4a7a2a');
   X.fillStyle=g2;X.fillRect(0,forestTop,W,H-48-forestTop);
@@ -1632,6 +1703,7 @@ function draw(){
 
   // ====== DIP NOTLAR ======
 
+if(S.built.grid){
   // ====== GRID CERCEVESI ======
   X.fillStyle='#5d4037';
   X.fillRect(GX-5,GY-5,COLS*CL+10,ROWS*CL+10);
@@ -1775,6 +1847,8 @@ function draw(){
   }
   }
 
+} // end if(S.built.grid)
+
   // ====== TRAKTOR ======
   if(S.tractorActive){
     for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){X.fillStyle='rgba(255,255,255,0.05)';X.fillRect(GX+c*CL,GY+r*CL,CL-1,CL-1)}
@@ -1872,6 +1946,31 @@ function draw(){
   X.fillRect(8,H-42,W-16,36);X.strokeStyle='#c8956c';X.lineWidth=1;X.strokeRect(8,H-42,W-16,36);
   X.fillStyle='#ffe082';X.font='11px sans-serif';X.textAlign='left';
   X.fillText('EV: Dinlen | MAGAZA: Alisveris | HAYVAN: Bakim | DEPO: Urunler | Traktor: Sur',16,H-22);
+
+  // ====== SURUKLEME ONIZLEME ======
+  if(S.dragging){
+    let dx=S.dragX,dy=S.dragY;
+    let valid=isValidPlacement(S.dragging,dx,dy);
+    X.globalAlpha=0.5;
+    if(S.dragging==='grid'){
+      X.fillStyle=valid?'rgba(100,200,100,0.3)':'rgba(200,100,100,0.3)';
+      X.fillRect(dx,dy,COLS*CL,ROWS*CL);
+      X.strokeStyle=valid?'#4caf50':'#e53935';X.lineWidth=3;
+      X.strokeRect(dx,dy,COLS*CL,ROWS*CL);
+    }else if(S.dragging==='ahir'){
+      drawBarn(dx,dy,CL*2.5);
+    }else if(S.dragging==='kumes'){
+      drawKumes(dx,dy,CL*2.0);
+    }else if(S.dragging==='degirmen'){
+      drawWindmill(dx,dy,CL*(ISLANDSCAPE?2.8:2.0)*0.8);
+    }else if(S.dragging==='kuyu'){
+      drawWell(dx,dy,CL*2.1);
+    }
+    X.globalAlpha=1;
+  }
+
+  // ====== BINA MENU ======
+  drawBuildingMenu();
 }
 
 function advanceTime(){S.m+=10;while(S.m>=60){S.m-=60;S.h++}if(S.h>=22){newDay();return}
@@ -1960,10 +2059,11 @@ function renderMissions(){let l=document.getElementById('missionList');l.innerHT
     if(done&&!m.rewarded){S.money+=100;m.rewarded=true;toast('Gorev tamamlandi! +100 TL')}l.appendChild(d)})}
 function openTesisler(){
   let grid=document.getElementById('tesisGrid');grid.innerHTML='';
-  let tesisFiyat={Ahir:2500,Kumes:1500,Degirmen:3000,Kuyu:2000};
-  let tesisKey={Ahir:'ahir',Kumes:'kumes',Degirmen:'degirmen',Kuyu:'kuyu'};
+  let tesisFiyat={Ev:0,Ahir:2500,Kumes:1500,Degirmen:3000,Kuyu:2000,Tarla:100};
+  let tesisKey={Ev:'ev',Ahir:'ahir',Kumes:'kumes',Degirmen:'degirmen',Kuyu:'kuyu',Tarla:'grid'};
   let tesisler=[
     {name:'Ev',fn:drawHouseToCanvas,bg:'#8d6e63',free:true},
+    {name:'Tarla',fn:drawGridToCanvas,bg:'#6d4c41'},
     {name:'Ahir',fn:drawBarnToCanvas,bg:'#8B2500'},
     {name:'Kumes',fn:drawKumesToCanvas,bg:'#8B6914'},
     {name:'Degirmen',fn:drawWindmillToCanvas,bg:'#e8e0d0'},
@@ -1988,6 +2088,11 @@ function openTesisler(){
         btn.textContent='Satinal '+tesisFiyat[t.name]+' TL';
         btn.onclick=function(e){e.stopPropagation();buyBuilding(key,tesisFiyat[t.name],t.name);openTesisler()};
         d.appendChild(btn);
+      }else{
+        let moveBtn=document.createElement('button');moveBtn.style.cssText='background:#5d4037;color:#ffe082;border:1px solid #c8956c;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:4px';
+        moveBtn.textContent='📍 Tasima Modu';
+        moveBtn.onclick=function(e){e.stopPropagation();closeM('tesisler');startDrag(key)};
+        d.appendChild(moveBtn);
       }
     }
     grid.appendChild(d);
@@ -2049,6 +2154,15 @@ function drawWellToCanvas(c,s){
   c.fillStyle='#c0392b';c.beginPath();c.moveTo(-24,-16);c.lineTo(0,-28);c.lineTo(24,-16);c.closePath();c.fill();
   c.strokeStyle='#a1887f';c.lineWidth=1;c.beginPath();c.moveTo(0,-16);c.lineTo(0,2);c.stroke();
   c.fillStyle='#78909c';c.fillRect(-3,0,6,5);
+  c.restore();
+}
+function drawGridToCanvas(c,s){
+  c.save();c.translate(s/2,s/2);
+  c.fillStyle='#6d4c41';c.fillRect(-30,-22,60,44);
+  c.fillStyle='#3e2723';c.fillRect(-26,-18,52,36);
+  c.strokeStyle='#5d4037';c.lineWidth=2;
+  for(let i=0;i<10;i++){c.beginPath();c.moveTo(-26+i*5.2,-18);c.lineTo(-26+i*5.2,18);c.stroke()}
+  for(let i=0;i<5;i++){c.beginPath();c.moveTo(-26,-18+i*9);c.lineTo(26,-18+i*9);c.stroke()}
   c.restore();
 }
 function drawMiniCrop(c,type,s){
@@ -2208,6 +2322,7 @@ function dismissW(){S.whDis=true;S.curW=null;closeM('whole');updateHUD()}
 
 let lastPlantClick=-1;
 CV.addEventListener('click',e=>{
+  if(S.dragging||S.buildingMenu)return;
   let mx=e.clientX,my=e.clientY;
   let gx=mx-GX,gy=my-GY;
   let c=Math.floor(gx/CL),r=Math.floor(gy/CL);
@@ -2272,6 +2387,7 @@ CV.addEventListener('click',e=>{
     }
   }
 
+  if(!S.built.grid){if(!S.buildingMenu)toast('Once tarla insa et! (Tesislerden)');return}
   if(S.tractorActive&&r>=0&&r<ROWS&&c>=0&&c<COLS){plowArea(r,c);S.tractorActive=false;draw();return}
   if(r<0||r>=ROWS||c<0||c>=COLS){closeAllModals();lastPlantClick=-1;S.sel=-1;draw();return}
   S.sel=r*COLS+c;let p=getP(r,c);
@@ -2408,7 +2524,14 @@ function buyBuilding(k,price,name){
   if(S.built[k]){toast('Zaten insa edildi!');return}
   if(S.money<price){toast('Yeterli paran yok! ('+price+' TL)');return}
   S.money-=price;S.built[k]=true;
-  toast(name+' insa edildi!');updateHUD();renderM('shop');
+  if(k==='grid'){
+    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+      if(!S.plots.find(p=>p.r===r&&p.c===c))S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0});
+      if(!S.plowed.includes(r*COLS+c))S.plowed.push(r*COLS+c);
+    }
+  }
+  S.animateBuilding={key:k,t:Date.now()};
+  toast(name+' insa edildi!');updateHUD();
 }
 
 function updateHUD(){
@@ -2425,13 +2548,265 @@ function updateHUD(){
 }
 function toast(m){let t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 
-const SAVE_VERSION=10;
+// ====== TASIMA SISTEMI ======
+const BUILDING_NAMES={ahir:'AHİR',kumes:'KÜMES',degirmen:'DEĞİRMEN',kuyu:'KUYU',grid:'TARLA'};
+const BUILDING_PRICES={ahir:2500,kumes:1500,degirmen:3000,kuyu:2000,grid:100};
+
+function getBuildingAt(mx,my){
+  let keys=Object.keys(BUILDING_NAMES);
+  for(let i=keys.length-1;i>=0;i--){
+    let k=keys[i];
+    if(k==='grid'){
+      if(!S.built.grid)continue;
+      if(mx>=GX&&mx<=GX+COLS*CL&&my>=GY&&my<=GY+ROWS*CL)return k;
+    }else if(k==='kuyu'){
+      if(!S.built.kuyu)continue;
+      if(typeof wellS==='undefined')continue;
+      if(Math.abs(mx-wellX)<wellS*0.7&&Math.abs(my-wellY)<wellS*0.7)return k;
+    }else if(k==='ahir'){
+      if(!S.built.ahir)continue;
+      if(typeof barnS==='undefined')continue;
+      if(Math.abs(mx-barnX)<barnS*0.7&&Math.abs(my-barnY)<barnS*0.7)return k;
+    }else if(k==='kumes'){
+      if(!S.built.kumes)continue;
+      if(typeof kumesS==='undefined')continue;
+      if(Math.abs(mx-kumesX)<kumesS*0.7&&Math.abs(my-kumesY)<kumesS*0.7)return k;
+    }else if(k==='degirmen'){
+      if(!S.built.degirmen)continue;
+      if(typeof wmS==='undefined')continue;
+      if(Math.abs(mx-wmX)<wmS*0.7&&Math.abs(my-wmY)<wmS*0.7)return k;
+    }
+  }
+  return null;
+}
+
+function startDrag(key){
+  S.dragging=key;
+  toast('Binayi surukleyip birakin. ESC ile iptal.');
+}
+
+function cancelDrag(){
+  if(!S.dragging)return;
+  S.dragging=null;
+  S.buildingMenu=null;
+  toast('Tasima iptal edildi.');
+  draw();
+}
+
+function finishDrag(){
+  if(!S.dragging)return;
+  let key=S.dragging;
+  let pos=getBuildingCenter(key);
+  if(!pos){cancelDrag();return}
+  if(!isValidPlacement(key,pos.x,pos.y)){
+    toast('Gecersiz konum! Baska bir yere birakin.');
+    return;
+  }
+  S.buildingPos[key]={x:pos.x,y:pos.y};
+  if(key==='grid'&&GRID_LINKED_KUYU&&S.built.kuyu){
+    let defKuyu=getDefaultKuyuPos();
+    if(!S.buildingPos.kuyu){
+      S.buildingPos.kuyu={x:defKuyu.x,y:defKuyu.y};
+    }
+    S.buildingPos.kuyu.x=pos.x+defKuyu.dx;
+    S.buildingPos.kuyu.y=pos.y+defKuyu.dy;
+  }
+  S.dragging=null;
+  toast(BUILDING_NAMES[key]+' yerlestirildi!');
+  draw();
+}
+
+function getBuildingCenter(key){
+  if(!S.dragging)return null;
+  return{x:S.dragX,y:S.dragY};
+}
+
+function getDefaultKuyuPos(){
+  let gcx=GX+COLS*CL/2;
+  let gbottom=GY+ROWS*CL;
+  let mwy=H-48-CL*1.2;
+  let ky=Math.min(gbottom+CL*1.5,mwy);
+  return{x:gcx,y:ky,dx:0,dy:Math.min(gbottom+CL*1.5,mwy)-GY};
+}
+
+function isValidPlacement(key,x,y){
+  let pad=CL*0.5;
+  if(x<pad||x>W-pad||y<pad||y>H-48-pad)return false;
+  let hx=(function(){
+    let hs=CL*(ISLANDSCAPE?2.8:2.0);
+    let hg=CL*1.2;
+    let hvx=Math.min(GX-hg,W*0.16+hs);
+    hvx=Math.max(hs+CL*0.3,hvx);
+    return hvx;
+  })();
+  let hy=sceneTop;
+  if(key!=='grid'&&Math.abs(x-hx)<CL*3&&Math.abs(y-hy)<CL*3)return false;
+  if(key!=='grid'){
+    if(S.built.grid&&x>GX-CL*2&&x<GX+COLS*CL+CL*2&&y>GY-CL*2&&y<GY+ROWS*CL+CL*2)return false;
+  }
+  if(key==='grid'){
+    if(x<CL*2||x+COLS*CL>W-CL*2)return false;
+    if(y<sceneTop+CL||y+ROWS*CL>H-48-CL*2)return false;
+  }
+  return true;
+}
+
+function sellBuilding(key){
+  let price=BUILDING_PRICES[key]||0;
+  let refund=Math.floor(price*SELL_RATIO);
+  if(!S.built[key]){toast('Bu bina insa edilmemis!');return}
+  S.built[key]=false;
+  S.money+=refund;
+  S.buildingPos[key]=null;
+  if(key==='grid'){
+    S.plots=[];S.plowed=[];
+    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0});
+    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plowed.push(r*COLS+c);
+    S.irrigating=false;S.sel=-1;
+  }
+  S.buildingMenu=null;S.dragging=null;
+  toast(BUILDING_NAMES[key]+' satildi! +'+refund+' TL');
+  updateHUD();
+}
+
+function showBuildingMenu(key,mx,my){
+  S.buildingMenu={key:key,x:mx,y:my};
+  draw();
+}
+
+function drawBuildingMenu(){
+  if(!S.buildingMenu)return;
+  let m=S.buildingMenu;
+  let bx=m.x-60,by=m.y-90;
+  if(bx<10)bx=10;if(bx+120>W-10)bx=W-130;
+  if(by<10)by=m.y+10;
+  X.fillStyle='rgba(40,25,10,0.95)';
+  X.strokeStyle='#c8956c';X.lineWidth=2;
+  X.beginPath();X.roundRect(bx,by,120,80,8);X.fill();X.stroke();
+  X.fillStyle='#ffe082';X.font='bold 11px sans-serif';X.textAlign='center';
+  X.fillText(BUILDING_NAMES[m.key],bx+60,by+16);
+  let items=[
+    {text:'📍 Kaydır',y:by+30,action:'drag'},
+    {text:'🗑 Kaldır ('+Math.floor((BUILDING_PRICES[m.key]||0)*SELL_RATIO)+' TL)',y:by+50,action:'sell'},
+    {text:'✖ İptal',y:by+70,action:'cancel'}
+  ];
+  items.forEach(it=>{
+    X.fillStyle='#d7ccc8';X.font='11px sans-serif';X.textAlign='center';
+    if(mx>bx&&mx<bx+120&&my>it.y-8&&my<it.y+10){
+      X.fillStyle='#ffe082';X.fillRect(bx+2,it.y-10,116,18);
+      X.fillStyle='#3e2723';
+    }
+    X.fillText(it.text,bx+60,it.y+3);
+  });
+  S.buildingMenu.items=items;
+}
+
+let longPressTimer=null;
+let longPressPos={x:0,y:0};
+let mouseDownTime=0;
+let mouseDownPos={x:0,y:0};
+
+CV.addEventListener('mousedown',e=>{
+  let mx=e.clientX,my=e.clientY;
+  mouseDownTime=Date.now();
+  mouseDownPos={x:mx,y:my};
+  if(S.dragging){
+    S.dragX=mx;S.dragY=my;
+    finishDrag();
+    return;
+  }
+  if(S.buildingMenu){
+    let m=S.buildingMenu;
+    let bx=m.x-60,by=m.y-90;
+    if(by<10)by=m.y+10;
+    if(mx>bx&&mx<bx+120&&m.items){
+      for(let it of m.items){
+        if(my>it.y-8&&my<it.y+10){
+          if(it.action==='drag'){S.buildingMenu=null;startDrag(m.key)}
+          else if(it.action==='sell')sellBuilding(m.key);
+          else{S.buildingMenu=null;draw()}
+          return;
+        }
+      }
+    }
+    S.buildingMenu=null;draw();return;
+  }
+  longPressTimer=setTimeout(()=>{
+    let b=getBuildingAt(mx,my);
+    if(b){showBuildingMenu(b,mx,my)}
+  },500);
+});
+
+CV.addEventListener('mousemove',e=>{
+  let mx=e.clientX,my=e.clientY;
+  if(S.dragging){
+    e.preventDefault();
+    S.dragX=mx;S.dragY=my;
+    draw();
+    return;
+  }
+  if(mouseDownTime>0&&Date.now()-mouseDownTime>300){
+    let dx=mx-mouseDownPos.x,dy=my-mouseDownPos.y;
+    if(Math.sqrt(dx*dx+dy*dy)>10){
+      clearTimeout(longPressTimer);longPressTimer=null;
+      let b=getBuildingAt(mouseDownPos.x,mouseDownPos.y);
+      if(b){mouseDownTime=0;startDrag(b);S.dragX=mx;S.dragY=my;draw()}
+    }
+  }
+});
+
+CV.addEventListener('mouseup',e=>{
+  mouseDownTime=0;
+  clearTimeout(longPressTimer);longPressTimer=null;
+});
+
+CV.addEventListener('touchstart',e=>{
+  let t=e.touches[0];let mx=t.clientX,my=t.clientY;
+  mouseDownTime=Date.now();mouseDownPos={x:mx,y:my};
+  longPressTimer=setTimeout(()=>{
+    let b=getBuildingAt(mx,my);
+    if(b){showBuildingMenu(b,mx,my)}
+  },500);
+},{passive:true});
+
+CV.addEventListener('touchmove',e=>{
+  let t=e.touches[0];let mx=t.clientX,my=t.clientY;
+  if(S.dragging){
+    e.preventDefault();
+    S.dragX=mx;S.dragY=my;
+    draw();return;
+  }
+  if(mouseDownTime>0&&Date.now()-mouseDownTime>300){
+    let dx=mx-mouseDownPos.x,dy=my-mouseDownPos.y;
+    if(Math.sqrt(dx*dx+dy*dy)>10){
+      clearTimeout(longPressTimer);longPressTimer=null;
+      let b=getBuildingAt(mouseDownPos.x,mouseDownPos.y);
+      if(b){mouseDownTime=0;startDrag(b);S.dragX=mx;S.dragY=my;draw()}
+    }
+  }
+},{passive:false});
+
+CV.addEventListener('touchend',e=>{
+  mouseDownTime=0;
+  clearTimeout(longPressTimer);longPressTimer=null;
+  if(S.dragging){finishDrag()}
+});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'&&S.dragging){cancelDrag()}
+  if(e.key==='Escape'&&S.buildingMenu){S.buildingMenu=null;draw()}
+});
+
+const SAVE_VERSION=11;
 function save(){S._v=SAVE_VERSION;localStorage.setItem('farm5',JSON.stringify(S))}
 function load(){let d=localStorage.getItem('farm5');
   if(d){let l=JSON.parse(d);if(l._v!==SAVE_VERSION){localStorage.removeItem('farm5');return}
     Object.assign(S,l);if(!S.dailyHarvest)S.dailyHarvest={};if(!S.dailyAnimal)S.dailyAnimal={};
     if(S.dailySold===undefined)S.dailySold=0;
-    if(!S.built)S.built={degirmen:false,kuyu:false,ahir:false,kumes:false};
+    if(!S.built)S.built={degirmen:false,kuyu:false,ahir:false,kumes:false,grid:false};
+    if(S.built.grid===undefined)S.built.grid=false;
+    if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahir:null,kumes:null,degirmen:null};
+    S.dragging=null;S.buildingMenu=null;
     Object.keys(CROPS).forEach(k=>{if(S.dailyHarvest[k]===undefined)S.dailyHarvest[k]=0});
     if(S.dailyAnimal.YUMURTA===undefined)S.dailyAnimal.YUMURTA=0;
     if(S.dailyAnimal.SUT===undefined)S.dailyAnimal.SUT=0;
