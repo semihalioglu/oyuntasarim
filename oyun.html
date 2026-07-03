@@ -328,6 +328,16 @@ SOGAN:{name:'Soğan',my:0.8,mk:0.5,buy:5,sell:6,sea:[.5,.9,1,.1],col:['#8d6e63',
 BUGDAY:{name:'Buğday',my:0.8,mk:0.4,buy:4,sell:5,sea:[.6,.9,.3,0],col:['#d4a017','#c68f00'],harvestInt:4,maxHarvest:1}
 };
 const ANIM={TAVUK:{name:'Tavuk',price:50,int:2,adet:3,prod:'Yumurta',feed:15,sell:2,unit:'adet'},INEK:{name:'İnek',price:200,int:10,litre:8,prod:'Süt',feed:45,sell:12,unit:'litre'},KOYUN:{name:'Koyun',price:150,int:3,adet:1,prod:'Yün',feed:25,sell:8,unit:'adet'}};
+const BUILDING_MAX_LEVEL=10;
+const UPGRADE_COST={ahır:500,kümes:400,kuyu:600,degirmen:800,fırın:700};
+const UPGRADE_DESC={
+  ahır:{name:'Ahır',effect:l=>`+${l} hayvan kapasitesi, +${l*2} lt süt/sağım`,icon:'🐄'},
+  kümes:{name:'Kümes',effect:l=>`+${l} tavuk kapasitesi, +${l} yumurta/gün`,icon:'🐔'},
+  kuyu:{name:'Kuyu',effect:l=>`Sulama süresi -${l*2} dk (min ${Math.max(10,40-l*3)} dk)`,icon:'💧'},
+  degirmen:{name:'Değirmen',effect:l=>`Öğütme hızı x${(1+l*0.1).toFixed(1)}`,icon:'⚙️'},
+  fırın:{name:'Fırın',effect:l=>`Pişirme hızı x${(1+l*0.1).toFixed(1)}`,icon:'🔥'}
+};
+function getUpgradeCost(key){let lv=S.buildingLevel[key]||1;return Math.floor(UPGRADE_COST[key]*lv*1.5)}
 const MISSION_TEMPLATES=[
   {type:'harvest',crop:'DOMATES',target:6,text:'6 kg Domates topla'},{type:'harvest',crop:'PATATES',target:8,text:'8 kg Patates topla'},
   {type:'harvest',crop:'SALATALIK',target:5,text:'5 kg Salatalık topla'},{type:'harvest',crop:'MARUL',target:4,text:'4 kg Marul topla'},
@@ -810,6 +820,22 @@ function drawBarn(x,y,s){
   X.beginPath();X.ellipse(s*0.71,-s*0.15,s*0.14,0.04,0,0,Math.PI*2);X.stroke();
   X.beginPath();X.ellipse(s*0.71,s*0.15,s*0.14,0.04,0,0,Math.PI*2);X.stroke();
 
+  // Seviye göstergesi ve çit
+  let bLv=S.buildingLevel?S.buildingLevel.ahır||1:1;
+  if(bLv>=2){
+    X.fillStyle='rgba(0,0,0,0.4)';X.beginPath();X.roundRect(-s*0.12,-s*0.42,s*0.24,s*0.12,3);X.fill();
+    X.fillStyle='#ffd54f';X.font=`bold ${s*0.07}px "Nunito",Arial,sans-serif`;X.textAlign='center';X.fillText('Lv.'+bLv,0,-s*0.34);
+  }
+  // Çit alanı - seviye ile büyür
+  let fW=s*(0.8+bLv*0.08),fH=s*(0.2+bLv*0.03);
+  X.strokeStyle='#8B6508';X.lineWidth=2;
+  X.strokeRect(-fW/2,s*0.82,fW,fH);
+  X.fillStyle='#6B4500';
+  for(let i=0;i<Math.min(bLv,5);i++){
+    let fx=-fW/2+s*0.06+i*(fW-s*0.12)/Math.min(bLv,5);
+    X.fillRect(fx,s*0.84,2,fH-s*0.04);
+  }
+
   X.restore();
 }
 
@@ -906,6 +932,21 @@ function drawKümes(x,y,s){
   X.fillStyle='#8d6e63';X.fillRect(-s*0.62,s*0.1,2,s*0.5);
   X.strokeStyle='#a1887f';X.lineWidth=2;
   X.beginPath();X.moveTo(-s*0.65,s*0.2);X.lineTo(-s*0.55,s*0.2);X.stroke();
+
+  // Seviye göstergesi ve çit
+  let kLv=S.buildingLevel?S.buildingLevel.kümes||1:1;
+  if(kLv>=2){
+    X.fillStyle='rgba(0,0,0,0.4)';X.beginPath();X.roundRect(-s*0.12,-s*0.42,s*0.24,s*0.12,3);X.fill();
+    X.fillStyle='#ffd54f';X.font=`bold ${s*0.07}px "Nunito",Arial,sans-serif`;X.textAlign='center';X.fillText('Lv.'+kLv,0,-s*0.34);
+  }
+  let fW=s*(0.7+kLv*0.06),fH=s*(0.15+kLv*0.02);
+  X.strokeStyle='#8B6508';X.lineWidth=1.5;
+  X.strokeRect(-fW/2,s*0.82,fW,fH);
+  X.fillStyle='#6B4500';
+  for(let i=0;i<Math.min(kLv,5);i++){
+    let fx=-fW/2+s*0.06+i*(fW-s*0.12)/Math.min(kLv,5);
+    X.fillRect(fx,s*0.84,1.5,fH-s*0.03);
+  }
 
   X.restore();
 }
@@ -1256,6 +1297,12 @@ function drawWindmill(x,y,s){
   X.restore();
   // Merkez
   X.fillStyle='#5d4037';X.beginPath();X.arc(0,-s*0.15,s*0.04,0,Math.PI*2);X.fill();
+  // Seviye göstergesi
+  let wLv=S.buildingLevel?S.buildingLevel.degirmen||1:1;
+  if(wLv>=2){
+    X.fillStyle='rgba(0,0,0,0.4)';X.beginPath();X.roundRect(-s*0.1,-s*0.55,s*0.2,s*0.1,3);X.fill();
+    X.fillStyle='#ffd54f';X.font=`bold ${s*0.06}px "Nunito",Arial,sans-serif`;X.textAlign='center';X.fillText('Lv.'+wLv,0,-s*0.48);
+  }
   X.restore();
 }
 
@@ -1335,6 +1382,11 @@ function drawFırın(x,y,s){
   X.fillStyle='#ffab00';X.beginPath();X.arc(0,s*0.35,s*0.04,0,Math.PI*2);X.fill();
   X.fillStyle='#5d4037';X.fillRect(-s*0.06,-s*0.15,s*0.12,s*0.2);
   X.fillStyle='#424242';X.fillRect(s*0.1,s*0.0,s*0.12,s*0.08);
+  let fLv=S.buildingLevel?S.buildingLevel.fırın||1:1;
+  if(fLv>=2){
+    X.fillStyle='rgba(0,0,0,0.4)';X.beginPath();X.roundRect(-s*0.1,-s*0.38,s*0.2,s*0.1,3);X.fill();
+    X.fillStyle='#ffd54f';X.font=`bold ${s*0.06}px "Nunito",Arial,sans-serif`;X.textAlign='center';X.fillText('Lv.'+fLv,0,-s*0.31);
+  }
   X.restore();
 }
 
@@ -2279,9 +2331,11 @@ function harvest(){
 
 function feedAnimals(){
   S.money-=(S.ch*ANIM.TAVUK.feed+S.co*ANIM.INEK.feed+S.sh*ANIM.KOYUN.feed);
-  if(S.day%ANIM.TAVUK.int===0&&S.ch>0){let a=S.ch*ANIM.TAVUK.adet;S.inv.YUMURTA=(S.inv.YUMURTA||0)+a;S.dailyAnimal.YUMURTA=(S.dailyAnimal.YUMURTA||0)+a}
-  if(S.day%ANIM.INEK.int===0&&S.co>0){let a=S.co*ANIM.INEK.litre;S.inv.SUT=(S.inv.SUT||0)+a;S.dailyAnimal.SUT=(S.dailyAnimal.SUT||0)+a}
-  if(S.day%ANIM.KOYUN.int===0&&S.sh>0){let a=S.sh*ANIM.KOYUN.adet;S.inv.YUN=(S.inv.YUN||0)+a;S.dailyAnimal.YUN=(S.dailyAnimal.YUN||0)+a}
+  let kumLv=S.buildingLevel?S.buildingLevel.kümes||1:1;
+  let ahirLv=S.buildingLevel?S.buildingLevel.ahır||1:1;
+  if(S.day%ANIM.TAVUK.int===0&&S.ch>0){let a=S.ch*(ANIM.TAVUK.adet+Math.floor(kumLv/3));S.inv.YUMURTA=(S.inv.YUMURTA||0)+a;S.dailyAnimal.YUMURTA=(S.dailyAnimal.YUMURTA||0)+a}
+  if(S.day%ANIM.INEK.int===0&&S.co>0){let a=S.co*(ANIM.INEK.litre+ahirLv*2);S.inv.SUT=(S.inv.SUT||0)+a;S.dailyAnimal.SUT=(S.dailyAnimal.SUT||0)+a}
+  if(S.day%ANIM.KOYUN.int===0&&S.sh>0){let a=S.sh*(ANIM.KOYUN.adet+Math.floor(ahirLv/3));S.inv.YUN=(S.inv.YUN||0)+a;S.dailyAnimal.YUN=(S.dailyAnimal.YUN||0)+a}
 }
 
 setInterval(()=>{S.m++;while(S.m>=60){S.m-=60;S.h++}if(S.h>=22)newDay();
@@ -2335,6 +2389,23 @@ function openTesisler(){
         btn.onclick=function(e){e.stopPropagation();buyBuilding(key,tesisFiyat[t.name],t.name);openTesisler()};
         d.appendChild(btn);
       }else{
+        let lv=S.buildingLevel[key]||1;
+        let lvDiv=document.createElement('div');lvDiv.style.cssText='font-size:11px;color:#ffeb3b;margin-top:3px;font-weight:bold';
+        lvDiv.textContent='Seviye: '+lv+'/'+BUILDING_MAX_LEVEL;
+        d.appendChild(lvDiv);
+        if(key!=='grid'&&lv<BUILDING_MAX_LEVEL){
+          let cost=getUpgradeCost(key);
+          let desc=UPGRADE_DESC[key]?UPGRADE_DESC[key].effect(lv+1):'';
+          let upgBtn=document.createElement('button');upgBtn.style.cssText='background:#6a1b9a;color:#fff;border:1px solid #ab47bc;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:3px';
+          upgBtn.textContent='⬆ Geliştir '+cost.toLocaleString()+' TL';
+          upgBtn.title=desc;
+          upgBtn.onclick=function(e){e.stopPropagation();upgradeBuilding(key);openTesisler()};
+          d.appendChild(upgBtn);
+        }else if(key!=='grid'&&lv>=BUILDING_MAX_LEVEL){
+          let maxDiv=document.createElement('div');maxDiv.style.cssText='font-size:10px;color:#ffd54f;margin-top:3px;font-weight:bold';
+          maxDiv.textContent='⭐ Maks Seviye!';
+          d.appendChild(maxDiv);
+        }
         let moveBtn=document.createElement('button');moveBtn.style.cssText='background:#5d4037;color:#ffe082;border:1px solid #c8956c;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:4px';
         moveBtn.textContent='📍 Taşıma Modu';
         moveBtn.onclick=function(e){e.stopPropagation();closeM('tesisler');startDrag(key)};
@@ -2356,7 +2427,9 @@ function drawHouseToCanvas(c,s){
 }
 function drawBarnToCanvas(c,s){
   c.save();c.translate(s/2,s/2+5);
-  c.fillStyle='#8B2500';c.fillRect(-28,0,56,32);
+  let lv=S.buildingLevel?S.buildingLevel.ahır||1:1;
+  let r=40+lv*3,g=24+lv*2,b=0;
+  c.fillStyle=`rgb(${r},${g},${b})`;c.fillRect(-28,0,56,32);
   c.fillStyle='#5B0E00';c.fillRect(-3,0,6,32);
   c.fillStyle='#6B1800';c.beginPath();c.moveTo(-32,0);c.lineTo(0,-20);c.lineTo(32,0);c.closePath();c.fill();
   c.fillStyle='#3e2723';c.fillRect(-10,10,20,22);
@@ -2364,19 +2437,34 @@ function drawBarnToCanvas(c,s){
   c.beginPath();c.arc(4,20,2,0,Math.PI*2);c.fill();
   c.fillStyle='#d4a040';c.fillRect(-12,-2,24,8);
   c.fillStyle='#3a2010';c.font='bold 7px "Nunito",Arial,sans-serif';c.textAlign='center';c.fillText('AHİR',0,5);
+  c.strokeStyle='#8B6508';c.lineWidth=1.5;
+  let fW=34+lv*4,fH=14+lv*3;
+  c.strokeRect(-fW/2,34,fW,fH);
+  c.fillStyle='#6B4500';
+  for(let i=0;i<Math.min(lv,5);i++){let fx=-fW/2+4+i*(fW-6)/Math.min(lv,5);c.fillRect(fx,36,2,fH-4)}
+  if(lv>=3){c.fillStyle='#ffd54f';c.font='bold 6px "Nunito",Arial,sans-serif';c.fillText('Lv.'+lv,0,34+fH+8)}
   c.restore();
 }
 function drawKümesToCanvas(c,s){
   c.save();c.translate(s/2,s/2+5);
-  c.fillStyle='#8B6914';c.fillRect(-28,0,56,32);
+  let lv=S.buildingLevel?S.buildingLevel.kümes||1:1;
+  let d=Math.min(lv*2,18);
+  c.fillStyle=`rgb(${139+d},${105-d/2},${20+d})`;c.fillRect(-28,0,56,32);
   c.fillStyle='#654321';c.beginPath();c.moveTo(-32,0);c.lineTo(0,-20);c.lineTo(32,0);c.closePath();c.fill();
   c.fillStyle='#3e2723';c.beginPath();c.arc(0,26,7,Math.PI,0);c.fill();
   c.fillStyle='#d4a040';c.fillRect(-14,-2,28,8);
   c.fillStyle='#3a2010';c.font='bold 6px "Nunito",Arial,sans-serif';c.textAlign='center';c.fillText('KÜMES',0,5);
+  c.strokeStyle='#8B6508';c.lineWidth=1.5;
+  let fW=30+lv*3,fH=12+lv*2;
+  c.strokeRect(-fW/2,34,fW,fH);
+  c.fillStyle='#6B4500';
+  for(let i=0;i<Math.min(lv,5);i++){let fx=-fW/2+4+i*(fW-6)/Math.min(lv,5);c.fillRect(fx,36,2,fH-4)}
+  if(lv>=3){c.fillStyle='#ffd54f';c.font='bold 6px "Nunito",Arial,sans-serif';c.fillText('Lv.'+lv,0,34+fH+8)}
   c.restore();
 }
 function drawWindmillToCanvas(c,s){
   c.save();c.translate(s/2,s/2+10);
+  let lv=S.buildingLevel?S.buildingLevel.degirmen||1:1;
   c.fillStyle='#e8e0d0';c.beginPath();c.moveTo(-14,22);c.lineTo(-10,-14);c.lineTo(10,-14);c.lineTo(14,22);c.closePath();c.fill();
   c.fillStyle='#8d6e63';c.beginPath();c.moveTo(-12,-14);c.lineTo(0,-26);c.lineTo(12,-14);c.closePath();c.fill();
   c.fillStyle='#87CEEB';c.beginPath();c.arc(0,2,5,0,Math.PI*2);c.fill();
@@ -2384,10 +2472,12 @@ function drawWindmillToCanvas(c,s){
   c.fillRect(-1.5,-14,3,18);c.fillRect(-1.5,4,3,18);
   c.fillRect(-14,-2,18,3);c.fillRect(4,-2,18,3);
   c.fillStyle='#5d4037';c.beginPath();c.arc(0,-2,3,0,Math.PI*2);c.fill();
+  if(lv>=2){c.fillStyle='#ffd54f';c.font='bold 6px "Nunito",Arial,sans-serif';c.textAlign='center';c.fillText('Lv.'+lv,0,20)}
   c.restore();
 }
 function drawWellToCanvas(c,s){
   c.save();c.translate(s/2,s/2+8);
+  let lv=S.buildingLevel?S.buildingLevel.kuyu||1:1;
   let stoneC=['#90a4ae','#78909c'];
   for(let row=0;row<3;row++){
     for(let col=0;col<6;col++){
@@ -2400,10 +2490,12 @@ function drawWellToCanvas(c,s){
   c.fillStyle='#c0392b';c.beginPath();c.moveTo(-24,-16);c.lineTo(0,-28);c.lineTo(24,-16);c.closePath();c.fill();
   c.strokeStyle='#a1887f';c.lineWidth=1;c.beginPath();c.moveTo(0,-16);c.lineTo(0,2);c.stroke();
   c.fillStyle='#78909c';c.fillRect(-3,0,6,5);
+  if(lv>=2){c.fillStyle='#ffd54f';c.font='bold 6px "Nunito",Arial,sans-serif';c.textAlign='center';c.fillText('Lv.'+lv,0,-30)}
   c.restore();
 }
 function drawFırınToCanvas(c,s){
   c.save();c.translate(s/2,s/2+5);
+  let lv=S.buildingLevel?S.buildingLevel.fırın||1:1;
   c.fillStyle='#d84315';c.fillRect(-28,0,56,28);
   c.fillStyle='#bf360c';c.beginPath();c.moveTo(-32,0);c.lineTo(0,-18);c.lineTo(32,0);c.closePath();c.fill();
   c.fillStyle='#3e2723';c.fillRect(-12,8,24,20);
@@ -2411,6 +2503,7 @@ function drawFırınToCanvas(c,s){
   c.fillStyle='#ffab00';c.beginPath();c.arc(0,22,3,0,Math.PI*2);c.fill();
   c.fillStyle='#5d4037';c.fillRect(-6,-14,12,14);
   c.fillStyle='#424242';c.fillRect(8,-8,10,6);
+  if(lv>=2){c.fillStyle='#ffd54f';c.font='bold 6px "Nunito",Arial,sans-serif';c.textAlign='center';c.fillText('Lv.'+lv,0,-22)}
   c.restore();
 }
 function drawGridToCanvas(c,s){
@@ -2631,13 +2724,15 @@ CV.addEventListener('click',e=>{
     let wDx=mx-wellX,wDy=my-wellY;
     if(Math.abs(wDx)<wellS*0.6&&Math.abs(wDy)<wellS*0.6){
       if(!S.built.kuyu){toast('Önce kuyu inşa et!');return}
+      let kuyuLv=S.buildingLevel.kuyu||1;
+      let irrigTime=Math.max(10,40-kuyuLv*3);
       if(S.irrigating){
         // Sulamayı durdur
         let elapsedMin=(S.h-S.irrigStartH)*60+(S.m-S.irrigStartM);
-        if(elapsedMin<40){
+        if(elapsedMin<irrigTime){
           S.irrigating=false;
           S.plots.forEach(p=>{p.w=false});
-          toast('Sulama iptal edildi! 40 dk altında kaldığı için sulanmadı.');
+          toast('Sulama iptal edildi! '+irrigTime+' dk altında kaldığı için sulanmadı.');
         }else{
           S.irrigating=false;
           S.plots.forEach(p=>{p.w=true});
@@ -2650,7 +2745,7 @@ CV.addEventListener('click',e=>{
         S.irrigStartH=S.h;S.irrigStartM=S.m;
         S.irrigEndH=S.h+1;S.irrigEndM=S.m;
         if(S.irrigEndH>=22){S.irrigEndH=21;S.irrigEndM=50}
-        toast('Sulama başlatildi! Tekrar tıklayarak durdurabilirsin.');
+        toast('Sulama başlatıldı! ('+irrigTime+' dk gerekli)');
         advanceTime();draw();return
       }
     }
@@ -2661,9 +2756,12 @@ CV.addEventListener('click',e=>{
     let dDx=mx-wmX,dDy=my-wmY;
     if(S.built.degirmen&&Math.abs(dDx)<wmS*0.6&&Math.abs(dDy)<wmS*0.6){
       let bugday=S.inv.BUGDAY||0;
-      if(bugday<3){toast('Değirmen için en az 3 buğday gerekli! (Mevcut: '+bugday+')');return}
-      S.inv.BUGDAY-=3;S.invUN=(S.invUN||0)+1;
-      toast('3 Buğday → 1 Un! (Toplam un: '+S.invUN+')');
+      let wmLv=S.buildingLevel.degirmen||1;
+      let wmCost=Math.max(1,3-Math.floor(wmLv/4));
+      let wmBonus=Math.random()<((wmLv-1)*0.1)?1:0;
+      if(bugday<wmCost){toast('Değirmen için en az '+wmCost+' buğday gerekli! (Mevcut: '+bugday+')');return}
+      S.inv.BUGDAY-=wmCost;S.invUN=(S.invUN||0)+1+wmBonus;
+      toast(wmCost+' Buğday → '+(1+wmBonus)+' Un! (Toplam un: '+S.invUN+')');
       checkTutorialAction('grind');advanceTime();draw();return
     }
   }
@@ -2672,9 +2770,11 @@ CV.addEventListener('click',e=>{
     let fDx=mx-firinX,fDy=my-firinY;
     if(S.built.fırın&&Math.abs(fDx)<firinS*0.6&&Math.abs(fDy)<firinS*0.6){
       let un=S.invUN||0;
+      let fLv=S.buildingLevel.fırın||1;
+      let fBonus=Math.random()<((fLv-1)*0.1)?1:0;
       if(un<1){toast('Fırın için en az 1 un gerekli! (Mevcut: '+un+')');return}
-      S.invUN-=1;S.invEKMEK=(S.invEKMEK||0)+1;
-      toast('1 Un → 1 Ekmek pişirildi! (Toplam ekmek: '+S.invEKMEK+')');
+      S.invUN-=1;S.invEKMEK=(S.invEKMEK||0)+1+fBonus;
+      toast('1 Un → '+(1+fBonus)+' Ekmek pişirildi! (Toplam ekmek: '+S.invEKMEK+')');
       checkTutorialAction('bake');advanceTime();draw();return
     }
   }
@@ -2808,7 +2908,7 @@ function renderM(id){
     l.appendChild(agrid)}
   if(id==='animal'){let l=document.getElementById('animalList');l.innerHTML='';
     let agrid=document.createElement('div');agrid.className='animal-grid';
-    Object.entries(ANIM).forEach(([k,a])=>{let cnt=k==='TAVUK'?S.ch:k==='INEK'?S.co:S.sh;let cap=k==='TAVUK'?5+S.st.KUMES:3+S.st.AHIR;
+    Object.entries(ANIM).forEach(([k,a])=>{let cnt=k==='TAVUK'?S.ch:k==='INEK'?S.co:S.sh;let cap=k==='TAVUK'?5+(S.buildingLevel.kümes||1):3+(S.buildingLevel.ahır||1);
     let d=document.createElement('div');d.className='animal-card';
     let cv=document.createElement('canvas');cv.width=60;cv.height=50;
     drawMiniAnimal(cv.getContext('2d'),k,60);
@@ -2843,13 +2943,13 @@ function renderM(id){
 function buyA(k){let a=ANIM[k];if(S.money<a.price){toast('Yeterli paran yok!');return}
   if(k==='TAVUK'){
     if(!S.built.kümes){toast('Önce kümes inşa et!');return}
-    let cap=5+S.st.KUMES;if(S.ch>=cap){toast('Kümes dolu!');return}S.ch++}
+    let cap=5+(S.buildingLevel.kümes||1);if(S.ch>=cap){toast('Kümes dolu!');return}S.ch++}
   else if(k==='INEK'){
     if(!S.built.ahır){toast('Önce ahır inşa et!');return}
-    let cap=3+S.st.AHIR;if(S.co>=cap){toast('Ahır dolu!');return}S.co++}
+    let cap=3+(S.buildingLevel.ahır||1);if(S.co>=cap){toast('Ahır dolu!');return}S.co++}
   else if(k==='KOYUN'){
     if(!S.built.ahır){toast('Önce ahır inşa et!');return}
-    let cap=3+S.st.AHIR;if(S.sh>=cap){toast('Ahır dolu!');return}S.sh++}
+    let cap=3+(S.buildingLevel.ahır||1);if(S.sh>=cap){toast('Ahır dolu!');return}S.sh++}
   S.money-=a.price;toast(`${a.name} alındı!`);updateHUD()}
 function buySeed(k,cr){if(S.money<cr.buy){toast('Yeterli paran yok!');return}S.money-=cr.buy;
   S.inv[k]=(S.inv[k]||0)+1;toast(`${cr.name} tohumu alındı! (+1 kg)`);updateHUD();renderM('shop')}
@@ -2870,6 +2970,16 @@ function buyBuilding(k,price,name){
   if(k==='kuyu')checkTutorialAction('build_kuyu');
   if(k==='degirmen')checkTutorialAction('build_degirmen');
   if(k==='fırın')checkTutorialAction('build_fırın');
+}
+function upgradeBuilding(k){
+  if(!S.built[k]){toast('Önce inşa et!');return}
+  let lv=S.buildingLevel[k]||1;
+  if(lv>=BUILDING_MAX_LEVEL){toast('Maks seviyeye ulaşıldı!');return}
+  let cost=getUpgradeCost(k);
+  if(S.money<cost){toast('Yeterli paran yok! ('+cost.toLocaleString()+' TL)');return}
+  S.money-=cost;S.buildingLevel[k]=lv+1;
+  toast(UPGRADE_DESC[k].name+' seviye '+(lv+1)+' oldu!');
+  updateHUD();
 }
 
 function updateHUD(){
@@ -3149,6 +3259,7 @@ function load(){let d=localStorage.getItem('farm5');
     if(S.built.grid===undefined)S.built.grid=false;
     if(S.built.fırın===undefined)S.built.fırın=false;
     if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null,fırın:null};
+    if(!S.buildingLevel)S.buildingLevel={ahır:1,kümes:1,kuyu:1,degirmen:1,fırın:1};
     if(!S.tutorial)S.tutorial={active:false,step:0,type:'bread',completed:false};
     if(S.invUN===undefined)S.invUN=0;
     if(S.invEKMEK===undefined)S.invEKMEK=0;
