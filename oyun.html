@@ -86,6 +86,21 @@ canvas{display:block;cursor:pointer}
 .animal-card .ac-name{font-size:10px;color:#ffe082;margin-top:3px;font-weight:bold}
 .animal-card .ac-info{font-size:8px;color:#bbb;text-align:center}
 .animal-card .ac-price{font-size:9px;color:#8bc34a;font-weight:bold;margin-top:3px}
+.tutorial-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center}
+.tutorial-box{background:rgba(30,18,8,0.92);border:2px solid #8bc34a;border-radius:12px;padding:20px 24px;max-width:420px;width:90vw;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.6)}
+.tutorial-title{color:#8bc34a;font-size:18px;font-weight:bold;margin-bottom:16px}
+.tutorial-chain{display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.tutorial-chain .tc-item{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid #5d4037;background:rgba(0,0,0,0.3);transition:all .3s}
+.tutorial-chain .tc-item.active{border-color:#ff9800;background:rgba(255,152,0,0.2);box-shadow:0 0 8px rgba(255,152,0,0.4)}
+.tutorial-chain .tc-item.done{border-color:#4caf50;background:rgba(76,175,80,0.2)}
+.tutorial-chain .tc-arrow{color:#666;font-size:16px}
+.tutorial-btn{background:linear-gradient(180deg,#5a8c3a,#3d6b24);color:#fff;border:2px solid #8bc34a;padding:10px 32px;border-radius:8px;font-size:15px;font-weight:bold;cursor:pointer;margin-top:8px}
+.tutorial-btn:hover{transform:scale(1.03)}
+.tutorial-close{position:absolute;top:8px;right:12px;background:none;border:none;color:#999;font-size:18px;cursor:pointer}
+.tutorial-step-popup{position:fixed;right:16px;top:50%;transform:translateY(-50%);background:rgba(30,18,8,0.88);border:2px solid #ff9800;border-radius:10px;padding:14px 18px;max-width:220px;z-index:210;box-shadow:0 4px 16px rgba(0,0,0,0.5)}
+.tutorial-step-num{color:#ff9800;font-size:12px;font-weight:bold;margin-bottom:6px}
+.tutorial-step-text{color:#ffe082;font-size:13px;line-height:1.4}
+.tutorial-step-text .step-action{display:inline-block;margin-top:8px;padding:6px 14px;background:#2e7d32;color:#fff;border-radius:6px;font-size:11px;font-weight:bold}
 .login-bg{position:fixed;inset:0;background:linear-gradient(135deg,#1a0f07,#2d1a0a);z-index:500;display:flex;align-items:center;justify-content:center;flex-direction:column}
 .login-box{background:linear-gradient(135deg,#4a3520,#3a2815);border:3px solid #c8956c;border-radius:12px;padding:24px;width:320px;max-width:90vw;box-shadow:0 8px 32px rgba(0,0,0,0.6)}
 .login-box h2{color:#ffe082;text-align:center;margin-bottom:16px;font-size:20px;text-shadow:1px 1px 2px rgba(0,0,0,0.5)}
@@ -209,6 +224,7 @@ canvas{display:block;cursor:pointer}
     <button class="tb tr" onclick="activateTraktör()"><span class="tb-icon">&#128668;</span></button>
     <button class="tb tf" onclick="openTesisler()"><span class="tb-icon">&#127981;</span></button>
     <button class="tb" onclick="toggleMissions()" style="background:#6d4c41"><span class="tb-icon">&#128203;</span></button>
+    <button class="tb tut" onclick="openTutorial()" style="background:#2e7d32"><span class="tb-icon">&#128218;</span></button>
 </div>
 <div class="info-panel" id="infoPanel">Sebze ekimi yaparak başla!</div>
 <div class="modal-bg" id="mShop"><div class="modal"><h2>Mağaza</h2><div id="shopList"></div><div class="mbtns"><button class="bc" onclick="closeM('shop')">Kapat</button></div></div></div>
@@ -219,6 +235,18 @@ canvas{display:block;cursor:pointer}
 <div class="modal-bg" id="mWhole"><div class="modal"><h2>Toptancı</h2><div class="modal-info" id="wholeI"></div><div class="mbtns"><button class="bd" onclick="dismissW()">Reddet</button><button class="bs" id="btnSell" onclick="sellW()">Sat</button></div></div></div>
 <div class="modal-bg" id="mTesisler"><div class="modal"><h2>Tesisler</h2><div class="tesis-grid" id="tesisGrid"></div><div class="mbtns"><button class="bc" onclick="closeM('tesisler')">Kapat</button></div></div></div>
 <div class="toast" id="toast"></div>
+<div class="tutorial-overlay" id="tutorialOverlay" style="display:none">
+  <div class="tutorial-box">
+    <div class="tutorial-title" id="tutorialTitle">Birlikte Ekmek Üretelim Mi?</div>
+    <div class="tutorial-chain" id="tutorialChain"></div>
+    <button class="tutorial-btn" id="tutorialBtn" onclick="tutorialNext()">Devam</button>
+    <button class="tutorial-close" onclick="closeTutorial()">Kapat</button>
+  </div>
+  <div class="tutorial-step-popup" id="tutorialStep" style="display:none">
+    <div class="tutorial-step-num" id="stepNum">Adım 1</div>
+    <div class="tutorial-step-text" id="stepText"></div>
+  </div>
+</div>
 
 <script>
 function getUsers(){try{return JSON.parse(localStorage.getItem('farm_users')||'{}')}catch(e){return{}}}
@@ -315,9 +343,10 @@ let S={money:10000,day:1,sea:0,yr:1,h:6,m:0,
   weather:'güneşli',weatherTimer:0,windSpeed:5,
   irrigating:false,irrigStartH:0,irrigStartM:0,irrigEndH:0,irrigEndM:0,
   irrigDrops:[],
-  built:{degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false},
+  built:{degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false,fırın:false},
   buildingPos:null,dragging:null,dragOffset:{x:0,y:0},
-  longPressTimer:null,buildingMenu:null,animateBuilding:null
+  longPressTimer:null,buildingMenu:null,animateBuilding:null,
+  tutorial:{active:false,step:0,type:'bread',completed:false},invUN:0,invEKMEK:0
 };
 if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null};
 Object.keys(CROPS).forEach(k=>{S.inv[k]=0;S.dailyHarvest[k]=0});S.inv.YUMURTA=0;S.inv.SUT=0;S.inv.YUN=0;S.dailyAnimal.YUMURTA=0;S.dailyAnimal.SUT=0;S.dailyAnimal.YUN=0;
@@ -330,6 +359,7 @@ let GX,GY,CL,sceneTop;
 let barnX=0,barnY=0,barnS=0,kümesX=0,kümesY=0,kümesS=0;
 let wellX=0,wellY=0,wellS=0;
 let wmX=0,wmY=0,wmS=0;
+let firinX=0,firinY=0,firinS=0;
 let sutCount=0,yumurtaCount=0;
 let rainDrops=[],snowFlakes=[];
 const WEATHERS=['güneşli','bulutlu','yağmurlu','karlı'];
@@ -1290,6 +1320,19 @@ function drawTractorShed(x,y,s){
   X.restore();
 }
 
+function drawFırın(x,y,s){
+  X.save();X.translate(x,y);
+  X.fillStyle='rgba(0,0,0,0.12)';X.beginPath();X.ellipse(0,s*0.55,s*0.4,s*0.07,0,0,Math.PI*2);X.fill();
+  X.fillStyle='#d84315';X.fillRect(-s*0.35,s*0.05,s*0.7,s*0.5);
+  X.fillStyle='#bf360c';X.beginPath();X.moveTo(-s*0.4,s*0.05);X.lineTo(0,-s*0.25);X.lineTo(s*0.4,s*0.05);X.closePath();X.fill();
+  X.fillStyle='#3e2723';X.fillRect(-s*0.15,s*0.15,s*0.3,s*0.4);
+  X.fillStyle='#ff6f00';X.beginPath();X.arc(0,s*0.35,s*0.08,0,Math.PI*2);X.fill();
+  X.fillStyle='#ffab00';X.beginPath();X.arc(0,s*0.35,s*0.04,0,Math.PI*2);X.fill();
+  X.fillStyle='#5d4037';X.fillRect(-s*0.06,-s*0.15,s*0.12,s*0.2);
+  X.fillStyle='#424242';X.fillRect(s*0.1,s*0.0,s*0.12,s*0.08);
+  X.restore();
+}
+
 function drawPlaceholder(x,y,s,label){
   X.save();X.translate(x,y);
   X.strokeStyle='rgba(200,149,108,0.5)';X.lineWidth=2;X.setLineDash([6,4]);
@@ -1525,6 +1568,107 @@ function drawOrganicPath(points,width){
   X.closePath();X.fill();
 }
 
+const TUTORIAL_STEPS={
+  bread:[
+    {title:'Birlikte Ekmek Üretelim Mi?',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Buğdaydan ekmeğe uzanan yolculuğa hazır mısın?',action:null,speak:'Birlikte ekmek üretelim mi?'},
+    {title:'Adım 1: Tarlayı Sür',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Önce traktörle tarlayı sürmen gerekiyor.',action:'plow',speak:'Önce traktörle tarlayı sür.'},
+    {title:'Adım 2: Buğday Ek',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Şimdi tarlaya buğday tohumu ek.',action:'plant_bugday',speak:'Şimdi tarlaya buğday ek.'},
+    {title:'Adım 3: Sulama Yap',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Buğdayın büyümesi için su ver.',action:'water',speak:'Buğdayın büyümesi için sulama yap.'},
+    {title:'Adım 4: Hasat Et',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Buğday büyüdü! Hasat et.',action:'harvest_bugday',speak:'Buğday büyüdü! Hasat et.'},
+    {title:'Adım 5: Değirmende Öğüt',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Buğdayı değirmene götür, un olsun.',action:'grind',speak:'Buğdayı değirmende öğüt, un olsun.'},
+    {title:'Adım 6: Fırında Pişir',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Unu fırına koy, ekmek pişsin!',action:'bake',speak:'Unu fırında pişir, ekmek olsun!'},
+    {title:'Tebrikler! 🎉',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Ekmeği başardın! Buğdaydan ekmeğe tüm yolu gördün.',action:null,speak:'Tebrikler! Ekmeği başarıyla ürettin!'}
+  ]
+};
+let tutorialStepDone=false;
+
+function speakTR(text){
+  if(!window.speechSynthesis)return;
+  speechSynthesis.cancel();
+  let u=new SpeechSynthesisUtterance(text);
+  u.lang='tr-TR';u.rate=0.9;u.pitch=1.1;
+  speechSynthesis.speak(u);
+}
+
+function openTutorial(){
+  if(!S.tutorial)S.tutorial={active:false,step:0,type:'bread',completed:false};
+  S.tutorial.active=true;S.tutorial.step=0;S.tutorial.type='bread';
+  tutorialStepDone=false;
+  renderTutorial();
+  speakTR(TUTORIAL_STEPS.bread[0].speak);
+}
+
+function closeTutorial(){
+  S.tutorial.active=false;
+  document.getElementById('tutorialOverlay').style.display='none';
+  document.getElementById('tutorialStep').style.display='none';
+  speechSynthesis.cancel();
+}
+
+function renderTutorial(){
+  let t=TUTORIAL_STEPS.bread[S.tutorial.step];
+  if(!t)return;
+  document.getElementById('tutorialOverlay').style.display='flex';
+  document.getElementById('tutorialTitle').textContent=t.title;
+  let chainEl=document.getElementById('tutorialChain');
+  chainEl.innerHTML='';
+  t.chain.forEach((icon,i)=>{
+    if(i>0){let arr=document.createElement('span');arr.className='tutorial-chain';arr.textContent='→';chainEl.appendChild(arr)}
+    let item=document.createElement('div');
+    item.className='tc-item';
+    if(i<S.tutorial.step)item.classList.add('done');
+    else if(i===S.tutorial.step)item.classList.add('active');
+    item.textContent=icon;
+    chainEl.appendChild(item);
+  });
+  let btn=document.getElementById('tutorialBtn');
+  if(S.tutorial.step===0){btn.textContent='Başla!';btn.style.display='inline-block'}
+  else if(S.tutorial.step>=TUTORIAL_STEPS.bread.length-1){btn.style.display='none'}
+  else if(tutorialStepDone){btn.textContent='Sonraki Adım';btn.style.display='inline-block'}
+  else{btn.style.display='none'}
+  let stepEl=document.getElementById('tutorialStep');
+  let stepNum=document.getElementById('stepNum');
+  let stepText=document.getElementById('stepText');
+  if(S.tutorial.step>0&&S.tutorial.step<TUTORIAL_STEPS.bread.length-1){
+    stepEl.style.display='block';
+    stepNum.textContent='Adım '+S.tutorial.step+'/6';
+    stepText.innerHTML=t.desc;
+    if(t.action){
+      let actLabel='';
+      if(t.action==='plow')actLabel='🚜 Traktörü aktifle';
+      else if(t.action==='plant_bugday')actLabel='🌱 Tarlaya tıkla, buğday ek';
+      else if(t.action==='water')actLabel='💧 Kaynaktan sulama başlat';
+      else if(t.action==='harvest_bugday')actLabel='🌾 Büyüyen buğdaya tıkla, hasat et';
+      else if(t.action==='grind')actLabel='⚙ Değirmene tıkla, un üret';
+      else if(t.action==='bake')actLabel='🔥 Fırına tıkla, ekmek pişir';
+      if(actLabel)stepText.innerHTML+='<br><span class="step-action">'+actLabel+'</span>';
+    }
+  }else{stepEl.style.display='none'}
+}
+
+function tutorialNext(){
+  if(S.tutorial.step===0){
+    S.tutorial.step=1;tutorialStepDone=false;
+    renderTutorial();speakTR(TUTORIAL_STEPS.bread[1].speak);
+  }else if(S.tutorial.step<TUTORIAL_STEPS.bread.length-1){
+    S.tutorial.step++;tutorialStepDone=false;
+    renderTutorial();
+    let st=TUTORIAL_STEPS.bread[S.tutorial.step];
+    if(st)speakTR(st.speak);
+  }
+}
+
+function checkTutorialAction(action){
+  if(!S.tutorial||!S.tutorial.active)return;
+  let current=TUTORIAL_STEPS.bread[S.tutorial.step];
+  if(!current||current.action!==action)return;
+  tutorialStepDone=true;
+  toast('✅ Tamamlandı! Devam et...');
+  let btn=document.getElementById('tutorialBtn');
+  btn.textContent='Sonraki Adım';btn.style.display='inline-block';
+  speakTR('Tamamlandı!');
+}
+
 function draw(){
   X.clearRect(0,0,W,H);
   calcLayout();
@@ -1690,6 +1834,21 @@ function draw(){
     drawWindmill(wmX,wmY,wmS);
   }else{
     drawPlaceholder(wmX,wmY,wmS*1.2,'DEĞİRMEN');
+  }
+
+  // ====== FIRIN ======
+  if(!S.buildingPos||!S.buildingPos.fırın){
+    firinS=CL*(ISLANDSCAPE?2.0:1.6);
+    firinX=gridRight+firinS*1.2;
+    firinY=sceneTop+firinS*1.8;
+    if(firinX+firinS>W-firinS){firinX=houseX+houseS*1.5;firinY=houseY+houseS*1.8}
+  }else{
+    firinX=S.buildingPos.fırın.x;firinY=S.buildingPos.fırın.y;firinS=CL*(ISLANDSCAPE?2.0:1.6);
+  }
+  if(S.built.fırın){
+    drawFırın(firinX,firinY,firinS);
+  }else{
+    drawPlaceholder(firinX,firinY,firinS*1.2,'FIRIN');
   }
 
   // ====== ALT SINIR - basit yesil serit ======
@@ -2066,15 +2225,16 @@ function renderMissions(){let l=document.getElementById('missionList');l.innerHT
     if(done&&!m.rewarded){S.money+=100;m.rewarded=true;toast('Görev tamamlandı! +100 TL')}l.appendChild(d)})}
 function openTesisler(){
   let grid=document.getElementById('tesisGrid');grid.innerHTML='';
-  let tesisFiyat={Ev:0,Ahır:2500,Kümes:1500,Değirmen:3000,Kuyu:2000,Tarla:100};
-  let tesisKey={Ev:'ev',Ahır:'ahır',Kümes:'kümes',Değirmen:'degirmen',Kuyu:'kuyu',Tarla:'grid'};
+  let tesisFiyat={Ev:0,Ahır:2500,Kümes:1500,Değirmen:3000,Kuyu:2000,Tarla:100,Fırın:2500};
+  let tesisKey={Ev:'ev',Ahır:'ahır',Kümes:'kümes',Değirmen:'degirmen',Kuyu:'kuyu',Tarla:'grid',Fırın:'fırın'};
   let tesisler=[
     {name:'Ev',fn:drawHouseToCanvas,bg:'#8d6e63',free:true},
     {name:'Tarla',fn:drawGridToCanvas,bg:'#6d4c41'},
     {name:'Ahır',fn:drawBarnToCanvas,bg:'#8B2500'},
     {name:'Kümes',fn:drawKümesToCanvas,bg:'#8B6914'},
     {name:'Değirmen',fn:drawWindmillToCanvas,bg:'#e8e0d0'},
-    {name:'Kuyu',fn:drawWellToCanvas,bg:'#29b6f6'}
+    {name:'Kuyu',fn:drawWellToCanvas,bg:'#29b6f6'},
+    {name:'Fırın',fn:drawFırınToCanvas,bg:'#d84315'}
   ];
   tesisler.forEach(t=>{
     let d=document.createElement('div');d.className='tesis-item';
@@ -2161,6 +2321,17 @@ function drawWellToCanvas(c,s){
   c.fillStyle='#c0392b';c.beginPath();c.moveTo(-24,-16);c.lineTo(0,-28);c.lineTo(24,-16);c.closePath();c.fill();
   c.strokeStyle='#a1887f';c.lineWidth=1;c.beginPath();c.moveTo(0,-16);c.lineTo(0,2);c.stroke();
   c.fillStyle='#78909c';c.fillRect(-3,0,6,5);
+  c.restore();
+}
+function drawFırınToCanvas(c,s){
+  c.save();c.translate(s/2,s/2+5);
+  c.fillStyle='#d84315';c.fillRect(-28,0,56,28);
+  c.fillStyle='#bf360c';c.beginPath();c.moveTo(-32,0);c.lineTo(0,-18);c.lineTo(32,0);c.closePath();c.fill();
+  c.fillStyle='#3e2723';c.fillRect(-12,8,24,20);
+  c.fillStyle='#ff6f00';c.beginPath();c.arc(0,22,6,0,Math.PI*2);c.fill();
+  c.fillStyle='#ffab00';c.beginPath();c.arc(0,22,3,0,Math.PI*2);c.fill();
+  c.fillStyle='#5d4037';c.fillRect(-6,-14,12,14);
+  c.fillStyle='#424242';c.fillRect(8,-8,10,6);
   c.restore();
 }
 function drawGridToCanvas(c,s){
@@ -2290,6 +2461,15 @@ function drawMiniProduct(c,type,s){
   }else if(type==='YUN'){
     c.fillStyle='#f5f5f5';c.beginPath();c.arc(0,0,s*0.2,0,Math.PI*2);c.fill();
     c.fillStyle='#e0e0e0';c.beginPath();c.arc(-s*0.05,0,s*0.12,0,Math.PI*2);c.fill();
+  }else if(type==='UN'){
+    c.fillStyle='#f5f0dc';c.beginPath();c.arc(0,0,s*0.18,0,Math.PI*2);c.fill();
+    c.fillStyle='#e8dcc8';c.beginPath();c.arc(0,s*0.02,s*0.12,0,Math.PI*2);c.fill();
+    c.fillStyle='#d4c8a8';c.fillRect(-s*0.05,-s*0.05,s*0.1,s*0.08);
+  }else if(type==='EKMEK'){
+    c.fillStyle='#c68f00';c.beginPath();c.ellipse(0,0,s*0.2,s*0.12,0,0,Math.PI*2);c.fill();
+    c.fillStyle='#d4a017';c.beginPath();c.ellipse(0,-s*0.03,s*0.18,s*0.08,0,0,Math.PI*2);c.fill();
+    c.fillStyle='#e8c040';c.beginPath();c.arc(-s*0.06,-s*0.04,s*0.03,0,Math.PI*2);c.fill();
+    c.beginPath();c.arc(s*0.06,-s*0.04,s*0.03,0,Math.PI*2);c.fill();
   }else{
     let cols=CROPS[type];
     if(cols){drawMiniCrop(c,type,s)}else{
@@ -2394,8 +2574,31 @@ CV.addEventListener('click',e=>{
     }
   }
 
+  // Değirmene tıklama - buğday öğüt
+  if(typeof wmX!=='undefined'){
+    let dDx=mx-wmX,dDy=my-wmY;
+    if(S.built.degirmen&&Math.abs(dDx)<wmS*0.6&&Math.abs(dDy)<wmS*0.6){
+      let bugday=S.inv.BUGDAY||0;
+      if(bugday<3){toast('Değirmen için en az 3 buğday gerekli! (Mevcut: '+bugday+')');return}
+      S.inv.BUGDAY-=3;S.invUN=(S.invUN||0)+1;
+      toast('3 Buğday → 1 Un! (Toplam un: '+S.invUN+')');
+      checkTutorialAction('grind');advanceTime();draw();return
+    }
+  }
+  // Fırına tıklama - un pişir
+  if(typeof firinX!=='undefined'){
+    let fDx=mx-firinX,fDy=my-firinY;
+    if(S.built.fırın&&Math.abs(fDx)<firinS*0.6&&Math.abs(fDy)<firinS*0.6){
+      let un=S.invUN||0;
+      if(un<1){toast('Fırın için en az 1 un gerekli! (Mevcut: '+un+')');return}
+      S.invUN-=1;S.invEKMEK=(S.invEKMEK||0)+1;
+      toast('1 Un → 1 Ekmek pişirildi! (Toplam ekmek: '+S.invEKMEK+')');
+      checkTutorialAction('bake');advanceTime();draw();return
+    }
+  }
+
   if(!S.built.grid){if(!S.buildingMenu)toast('Önce tarla inşa et! (Tesislerden)');return}
-  if(S.tractorActive&&r>=0&&r<ROWS&&c>=0&&c<COLS){plowArea(r,c);S.tractorActive=false;draw();return}
+  if(S.tractorActive&&r>=0&&r<ROWS&&c>=0&&c<COLS){plowArea(r,c);S.tractorActive=false;checkTutorialAction('plow');draw();return}
   if(r<0||r>=ROWS||c<0||c>=COLS){closeAllModals();lastPlantClick=-1;S.sel=-1;draw();return}
   S.sel=r*COLS+c;let p=getP(r,c);
   if(!p.crop){
@@ -2415,7 +2618,7 @@ function openPlantM(r,c){let l=document.getElementById('plantList');l.innerHTML=
     let harvestInfo='3\'te 1 gün';let winterNote=isWinter?' (Kışın ekilmez)':'';
     d.innerHTML=`<div class="inf"><div class="nm">${cr.name}${winterNote}</div><div class="dt">Sebze | Max:${cr.mk}kg | Hasat: ${harvestInfo}</div></div><div class="pr">${cr.buy} TL</div>`;
     if(!ok){d.style.opacity='.3';d.style.cursor='not-allowed'}
-    else d.onclick=()=>{if(S.money<cr.buy){toast('Yeterli paran yok!');return}S.money-=cr.buy;let p=getP(r,c);p.crop=k;p.age=0;p.w=false;p.p=false;p.nextHarvest=480;S.plantCount++;advanceTime();closeM('plant');toast(`${cr.name} ekildi!`);draw()};
+    else d.onclick=()=>{if(S.money<cr.buy){toast('Yeterli paran yok!');return}S.money-=cr.buy;let p=getP(r,c);p.crop=k;p.age=0;p.w=false;p.p=false;p.nextHarvest=480;S.plantCount++;advanceTime();closeM('plant');toast(`${cr.name} ekildi!`);if(k==='BUGDAY')checkTutorialAction('plant_bugday');draw()};
     l.appendChild(d)});openM('plant')}
 
 function openPlotM(r,c){let p=getP(r,c),cr=CROPS[p.crop];if(!cr)return;
@@ -2438,7 +2641,7 @@ function harvestP(){let p=S.plots[S.sel];if(!p||!p.crop)return;
   let cap=500+S.st.DEPO*200,used=Object.values(S.inv).reduce((a,b)=>a+b,0);
   if(y>0&&(used+y)<=cap){S.inv[p.crop]=(S.inv[p.crop]||0)+y;S.dailyHarvest[p.crop]=(S.dailyHarvest[p.crop]||0)+y;
     p.age++;p.w=false;p.p=false;p.nextHarvest=480;advanceTime();
-    toast(`${cr.name} hasat edildi! +${y.toFixed(1)} kg`);closeM('plot');draw();checkMissions()}
+    toast(`${cr.name} hasat edildi! +${y.toFixed(1)} kg`);closeM('plot');if(p.crop==='BUGDAY')checkTutorialAction('harvest_bugday');draw();checkMissions()}
   else if(y>0){toast('Depo dolu!')}}
 function waterP(){let p=S.plots[S.sel];if(p&&!p.w){p.w=true;S.waterCount++;advanceTime();closeM('plot');toast('Sulama yapıldı!');draw();checkMissions()}}
 function pestP(){let p=S.plots[S.sel];if(p&&!p.p){p.p=true;advanceTime();closeM('plot');toast('İlaçlama yapildi!');draw()}}
@@ -2497,13 +2700,13 @@ function renderM(id){
     document.getElementById('storBar').innerHTML=`<div style="font-size:12px;color:#ccc">${used.toFixed(0)} / ${cap} kg</div><div class="sbar"><div class="sfill" style="width:${Math.min(100,used/cap*100)}%"></div></div>`;
     let l=document.getElementById('storList');l.innerHTML='';
     let grid=document.createElement('div');grid.className='catalog-grid';
-    [{k:'DOMATES',n:'Domates',u:'kg'},{k:'PATATES',n:'Patates',u:'kg'},{k:'SALATALIK',n:'Salatalık',u:'kg'},{k:'MARUL',n:'Marul',u:'kg'},{k:'BIBER',n:'Biber',u:'kg'},{k:'PATLICAN',n:'Patlıcan',u:'kg'},{k:'MISIR',n:'Mısır',u:'kg'},{k:'KABAK',n:'Kabak',u:'kg'},{k:'SOGAN',n:'Soğan',u:'kg'},{k:'BUGDAY',n:'Buğday',u:'kg'},{k:'YUMURTA',n:'Yumurta',u:'adet'},{k:'SUT',n:'Süt',u:'litre'},{k:'YUN',n:'Yün',u:'adet'}].forEach(it=>{
-      let amt=S.inv[it.k]||0;
+    [{k:'DOMATES',n:'Domates',u:'kg'},{k:'PATATES',n:'Patates',u:'kg'},{k:'SALATALIK',n:'Salatalık',u:'kg'},{k:'MARUL',n:'Marul',u:'kg'},{k:'BIBER',n:'Biber',u:'kg'},{k:'PATLICAN',n:'Patlıcan',u:'kg'},{k:'MISIR',n:'Mısır',u:'kg'},{k:'KABAK',n:'Kabak',u:'kg'},{k:'SOGAN',n:'Soğan',u:'kg'},{k:'BUGDAY',n:'Buğday',u:'kg'},{k:'YUMURTA',n:'Yumurta',u:'adet'},{k:'SUT',n:'Süt',u:'litre'},{k:'YUN',n:'Yün',u:'adet'},{k:'UN',n:'Un',u:'kg'},{k:'EKMEK',n:'Ekmek',u:'adet'}].forEach(it=>{
+      let amt=it.k==='UN'?(S.invUN||0):it.k==='EKMEK'?(S.invEKMEK||0):(S.inv[it.k]||0);
       let d=document.createElement('div');d.className='catalog-item';
       d.style.opacity=amt>0?1:0.3;
       let cv=document.createElement('canvas');cv.width=50;cv.height=50;
       let ctx=cv.getContext('2d');
-      if(['YUMURTA','SUT','YUN'].includes(it.k))drawMiniProduct(ctx,it.k,50);
+      if(['YUMURTA','SUT','YUN','UN','EKMEK'].includes(it.k))drawMiniProduct(ctx,it.k,50);
       else drawMiniCrop(ctx,it.k,50);
       d.appendChild(cv);
       let nm=document.createElement('div');nm.className='catalog-name';nm.textContent=it.n;d.appendChild(nm);
@@ -2556,8 +2759,8 @@ function updateHUD(){
 function toast(m){let t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 
 // ====== TASIMA SISTEMI ======
-const BUILDING_NAMES={ahır:'AHİR',kümes:'KÜMES',degirmen:'DEĞİRMEN',kuyu:'KUYU',grid:'TARLA'};
-const BUILDING_PRICES={ahır:2500,kümes:1500,degirmen:3000,kuyu:2000,grid:100};
+const BUILDING_NAMES={ahır:'AHİR',kümes:'KÜMES',degirmen:'DEĞİRMEN',kuyu:'KUYU',grid:'TARLA',fırın:'FIRIN'};
+const BUILDING_PRICES={ahır:2500,kümes:1500,degirmen:3000,kuyu:2000,grid:100,fırın:2500};
 
 function getBuildingAt(mx,my){
   let keys=Object.keys(BUILDING_NAMES);
@@ -2582,6 +2785,10 @@ function getBuildingAt(mx,my){
       if(!S.built.degirmen)continue;
       if(typeof wmS==='undefined')continue;
       if(Math.abs(mx-wmX)<wmS*0.7&&Math.abs(my-wmY)<wmS*0.7)return k;
+    }else if(k==='fırın'){
+      if(!S.built.fırın)continue;
+      if(typeof firinS==='undefined')continue;
+      if(Math.abs(mx-firinX)<firinS*0.7&&Math.abs(my-firinY)<firinS*0.7)return k;
     }
   }
   return null;
@@ -2810,9 +3017,13 @@ function load(){let d=localStorage.getItem('farm5');
   if(d){let l=JSON.parse(d);if(l._v!==SAVE_VERSION){localStorage.removeItem('farm5');return}
     Object.assign(S,l);if(!S.dailyHarvest)S.dailyHarvest={};if(!S.dailyAnimal)S.dailyAnimal={};
     if(S.dailySold===undefined)S.dailySold=0;
-    if(!S.built)S.built={degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false};
+    if(!S.built)S.built={degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false,fırın:false};
     if(S.built.grid===undefined)S.built.grid=false;
-    if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null};
+    if(S.built.fırın===undefined)S.built.fırın=false;
+    if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null,fırın:null};
+    if(!S.tutorial)S.tutorial={active:false,step:0,type:'bread',completed:false};
+    if(S.invUN===undefined)S.invUN=0;
+    if(S.invEKMEK===undefined)S.invEKMEK=0;
     S.dragging=null;S.buildingMenu=null;
     Object.keys(CROPS).forEach(k=>{if(S.dailyHarvest[k]===undefined)S.dailyHarvest[k]=0});
     if(S.dailyAnimal.YUMURTA===undefined)S.dailyAnimal.YUMURTA=0;
