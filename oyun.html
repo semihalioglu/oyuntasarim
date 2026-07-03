@@ -2688,12 +2688,12 @@ function openPlantM(r,c){let l=document.getElementById('plantList');l.innerHTML=
 
 function openPlotM(r,c){let p=getP(r,c),cr=CROPS[p.crop];if(!cr)return;
   let age=(p.age/365).toFixed(1),ib=p.w?Math.min(.2,S.st.SULAMA*.04):0,pb=p.p?Math.min(.2,S.st.ICLAMA*.04):0;
-  let g=Math.min(1,(p.age/365)/cr.my),y=(cr.mk*g*cr.sea[S.sea]*(1+ib)*(1+pb)).toFixed(2);
+  let g=Math.min(1,(p.age/365)/cr.my),y=cr.mk*g*cr.sea[S.sea]*(1+ib)*(1+pb);y=Math.max(0.1,y);let ys=y.toFixed(1);
   let harvestText='';let canHarvest=p.nextHarvest<=0;
   if(!canHarvest){let hrs=Math.floor(p.nextHarvest/60);let mins=p.nextHarvest%60;harvestText=`<div>Siradaki hasat: <b>${hrs}sa ${mins}dk</b></div>`}
   else{harvestText=`<div style="color:#8bc34a;font-weight:bold">Hasat hazir!</div>`}
   document.getElementById('plotT').textContent=cr.name;
-  document.getElementById('plotI').innerHTML=`<div>Yas: <b>${age} yil</b></div><div>Tahmini: <b>${y} kg</b></div>${harvestText}<div>Sulama: <b>${p.w?'Evet':'Yok'}</b></div><div>İlaçlama: <b>${p.p?'Evet':'Yok'}</b></div>`;
+  document.getElementById('plotI').innerHTML=`<div>Yas: <b>${age} yil</b></div><div>Tahmini: <b>${ys} kg</b></div>${harvestText}<div>Sulama: <b>${p.w?'Evet':'Yok'}</b></div><div>İlaçlama: <b>${p.p?'Evet':'Yok'}</b></div>`;
   let bH=document.getElementById('bH');bH.disabled=!canHarvest;bH.style.opacity=canHarvest?1:.4;
   document.getElementById('bW').disabled=p.w;document.getElementById('bW').style.opacity=p.w?.4:1;
   document.getElementById('bP').disabled=p.p;document.getElementById('bP').style.opacity=p.p?.4:1;openM('plot')}
@@ -2702,10 +2702,11 @@ function harvestP(){let p=getP(selR,selC);if(!p||!p.crop)return;
   if(p.nextHarvest>0){toast('Hasat için bekleyin!');return}let cr=CROPS[p.crop];if(!cr)return;
   let ib=p.w?Math.min(.2,S.st.SULAMA*.04):0,pb=p.p?Math.min(.2,S.st.ICLAMA*.04):0;
   let g=Math.min(1,(p.age/365)/cr.my);let y=cr.mk*g*cr.sea[S.sea];
-  y/=3;if(p.w)y*=(1+ib);if(p.p)y*=(1+pb);
+  if(p.w)y*=(1+ib);if(p.p)y*=(1+pb);
+  y=Math.max(0.1,y);
   let cap=500+S.st.DEPO*200,used=Object.values(S.inv).reduce((a,b)=>a+b,0);
   if(y>0&&(used+y)<=cap){S.inv[p.crop]=(S.inv[p.crop]||0)+y;S.dailyHarvest[p.crop]=(S.dailyHarvest[p.crop]||0)+y;
-    p.age++;p.w=false;p.p=false;p.nextHarvest=p.crop==='BUGDAY'?120:480;advanceTime();
+    p.age+=5;p.w=false;p.p=false;p.nextHarvest=p.crop==='BUGDAY'?120:480;advanceTime();
     toast(`${cr.name} hasat edildi! +${y.toFixed(1)} kg`);closeM('plot');if(p.crop==='BUGDAY')checkTutorialAction('harvest_bugday');draw();checkMissions()}
   else if(y>0){toast('Depo dolu!')}}
 function waterP(){let p=getP(selR,selC);if(p&&!p.w){p.w=true;S.waterCount++;advanceTime();closeM('plot');toast('Sulama yapıldı!');draw();checkMissions()}}
