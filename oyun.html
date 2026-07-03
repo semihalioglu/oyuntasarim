@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
-<title>Ciftlik Simulasyonu</title>
+<title>Çiftlik Simülasyonu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Segoe UI',sans-serif;background:#2d5a1e;overflow:hidden;height:100vh;user-select:none}
+body{font-family:"Nunito","Segoe UI",Arial,sans-serif;background:#2d5a1e;overflow:hidden;height:100vh;user-select:none}
 canvas{display:block;cursor:pointer}
 .hud{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;padding:4px 14px;background:linear-gradient(180deg,rgba(60,40,20,0.95),rgba(40,25,10,0.95));border-bottom:3px solid #c8956c;z-index:10;height:38px;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,0.4);font-family:'Courier New',monospace}
 .hud-clock{font-size:18px;font-weight:bold;color:#ffe082}
@@ -163,21 +165,21 @@ canvas{display:block;cursor:pointer}
   <div class="login-box">
     <div class="login-logo">🌾🐄</div>
     <div class="login-tabs">
-      <div class="login-tab active" onclick="showLoginTab('login')">Giris Yap</div>
-      <div class="login-tab" onclick="showLoginTab('register')">Kayit Ol</div>
+      <div class="login-tab active" onclick="showLoginTab('login')">Giriş Yap</div>
+      <div class="login-tab" onclick="showLoginTab('register')">Kayıt Ol</div>
     </div>
     <div id="loginForm">
-      <div class="field"><label>Kullanici Adi</label><input type="text" id="loginUser" placeholder="Kullanici adi"></div>
-      <div class="field"><label>Sifre</label><input type="password" id="loginPass" placeholder="Sifre"></div>
+      <div class="field"><label>Kullanıcı Adı</label><input type="text" id="loginUser" placeholder="Kullanıcı adı"></div>
+      <div class="field"><label>Şifre</label><input type="password" id="loginPass" placeholder="Şifre"></div>
       <div class="login-error" id="loginErr"></div>
-      <button class="login-btn primary" onclick="doLogin()">Giris Yap</button>
+      <button class="login-btn primary" onclick="doLogin()">Giriş Yap</button>
     </div>
     <div id="registerForm" style="display:none">
-      <div class="field"><label>Kullanici Adi</label><input type="text" id="regUser" placeholder="Kullanici adi (min 3 karakter)"></div>
-      <div class="field"><label>Sifre</label><input type="password" id="regPass" placeholder="Sifre (min 4 karakter)"></div>
-      <div class="field"><label>Sifre Tekrar</label><input type="password" id="regPass2" placeholder="Sifre tekrar"></div>
+      <div class="field"><label>Kullanıcı Adı</label><input type="text" id="regUser" placeholder="Kullanıcı adı (min 3 karakter)"></div>
+      <div class="field"><label>Şifre</label><input type="password" id="regPass" placeholder="Şifre (min 4 karakter)"></div>
+      <div class="field"><label>Şifre Tekrar</label><input type="password" id="regPass2" placeholder="Şifre tekrar"></div>
       <div class="login-error" id="regErr"></div>
-      <button class="login-btn primary" onclick="doRegister()">Kayit Ol</button>
+      <button class="login-btn primary" onclick="doRegister()">Kayıt Ol</button>
     </div>
     <button class="login-btn secondary" onclick="doGuestLogin()" style="width:100%;margin-top:12px">🎭 Misafir Girişi</button>
   </div>
@@ -185,35 +187,35 @@ canvas{display:block;cursor:pointer}
 <canvas id="c"></canvas>
 <div class="hud">
     <div class="hud-clock" id="clock">06:00</div>
-    <div class="hud-info">Gun <b id="hDay">1</b></div>
-    <div class="hud-info" id="hSeason">Ilkbahar</div>
-    <div class="hud-info">Yil <b id="hYear">1</b></div>
-    <div class="hud-whole" id="hWhole">Toptanci: 12:30</div>
-    <div class="hud-info" id="hWeather" style="font-size:13px">Gunesli</div>
-    <div class="hud-info" id="hWind" style="font-size:12px">Ruzgar: 5 km/h</div>
+    <div class="hud-info">Gün <b id="hDay">1</b></div>
+    <div class="hud-info" id="hSeason">İlkbahar</div>
+    <div class="hud-info">Yıl <b id="hYear">1</b></div>
+    <div class="hud-whole" id="hWhole">Toptancı: 12:30</div>
+    <div class="hud-info" id="hWeather" style="font-size:13px">Güneşli</div>
+    <div class="hud-info" id="hWind" style="font-size:12px">Rüzgar: 5 km/h</div>
     <button class="hud-btn" onclick="advanceTime()">+10 DK</button>
     <div class="hud-money" id="hMoney">5.000 TL</div>
 </div>
 <div class="mission-box" id="missionBox">
     <div class="mission-header">
-        <h4>Gunluk Gorev</h4>
+        <h4>Günlük Görev</h4>
     </div>
     <div class="mission-body" id="missionBody"><div id="missionList"></div></div>
 </div>
 <div class="toolbar">
     <button class="tb s" onclick="openM('shop')"><span class="tb-icon">&#127793;</span></button>
     <button class="tb d" onclick="openM('storage')"><span class="tb-icon">&#128230;</span></button>
-    <button class="tb tr" onclick="activateTraktor()"><span class="tb-icon">&#128668;</span></button>
+    <button class="tb tr" onclick="activateTraktör()"><span class="tb-icon">&#128668;</span></button>
     <button class="tb tf" onclick="openTesisler()"><span class="tb-icon">&#127981;</span></button>
     <button class="tb" onclick="toggleMissions()" style="background:#6d4c41"><span class="tb-icon">&#128203;</span></button>
 </div>
-<div class="info-panel" id="infoPanel">Sebze ekimi yaparak basla!</div>
-<div class="modal-bg" id="mShop"><div class="modal"><h2>Magaza</h2><div id="shopList"></div><div class="mbtns"><button class="bc" onclick="closeM('shop')">Kapat</button></div></div></div>
+<div class="info-panel" id="infoPanel">Sebze ekimi yaparak başla!</div>
+<div class="modal-bg" id="mShop"><div class="modal"><h2>Mağaza</h2><div id="shopList"></div><div class="mbtns"><button class="bc" onclick="closeM('shop')">Kapat</button></div></div></div>
 <div class="modal-bg" id="mAnimal"><div class="modal"><h2>Hayvanlar</h2><div id="animalList"></div><div class="mbtns"><button class="bc" onclick="closeM('animal')">Kapat</button></div></div></div>
-<div class="modal-bg" id="mStorage"><div class="modal"><h2>Urun Deposu</h2><div id="storBar"></div><div id="storList"></div><div class="mbtns"><button class="bc" onclick="closeM('storage')">Kapat</button></div></div></div>
-<div class="modal-bg" id="mPlant"><div class="modal"><h2>Ne Ekeceksin?</h2><div id="plantList"></div><div class="mbtns"><button class="bc" onclick="closeM('plant')">Iptal</button></div></div></div>
-<div class="modal-bg" id="mPlot"><div class="modal"><h2 id="plotT">Tarla</h2><div class="modal-info" id="plotI"></div><div class="mbtns"><button class="bs" id="bH" onclick="harvestP()">Hasat Et</button><button class="bw" id="bW" onclick="waterP()">Sulama</button><button class="bp" id="bP" onclick="pestP()">Ilacla</button></div><div class="mbtns" style="margin-top:2px"><button class="br" id="bR" onclick="removeC()">Sok 50TL</button><button class="bc" onclick="closeM('plot')">Kapat</button></div></div></div>
-<div class="modal-bg" id="mWhole"><div class="modal"><h2>Toptanci</h2><div class="modal-info" id="wholeI"></div><div class="mbtns"><button class="bd" onclick="dismissW()">Reddet</button><button class="bs" id="btnSell" onclick="sellW()">Sat</button></div></div></div>
+<div class="modal-bg" id="mStorage"><div class="modal"><h2>Ürün Deposu</h2><div id="storBar"></div><div id="storList"></div><div class="mbtns"><button class="bc" onclick="closeM('storage')">Kapat</button></div></div></div>
+<div class="modal-bg" id="mPlant"><div class="modal"><h2>Ne Ekeceksin?</h2><div id="plantList"></div><div class="mbtns"><button class="bc" onclick="closeM('plant')">İptal</button></div></div></div>
+<div class="modal-bg" id="mPlot"><div class="modal"><h2 id="plotT">Tarla</h2><div class="modal-info" id="plotI"></div><div class="mbtns"><button class="bs" id="bH" onclick="harvestP()">Hasat Et</button><button class="bw" id="bW" onclick="waterP()">Sulama</button><button class="bp" id="bP" onclick="pestP()">İlaçla</button></div><div class="mbtns" style="margin-top:2px"><button class="br" id="bR" onclick="removeC()">Sök 50TL</button><button class="bc" onclick="closeM('plot')">Kapat</button></div></div></div>
+<div class="modal-bg" id="mWhole"><div class="modal"><h2>Toptancı</h2><div class="modal-info" id="wholeI"></div><div class="mbtns"><button class="bd" onclick="dismissW()">Reddet</button><button class="bs" id="btnSell" onclick="sellW()">Sat</button></div></div></div>
 <div class="modal-bg" id="mTesisler"><div class="modal"><h2>Tesisler</h2><div class="tesis-grid" id="tesisGrid"></div><div class="mbtns"><button class="bc" onclick="closeM('tesisler')">Kapat</button></div></div></div>
 <div class="toast" id="toast"></div>
 
@@ -232,10 +234,10 @@ function showErr(id,msg){let e=document.getElementById(id);e.textContent=msg;e.s
 function doLogin(){
   let u=document.getElementById('loginUser').value.trim();
   let p=document.getElementById('loginPass').value;
-  if(!u||!p){showErr('loginErr','Kullanici adi ve sifre gerekli');return}
+  if(!u||!p){showErr('loginErr','Kullanıcı adı ve sifre gerekli');return}
   let users=getUsers();
   if(!users[u]){showErr('loginErr','Boyle bir kullanici yok');return}
-  if(users[u]!==p){showErr('loginErr','Sifre hatali');return}
+  if(users[u]!==p){showErr('loginErr','Şifre hatalı');return}
   sessionStorage.setItem('farm_user',u);
   startGame();
 }
@@ -243,9 +245,9 @@ function doRegister(){
   let u=document.getElementById('regUser').value.trim();
   let p=document.getElementById('regPass').value;
   let p2=document.getElementById('regPass2').value;
-  if(!u||u.length<3){showErr('regErr','Kullanici adi en az 3 karakter');return}
-  if(!p||p.length<4){showErr('regErr','Sifre en az 4 karakter');return}
-  if(p!==p2){showErr('regErr','Sifreler eslesmiyor');return}
+  if(!u||u.length<3){showErr('regErr','Kullanıcı adı en az 3 karakter');return}
+  if(!p||p.length<4){showErr('regErr','Şifre en az 4 karakter');return}
+  if(p!==p2){showErr('regErr','Şifreler eşleşmiyor');return}
   let users=getUsers();
   if(users[u]){showErr('regErr','Bu kullanici adi zaten var');return}
   users[u]=p;saveUsers(users);
@@ -268,34 +270,34 @@ window.addEventListener('load',function(){
     document.getElementById('regPass2').addEventListener('keydown',function(e){if(e.key==='Enter')doRegister()});
   }
 });
-const CV=document.getElementById('c'),X=CV.getContext('2d');
+const CV=document.getElementById('c'),X=CV.getContext('2d');const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
 let W,H;
 const _origArc=X.arc.bind(X);
 X.arc=function(cx,cy,r){return _origArc(cx,cy,Math.max(0,r),...Array.prototype.slice.call(arguments,3))};
 const ROWS=5,COLS=10;
-const SEASONS=['Ilkbahar','Yaz','Sonbahar','Kis'];
-const FACTS=['Bir tavuk yilda ~250 yumurta verir.','Inekler gunde 8-10 lt sut verebilir.','Marulun %95\'i sudur.','Patates dunyanin en onemli gidasidir.','Salatalik yazin cok yetisir.','Tarlayi sulamak urunu %20 artirir.','Ilaclama bocekleri engeller.','Biber C vitamini acisindan zengindir.','Misir lif bakimindan faydalidir.','Kabak omega-3 icerir.','Sogan antibakteriyel ozellige sahiptir.','Patlican kalp sagligina iyi gelir.','Ruzgar degirmeni enerji uretir!','Sera kis bile ekim yapmaya olanak saglar.'];
+const SEASONS=['İlkbahar','Yaz','Sonbahar','Kış'];
+const FACTS=['Bir tavuk yılda ~250 yumurta verir.','İnekler günde 8-10 lt süt verebilir.','Marulun %95\'i sudur.','Patates dünyanın en önemli gıdasıdır.','Salatalık yazın çok yetiştirir.','Tarlayi sulamak ürünu %20 artırır.','İlaçlama bocekleri engeller.','Biber C vitamini açısından zengindir.','Mısır lif bakımından faydalıdır.','Kabak omega-3 içerir.','Soğan antibakteriyel özelliğe sahiptir.','Patlıcan kalp sağlığına iyi gelir.','Rüzgar değirmeni enerji üretir!','Sera kış bile ekim yapmaya olanak sağlar.'];
 const CROPS={
 DOMATES:{name:'Domates',my:1,mk:0.6,buy:8,sell:9,sea:[.3,1,.7,0],col:['#c62828','#e53935'],harvestInt:3},
 PATATES:{name:'Patates',my:1,mk:0.8,buy:6,sell:7,sea:[.5,.9,1,0],col:['#6d4c41','#8d6e63'],harvestInt:3},
-SALATALIK:{name:'Salatalik',my:1,mk:0.5,buy:10,sell:10,sea:[.4,1,.8,0],col:['#2e7d32','#43a047'],harvestInt:3},
+SALATALIK:{name:'Salatalık',my:1,mk:0.5,buy:10,sell:10,sea:[.4,1,.8,0],col:['#2e7d32','#43a047'],harvestInt:3},
 MARUL:{name:'Marul',my:0.5,mk:0.4,buy:12,sell:12,sea:[.7,1,.5,0],col:['#558b2f','#7cb342'],harvestInt:3},
 BIBER:{name:'Biber',my:1,mk:0.5,buy:9,sell:10,sea:[.3,1,.6,0],col:['#c62828','#ff5722'],harvestInt:3},
-PATLICAN:{name:'Patlican',my:1.2,mk:0.7,buy:11,sell:12,sea:[.2,1,.7,0],col:['#4a148c','#6a1b9a'],harvestInt:3},
-MISIR:{name:'Misir',my:1,mk:0.8,buy:7,sell:8,sea:[.4,1,.8,0],col:['#f9a825','#fdd835'],harvestInt:3},
+PATLICAN:{name:'Patlıcan',my:1.2,mk:0.7,buy:11,sell:12,sea:[.2,1,.7,0],col:['#4a148c','#6a1b9a'],harvestInt:3},
+MISIR:{name:'Mısır',my:1,mk:0.8,buy:7,sell:8,sea:[.4,1,.8,0],col:['#f9a825','#fdd835'],harvestInt:3},
 KABAK:{name:'Kabak',my:1,mk:0.6,buy:8,sell:9,sea:[.3,1,.7,0],col:['#e65100','#ff9800'],harvestInt:3},
-SOGAN:{name:'Sogan',my:0.8,mk:0.5,buy:5,sell:6,sea:[.5,.9,1,.1],col:['#8d6e63','#a1887f'],harvestInt:3},
-BUGDAY:{name:'Bugday',my:0.8,mk:0.4,buy:4,sell:5,sea:[.6,.9,.3,0],col:['#d4a017','#c68f00'],harvestInt:4}
+SOGAN:{name:'Soğan',my:0.8,mk:0.5,buy:5,sell:6,sea:[.5,.9,1,.1],col:['#8d6e63','#a1887f'],harvestInt:3},
+BUGDAY:{name:'Buğday',my:0.8,mk:0.4,buy:4,sell:5,sea:[.6,.9,.3,0],col:['#d4a017','#c68f00'],harvestInt:4}
 };
-const ANIM={TAVUK:{name:'Tavuk',price:50,int:2,adet:3,prod:'Yumurta',feed:15,sell:2,unit:'adet'},INEK:{name:'Inek',price:200,int:10,litre:8,prod:'Sut',feed:45,sell:12,unit:'litre'},KOYUN:{name:'Koyun',price:150,int:3,adet:1,prod:'Yun',feed:25,sell:8,unit:'adet'}};
+const ANIM={TAVUK:{name:'Tavuk',price:50,int:2,adet:3,prod:'Yumurta',feed:15,sell:2,unit:'adet'},INEK:{name:'İnek',price:200,int:10,litre:8,prod:'Süt',feed:45,sell:12,unit:'litre'},KOYUN:{name:'Koyun',price:150,int:3,adet:1,prod:'Yün',feed:25,sell:8,unit:'adet'}};
 const MISSION_TEMPLATES=[
   {type:'harvest',crop:'DOMATES',target:6,text:'6 kg Domates topla'},{type:'harvest',crop:'PATATES',target:8,text:'8 kg Patates topla'},
-  {type:'harvest',crop:'SALATALIK',target:5,text:'5 kg Salatalik topla'},{type:'harvest',crop:'MARUL',target:4,text:'4 kg Marul topla'},
-  {type:'harvest',crop:'BIBER',target:5,text:'5 kg Biber topla'},{type:'harvest',crop:'PATLICAN',target:4,text:'4 kg Patlican topla'},
-  {type:'harvest',crop:'MISIR',target:6,text:'6 kg Misir topla'},{type:'harvest',crop:'KABAK',target:5,text:'5 kg Kabak topla'},
-  {type:'harvest',crop:'SOGAN',target:7,text:'7 kg Sogan topla'},
-  {type:'animal',animal:'YUMURTA',target:10,text:'10 yumurta topla'},{type:'animal',animal:'SUT',target:5,text:'5 litre sut topla'},
-  {type:'sell',target:100,text:'100 TL degerinde urun sat'},{type:'plant',target:3,text:'3 fidan dik'},{type:'water',target:5,text:'5 kez sulama yap'}
+  {type:'harvest',crop:'SALATALIK',target:5,text:'5 kg Salatalık topla'},{type:'harvest',crop:'MARUL',target:4,text:'4 kg Marul topla'},
+  {type:'harvest',crop:'BIBER',target:5,text:'5 kg Biber topla'},{type:'harvest',crop:'PATLICAN',target:4,text:'4 kg Patlıcan topla'},
+  {type:'harvest',crop:'MISIR',target:6,text:'6 kg Mısır topla'},{type:'harvest',crop:'KABAK',target:5,text:'5 kg Kabak topla'},
+  {type:'harvest',crop:'SOGAN',target:7,text:'7 kg Soğan topla'},
+  {type:'animal',animal:'YUMURTA',target:10,text:'10 yumurta topla'},{type:'animal',animal:'SUT',target:5,text:'5 litre süt topla'},
+  {type:'sell',target:100,text:'100 TL değerinde ürün sat'},{type:'plant',target:3,text:'3 fidan dik'},{type:'water',target:5,text:'5 kez sulama yap'}
 ];
 let S={money:10000,day:1,sea:0,yr:1,h:6,m:0,
   plots:[],inv:{},st:{SULAMA:1,ICLAMA:1,DEPO:1,KUMES:1,AHIR:1},
@@ -305,14 +307,14 @@ let S={money:10000,day:1,sea:0,yr:1,h:6,m:0,
   missions:[],missionProgress:{},
   lastHarvestTime:{},plantCount:0,waterCount:0,totalSold:0,
   dailyHarvest:{},dailyAnimal:{},dailySold:0,
-  weather:'gunesli',weatherTimer:0,windSpeed:5,
+  weather:'güneşli',weatherTimer:0,windSpeed:5,
   irrigating:false,irrigStartH:0,irrigStartM:0,irrigEndH:0,irrigEndM:0,
   irrigDrops:[],
-  built:{degirmen:false,kuyu:false,ahir:false,kumes:false,grid:false},
+  built:{degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false},
   buildingPos:null,dragging:null,dragOffset:{x:0,y:0},
   longPressTimer:null,buildingMenu:null,animateBuilding:null
 };
-if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahir:null,kumes:null,degirmen:null};
+if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null};
 Object.keys(CROPS).forEach(k=>{S.inv[k]=0;S.dailyHarvest[k]=0});S.inv.YUMURTA=0;S.inv.SUT=0;S.inv.YUN=0;S.dailyAnimal.YUMURTA=0;S.dailyAnimal.SUT=0;S.dailyAnimal.YUN=0;
 for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0});
 for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plowed.push(r*COLS+c);
@@ -320,13 +322,13 @@ function resize(){W=window.innerWidth;H=window.innerHeight;CV.width=W;CV.height=
 window.addEventListener('resize',resize);resize();
 
 let GX,GY,CL,sceneTop;
-let barnX=0,barnY=0,barnS=0,kumesX=0,kumesY=0,kumesS=0;
+let barnX=0,barnY=0,barnS=0,kümesX=0,kümesY=0,kümesS=0;
 let wellX=0,wellY=0,wellS=0;
 let wmX=0,wmY=0,wmS=0;
 let sutCount=0,yumurtaCount=0;
 let rainDrops=[],snowFlakes=[];
-const WEATHERS=['gunesli','bulutlu','yagmurlu','karli'];
-const WEATHER_ICONS={gunesli:'\u2600\uFE0F',bulutlu:'\u2601\uFE0F',yagmurlu:'\uD83C\uDF27\uFE0F',karli:'\u2744\uFE0F'};
+const WEATHERS=['güneşli','bulutlu','yağmurlu','karlı'];
+const WEATHER_ICONS={güneşli:'\u2600\uFE0F',bulutlu:'\u2601\uFE0F',yağmurlu:'\uD83C\uDF27\uFE0F',karlı:'\u2744\uFE0F'};
 let lampPositions=[];
 let ISLANDSCAPE=false;
 const GRID_LINKED_KUYU=true;
@@ -369,11 +371,11 @@ function drawSky(){
   let dl=getDaylight();
   let nightAlpha=1-dl;
   let g=X.createLinearGradient(0,0,0,skyH);
-  if(S.weather==='karli'){
+  if(S.weather==='karlı'){
     g.addColorStop(0,`rgba(180,195,210,${0.3+dl*0.7})`);
     g.addColorStop(0.5,`rgba(200,210,220,${0.3+dl*0.7})`);
     g.addColorStop(1,`rgba(210,220,215,${0.3+dl*0.7})`);
-  }else if(S.weather==='yagmurlu'){
+  }else if(S.weather==='yağmurlu'){
     g.addColorStop(0,`rgba(120,130,145,${0.4+dl*0.6})`);
     g.addColorStop(0.5,`rgba(140,150,160,${0.4+dl*0.6})`);
     g.addColorStop(1,`rgba(160,170,165,${0.4+dl*0.6})`);
@@ -417,20 +419,20 @@ function drawSky(){
     X.beginPath();X.arc(sunX,sunY,12,0,Math.PI*2);X.fill();
   }
   // Bulutlar
-  let cloudCount=S.weather==='gunesli'?3:S.weather==='bulutlu'?8:S.weather==='yagmurlu'?10:6;
-  let cloudAlpha=S.weather==='gunesli'?0.5:S.weather==='bulutlu'?0.7:0.8;
+  let cloudCount=S.weather==='güneşli'?3:S.weather==='bulutlu'?8:S.weather==='yağmurlu'?10:6;
+  let cloudAlpha=S.weather==='güneşli'?0.5:S.weather==='bulutlu'?0.7:0.8;
   let t=Date.now()/8000;
   for(let i=0;i<cloudCount;i++){
     let cx=(W*0.1+i*W*0.12+Math.sin(t+i*0.8)*15)%W;
     let cy=12+Math.sin(t*0.5+i*2)*6+i%3*10;
-    X.fillStyle=S.weather==='yagmurlu'?`rgba(120,130,140,${cloudAlpha})`:
-                S.weather==='karli'?`rgba(190,200,210,${cloudAlpha})`:`rgba(255,255,255,${cloudAlpha})`;
+    X.fillStyle=S.weather==='yağmurlu'?`rgba(120,130,140,${cloudAlpha})`:
+                S.weather==='karlı'?`rgba(190,200,210,${cloudAlpha})`:`rgba(255,255,255,${cloudAlpha})`;
     X.beginPath();X.arc(cx,cy,12+i%3*3,0,Math.PI*2);X.fill();
     X.beginPath();X.arc(cx-10,cy+3,10+i%2*2,0,Math.PI*2);X.fill();
     X.beginPath();X.arc(cx+10,cy+3,10+i%2*2,0,Math.PI*2);X.fill();
   }
   // Yagmur efekti
-  if(S.weather==='yagmurlu'){
+  if(S.weather==='yağmurlu'){
     X.strokeStyle='rgba(150,180,220,0.5)';X.lineWidth=1;
     for(let i=0;i<rainDrops.length;i++){
       let rd=rainDrops[i];
@@ -440,7 +442,7 @@ function drawSky(){
     }
   }
   // Kar efekti
-  if(S.weather==='karli'){
+  if(S.weather==='karlı'){
     X.fillStyle='rgba(255,255,255,0.8)';
     for(let i=0;i<snowFlakes.length;i++){
       let sf=snowFlakes[i];
@@ -714,7 +716,7 @@ function drawBarn(x,y,s){
   X.fillStyle='#d4a040';
   X.beginPath();X.roundRect(-s*0.22,s*0.0,s*0.44,s*0.13,3);X.fill();
   X.strokeStyle='#8d6e63';X.lineWidth=1.5;X.strokeRect(-s*0.22,s*0.0,s*0.44,s*0.13);
-  X.fillStyle='#3a2010';X.font=`bold ${s*0.1}px sans-serif`;X.textAlign='center';X.textBaseline='middle';
+  X.fillStyle='#3a2010';X.font=`bold ${s*0.1}px "Nunito",Arial,sans-serif`;X.textAlign='center';X.textBaseline='middle';
   X.fillText('AHİR',0,s*0.065);
   X.textBaseline='alphabetic';
 
@@ -771,7 +773,7 @@ function drawBarn(x,y,s){
   X.restore();
 }
 
-function drawKumes(x,y,s){
+function drawKümes(x,y,s){
   X.save();X.translate(x,y);
 
   // Gölge
@@ -789,9 +791,9 @@ function drawKumes(x,y,s){
   }
 
   // Kümüs gövdesi - kahverengi tahta
-  let kumesColors=['#8B6914','#9B7924','#7B5904','#A08030','#8B7020'];
+  let kümesColors=['#8B6914','#9B7924','#7B5904','#A08030','#8B7020'];
   for(let i=0;i<8;i++){
-    X.fillStyle=kumesColors[i%kumesColors.length];
+    X.fillStyle=kümesColors[i%kümesColors.length];
     X.fillRect(-s*0.55,s*0.12+i*s*0.085,s*1.1,s*0.085);
     X.strokeStyle='rgba(0,0,0,0.1)';X.lineWidth=0.5;
     X.beginPath();X.moveTo(-s*0.55,s*0.12+i*s*0.085);X.lineTo(s*0.55,s*0.12+i*s*0.085);X.stroke();
@@ -826,7 +828,7 @@ function drawKumes(x,y,s){
   X.fillStyle='#d4a040';
   X.beginPath();X.roundRect(-s*0.24,s*0.0,s*0.48,s*0.13,3);X.fill();
   X.strokeStyle='#8d6e63';X.lineWidth=1.5;X.strokeRect(-s*0.24,s*0.0,s*0.48,s*0.13);
-  X.fillStyle='#3a2010';X.font=`bold ${s*0.1}px sans-serif`;X.textAlign='center';X.textBaseline='middle';
+  X.fillStyle='#3a2010';X.font=`bold ${s*0.1}px "Nunito",Arial,sans-serif`;X.textAlign='center';X.textBaseline='middle';
   X.fillText('KÜMES',0,s*0.065);
   X.textBaseline='alphabetic';
 
@@ -944,7 +946,7 @@ function drawCow(x,y,s,flip){
   X.beginPath();X.moveTo(s*0.42,-s*0.12);X.quadraticCurveTo(s*0.45,-s*0.2,s*0.42,-s*0.22);X.stroke();
   // Göz
   X.fillStyle='#000';X.beginPath();X.arc(s*0.36,-s*0.06,s*0.018,0,Math.PI*2);X.fill();
-  // Burun
+  // Bürün
   X.fillStyle='#ffb6c1';X.beginPath();X.ellipse(s*0.4,-s*0.01,s*0.04,s*0.03,0,0,Math.PI*2);X.fill();
   X.fillStyle='#000';X.beginPath();X.arc(s*0.39,-s*0.005,1.5,0,Math.PI*2);X.fill();
   X.beginPath();X.arc(s*0.42,-s*0.005,1.5,0,Math.PI*2);X.fill();
@@ -1289,9 +1291,9 @@ function drawPlaceholder(x,y,s,label){
   X.beginPath();X.roundRect(-s*0.5,-s*0.4,s,s*0.8,4);X.stroke();
   X.setLineDash([]);
   X.fillStyle='rgba(200,149,108,0.15)';X.beginPath();X.roundRect(-s*0.5,-s*0.4,s,s*0.8,4);X.fill();
-  X.fillStyle='rgba(200,149,108,0.6)';X.font='bold '+(s*0.12)+'px sans-serif';X.textAlign='center';X.textBaseline='middle';
+  X.fillStyle='rgba(200,149,108,0.6)';X.font='bold '+(s*0.12)+'px "Nunito",Arial,sans-serif';X.textAlign='center';X.textBaseline='middle';
   X.fillText(label,0,0);
-  X.fillStyle='rgba(200,149,108,0.4)';X.font=(s*0.2)+'px sans-serif';
+  X.fillStyle='rgba(200,149,108,0.4)';X.font=(s*0.2)+'px "Nunito",Arial,sans-serif';
   X.fillText('+',0,-s*0.08);
   X.restore();
 }
@@ -1322,15 +1324,15 @@ function drawMiniBarn(ctx,s){
   ctx.save();ctx.translate(s/2,s/2);
   ctx.fillStyle='#c62828';ctx.beginPath();ctx.moveTo(-s*0.25,s*0.1);ctx.lineTo(0,-s*0.2);ctx.lineTo(s*0.25,s*0.1);ctx.closePath();ctx.fill();
   ctx.fillRect(-s*0.25,-s*0.05,s*0.5,s*0.15);
-  ctx.fillStyle='#fff';ctx.font='bold '+(s*0.08)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillStyle='#fff';ctx.font='bold '+(s*0.08)+'px "Nunito",Arial,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText('AHİR',0,s*0.02);
   ctx.restore();
 }
-function drawMiniKumes(ctx,s){
+function drawMiniKümes(ctx,s){
   ctx.save();ctx.translate(s/2,s/2);
   ctx.fillStyle='#795548';ctx.beginPath();ctx.moveTo(-s*0.22,s*0.08);ctx.lineTo(0,-s*0.18);ctx.lineTo(s*0.22,s*0.08);ctx.closePath();ctx.fill();
   ctx.fillRect(-s*0.22,-s*0.05,s*0.44,s*0.13);
-  ctx.fillStyle='#fff';ctx.font='bold '+(s*0.07)+'px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+  ctx.fillStyle='#fff';ctx.font='bold '+(s*0.07)+'px "Nunito",Arial,sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
   ctx.fillText('KÜMES',0,s*0.01);
   ctx.restore();
 }
@@ -1521,7 +1523,7 @@ function drawOrganicPath(points,width){
 function draw(){
   X.clearRect(0,0,W,H);
   calcLayout();
-  // Pozisyon override - tasima sonrasi
+  // Pozisyon override - taşıma sonrasi
   if(S.buildingPos.grid){
     let off=S.buildingPos.grid;
     GX=off.x;GY=off.y;
@@ -1536,7 +1538,7 @@ function draw(){
   let gridBottom=GY+ROWS*CL;
   let gridRight=GX+COLS*CL;
 
-  // ====== EV - sabit, tasima yok ======
+  // ====== EV - sabit, taşıma yok ======
   let houseScale=ISLANDSCAPE?2.8:2.0;
   let houseS=CL*houseScale;
   let houseGap=CL*1.2;
@@ -1545,7 +1547,7 @@ function draw(){
   let houseY=sceneTop+Math.floor((GY-sceneTop)*0.05);
   drawHouse(houseX,houseY,houseS);
 
-  // ====== GRID ETRAFINA CIT (sadece grid insa edildiyse) ======
+  // ====== GRID ETRAFINA CIT (sadece grid inşa edildiyse) ======
   if(S.built.grid){
     let fPad=CL*0.3;
     drawFenceSegment(GX-fPad,GY-fPad,gridRight+fPad,GY-fPad);
@@ -1556,37 +1558,37 @@ function draw(){
 
   // ====== AHIR - sag ust, buyuk ======
   barnS=CL*2.5;
-  if(S.buildingPos.ahir){
-    barnX=S.buildingPos.ahir.x;barnY=S.buildingPos.ahir.y;
+  if(S.buildingPos.ahır){
+    barnX=S.buildingPos.ahır.x;barnY=S.buildingPos.ahır.y;
   }else{
     let barnMinX=gridRight+CL*1.0;
     barnX=S.built.grid?Math.max(barnMinX,Math.min(W*0.88,gridRight+barnS+CL*0.5)):W*0.88;
     barnY=sceneTop+Math.floor((H-86)*0.02);
   }
-  if(S.built.ahir){
+  if(S.built.ahır){
     drawBarn(barnX,barnY,barnS);
   }else{
     drawPlaceholder(barnX,barnY,barnS*1.2,'AHİR');
   }
 
   // ====== KUMES - ahır formatında, sag alt ======
-  kumesS=CL*2.0;
-  if(S.buildingPos.kumes){
-    kumesX=S.buildingPos.kumes.x;kumesY=S.buildingPos.kumes.y;
+  kümesS=CL*2.0;
+  if(S.buildingPos.kümes){
+    kümesX=S.buildingPos.kümes.x;kümesY=S.buildingPos.kümes.y;
   }else{
-    kumesX=barnX;
-    kumesY=barnY+barnS*2.2;
+    kümesX=barnX;
+    kümesY=barnY+barnS*2.2;
   }
-  if(S.built.kumes){
-    drawKumes(kumesX,kumesY,kumesS);
+  if(S.built.kümes){
+    drawKümes(kümesX,kümesY,kümesS);
   }else{
-    drawPlaceholder(kumesX,kumesY,kumesS*1.2,'KÜMES');
+    drawPlaceholder(kümesX,kümesY,kümesS*1.2,'KÜMES');
   }
 
   // ====== KUMES ALTINA CIT ======
-  let kFfX=kumesX-kumesS*0.7,kFfY=kumesY+kumesS*0.75;
-  let kFfW=kumesS*1.4,kFfH=kumesS*0.6;
-  if(S.built.kumes){
+  let kFfX=kümesX-kümesS*0.7,kFfY=kümesY+kümesS*0.75;
+  let kFfW=kümesS*1.4,kFfH=kümesS*0.6;
+  if(S.built.kümes){
     drawFenceSegment(kFfX,kFfY,kFfX+kFfW,kFfY);
     drawFenceSegment(kFfX+kFfW,kFfY,kFfX+kFfW,kFfY+kFfH);
     drawFenceSegment(kFfX+kFfW,kFfY+kFfH,kFfX,kFfY+kFfH);
@@ -1596,7 +1598,7 @@ function draw(){
   // ====== HAYVANLIK - ahır civarında ======
   let fYX=barnX-barnS*0.8,fYY=barnY+barnS*0.8;
   let fYW=barnS*1.8,fYH=barnS*0.9;
-  if(S.built.ahir){
+  if(S.built.ahır){
     drawFenceSegment(fYX,fYY,fYX+fYW,fYY);
     drawFenceSegment(fYX+fYW,fYY,fYX+fYW,fYY+fYH);
     drawFenceSegment(fYX+fYW,fYY+fYH,fYX,fYY+fYH);
@@ -1604,7 +1606,7 @@ function draw(){
   }
 
   // ====== HAYVANLAR ======
-  if(S.built.ahir){
+  if(S.built.ahır){
     for(let i=0;i<Math.min(S.co,3);i++){
       let cx=fYX+fYW*0.2+i*fYW*0.25;
       let cy=fYY+fYH*0.35+Math.sin(Date.now()/1500+i)*CL*0.08;
@@ -1616,7 +1618,7 @@ function draw(){
       drawSheep(cx,cy,CL*0.6,i%2===0);
     }
   }
-  if(S.built.kumes){
+  if(S.built.kümes){
     for(let i=0;i<Math.min(S.ch,6);i++){
       let cx=kFfX+kFfW*0.15+i*kFfW*0.14;
       let cy=kFfY+kFfH*0.4+Math.sin(Date.now()/800+i*1.5)*CL*0.05;
@@ -1650,7 +1652,7 @@ function draw(){
   // Göz
   X.fillStyle='#fff';X.beginPath();X.arc(dogX+CL*0.18,dogY-CL*0.06,CL*0.025,0,Math.PI*2);X.fill();
   X.fillStyle='#000';X.beginPath();X.arc(dogX+CL*0.19,dogY-CL*0.06,CL*0.012,0,Math.PI*2);X.fill();
-  // Burun
+  // Bürün
   X.fillStyle='#2d2d2d';X.beginPath();X.arc(dogX+CL*0.22,dogY-CL*0.04,CL*0.015,0,Math.PI*2);X.fill();
   // Dil
   X.fillStyle='#e57373';X.beginPath();X.ellipse(dogX+CL*0.2,dogY-CL*0.01,CL*0.01,CL*0.02,.2,0,Math.PI*2);X.fill();
@@ -1765,7 +1767,7 @@ if(S.built.grid){
   X.strokeStyle=isIrrigating?'rgba(100,181,246,0.5)':'rgba(200,210,220,0.4)';X.lineWidth=1;
   X.beginPath();X.moveTo(wellX-1,pipeStartYW-1);X.lineTo(sprinklerX-1,sprinklerY-1);X.stroke();
 
-  // Sulama basladiginda boruda su ilerlemesi animasyonu
+  // Sulama başladiginda boruda su ilerlemesi animasyonu
   if(isIrrigating){
     let t=Date.now()/500;
     let prog=(Math.sin(t)*0.5+0.5);
@@ -1859,8 +1861,8 @@ if(S.built.grid){
     X.fillStyle='#e53935';X.fillRect(tx-18,ty-6,28,14);
     X.fillStyle='#c62828';X.fillRect(tx-16,ty-12,16,8);
     X.fillStyle='#64b5f6';X.fillRect(tx-14,ty-10,8,5);
-    X.fillStyle='rgba(255,255,255,0.8)';X.font='bold 12px sans-serif';X.textAlign='center';
-    X.fillText('Tikla ve sur!',tx,ty+25);
+    X.fillStyle='rgba(255,255,255,0.8)';X.font='bold 12px "Nunito",Arial,sans-serif';X.textAlign='center';
+    X.fillText('Tıkla ve sür!',tx,ty+25);
   }
 
   // ====== SOKAK LAMBALARI ======
@@ -1879,7 +1881,7 @@ if(S.built.grid){
     {x:GX-CL*0.6,y:gridBottom2+CL*0.3,tip:'basit'},
     {x:GX+COLS*CL+CL*0.6,y:gridBottom2+CL*0.3,tip:'basit'},
     {x:barnX-barnS*0.5,y:barnY+barnS*0.7,tip:'guzel'},
-    {x:kumesX-kumesS*0.5,y:kumesY+kumesS*0.7,tip:'guzel'}
+    {x:kümesX-kümesS*0.5,y:kümesY+kümesS*0.7,tip:'guzel'}
   ];
   lampPositions.forEach(lp=>{
     let poleH=lp.tip==='basit'?CL*0.8:CL*1.1;
@@ -1944,8 +1946,8 @@ if(S.built.grid){
   // ====== YARDIMCI YAZI ======
   X.fillStyle='rgba(0,0,0,0.4)';
   X.fillRect(8,H-42,W-16,36);X.strokeStyle='#c8956c';X.lineWidth=1;X.strokeRect(8,H-42,W-16,36);
-  X.fillStyle='#ffe082';X.font='11px sans-serif';X.textAlign='left';
-  X.fillText('EV: Dinlen | MAGAZA: Alisveris | HAYVAN: Bakim | DEPO: Urunler | Traktor: Sur',16,H-22);
+  X.fillStyle='#ffe082';X.font='11px "Nunito",Arial,sans-serif';X.textAlign='left';
+  X.fillText('EV: Dinlen | MAGAZA: Alışveriş | HAYVAN: Bakım | DEPO: Ürünler | Traktör: Sur',16,H-22);
 
   // ====== SURUKLEME ONIZLEME ======
   if(S.dragging){
@@ -1957,10 +1959,10 @@ if(S.built.grid){
       X.fillRect(dx,dy,COLS*CL,ROWS*CL);
       X.strokeStyle=valid?'#4caf50':'#e53935';X.lineWidth=3;
       X.strokeRect(dx,dy,COLS*CL,ROWS*CL);
-    }else if(S.dragging==='ahir'){
+    }else if(S.dragging==='ahır'){
       drawBarn(dx,dy,CL*2.5);
-    }else if(S.dragging==='kumes'){
-      drawKumes(dx,dy,CL*2.0);
+    }else if(S.dragging==='kümes'){
+      drawKümes(dx,dy,CL*2.0);
     }else if(S.dragging==='degirmen'){
       drawWindmill(dx,dy,CL*(ISLANDSCAPE?2.8:2.0)*0.8);
     }else if(S.dragging==='kuyu'){
@@ -1980,9 +1982,9 @@ function advanceTime(){S.m+=10;while(S.m>=60){S.m-=60;S.h++}if(S.h>=22){newDay()
       let elapsedMin=(S.h-S.irrigStartH)*60+(S.m-S.irrigStartM);
       if(elapsedMin>=40){
         S.plots.forEach(p=>{p.w=true});
-        toast('Sulama tamamlandi! Tarla sulandi. ('+elapsedMin+' dk)');
+        toast('Sulama tamamlandı! Tarla sulandı. ('+elapsedMin+' dk)');
       }else{
-        toast('Sulama sureyi tamamlamadi! ('+elapsedMin+' dk < 40 dk) Sulanmadi.');
+        toast('Sulama süreyi tamamlamadı! ('+elapsedMin+' dk < 40 dk) Sulanmadı.');
       }
     }
   }
@@ -1999,11 +2001,11 @@ function changeWeather(){
   let r=Math.random(),cum=0;
   for(let i=0;i<WEATHERS.length;i++){cum+=weights[i];if(r<cum){S.weather=WEATHERS[i];break}}
   rainDrops=[];snowFlakes=[];
-  if(S.weather==='yagmurlu')for(let i=0;i<150;i++)rainDrops.push({x:Math.random()*W,y:Math.random()*H,spd:4+Math.random()*4});
-  if(S.weather==='karli')for(let i=0;i<80;i++)snowFlakes.push({x:Math.random()*W,y:Math.random()*H,r:1+Math.random()*2,spd:1+Math.random()*2});
-  if(S.weather==='gunesli')S.windSpeed=3+Math.floor(Math.random()*5);
+  if(S.weather==='yağmurlu')for(let i=0;i<150;i++)rainDrops.push({x:Math.random()*W,y:Math.random()*H,spd:4+Math.random()*4});
+  if(S.weather==='karlı')for(let i=0;i<80;i++)snowFlakes.push({x:Math.random()*W,y:Math.random()*H,r:1+Math.random()*2,spd:1+Math.random()*2});
+  if(S.weather==='güneşli')S.windSpeed=3+Math.floor(Math.random()*5);
   else if(S.weather==='bulutlu')S.windSpeed=5+Math.floor(Math.random()*8);
-  else if(S.weather==='yagmurlu')S.windSpeed=8+Math.floor(Math.random()*12);
+  else if(S.weather==='yağmurlu')S.windSpeed=8+Math.floor(Math.random()*12);
   else S.windSpeed=2+Math.floor(Math.random()*4);
 }
 changeWeather();
@@ -2056,17 +2058,17 @@ function renderMissions(){let l=document.getElementById('missionList');l.innerHT
   S.missions.forEach((m,i)=>{let prog=Math.min(S.missionProgress[i]||0,m.target);let done=prog>=m.target;
     let d=document.createElement('div');d.className='mi'+(done?' done':'');
     d.innerHTML=`<span class="check"></span>${m.text} (${prog}/${m.target})`;
-    if(done&&!m.rewarded){S.money+=100;m.rewarded=true;toast('Gorev tamamlandi! +100 TL')}l.appendChild(d)})}
+    if(done&&!m.rewarded){S.money+=100;m.rewarded=true;toast('Görev tamamlandı! +100 TL')}l.appendChild(d)})}
 function openTesisler(){
   let grid=document.getElementById('tesisGrid');grid.innerHTML='';
-  let tesisFiyat={Ev:0,Ahir:2500,Kumes:1500,Degirmen:3000,Kuyu:2000,Tarla:100};
-  let tesisKey={Ev:'ev',Ahir:'ahir',Kumes:'kumes',Degirmen:'degirmen',Kuyu:'kuyu',Tarla:'grid'};
+  let tesisFiyat={Ev:0,Ahır:2500,Kümes:1500,Değirmen:3000,Kuyu:2000,Tarla:100};
+  let tesisKey={Ev:'ev',Ahır:'ahır',Kümes:'kümes',Değirmen:'degirmen',Kuyu:'kuyu',Tarla:'grid'};
   let tesisler=[
     {name:'Ev',fn:drawHouseToCanvas,bg:'#8d6e63',free:true},
     {name:'Tarla',fn:drawGridToCanvas,bg:'#6d4c41'},
-    {name:'Ahir',fn:drawBarnToCanvas,bg:'#8B2500'},
-    {name:'Kumes',fn:drawKumesToCanvas,bg:'#8B6914'},
-    {name:'Degirmen',fn:drawWindmillToCanvas,bg:'#e8e0d0'},
+    {name:'Ahır',fn:drawBarnToCanvas,bg:'#8B2500'},
+    {name:'Kümes',fn:drawKümesToCanvas,bg:'#8B6914'},
+    {name:'Değirmen',fn:drawWindmillToCanvas,bg:'#e8e0d0'},
     {name:'Kuyu',fn:drawWellToCanvas,bg:'#29b6f6'}
   ];
   tesisler.forEach(t=>{
@@ -2080,17 +2082,17 @@ function openTesisler(){
       let key=tesisKey[t.name];
       let built=S.built[key];
       let info=document.createElement('div');info.style.cssText='font-size:10px;margin-top:3px;';
-      if(built){info.style.color='#81c784';info.textContent='Insa Edildi'}
+      if(built){info.style.color='#81c784';info.textContent='İnşa Edildi'}
       else{info.style.color='#ef9a9a';info.textContent=tesisFiyat[t.name]+' TL'}
       d.appendChild(info);
       if(!built){
         let btn=document.createElement('button');btn.style.cssText='background:#5a8c3a;color:#fff;border:1px solid #8bc34a;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:4px';
-        btn.textContent='Satinal '+tesisFiyat[t.name]+' TL';
+        btn.textContent='Satın al '+tesisFiyat[t.name]+' TL';
         btn.onclick=function(e){e.stopPropagation();buyBuilding(key,tesisFiyat[t.name],t.name);openTesisler()};
         d.appendChild(btn);
       }else{
         let moveBtn=document.createElement('button');moveBtn.style.cssText='background:#5d4037;color:#ffe082;border:1px solid #c8956c;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:4px';
-        moveBtn.textContent='📍 Tasima Modu';
+        moveBtn.textContent='📍 Taşıma Modu';
         moveBtn.onclick=function(e){e.stopPropagation();closeM('tesisler');startDrag(key)};
         d.appendChild(moveBtn);
       }
@@ -2117,16 +2119,16 @@ function drawBarnToCanvas(c,s){
   c.fillStyle='#ffe082';c.beginPath();c.arc(-4,20,2,0,Math.PI*2);c.fill();
   c.beginPath();c.arc(4,20,2,0,Math.PI*2);c.fill();
   c.fillStyle='#d4a040';c.fillRect(-12,-2,24,8);
-  c.fillStyle='#3a2010';c.font='bold 7px sans-serif';c.textAlign='center';c.fillText('AHİR',0,5);
+  c.fillStyle='#3a2010';c.font='bold 7px "Nunito",Arial,sans-serif';c.textAlign='center';c.fillText('AHİR',0,5);
   c.restore();
 }
-function drawKumesToCanvas(c,s){
+function drawKümesToCanvas(c,s){
   c.save();c.translate(s/2,s/2+5);
   c.fillStyle='#8B6914';c.fillRect(-28,0,56,32);
   c.fillStyle='#654321';c.beginPath();c.moveTo(-32,0);c.lineTo(0,-20);c.lineTo(32,0);c.closePath();c.fill();
   c.fillStyle='#3e2723';c.beginPath();c.arc(0,26,7,Math.PI,0);c.fill();
   c.fillStyle='#d4a040';c.fillRect(-14,-2,28,8);
-  c.fillStyle='#3a2010';c.font='bold 6px sans-serif';c.textAlign='center';c.fillText('KÜMES',0,5);
+  c.fillStyle='#3a2010';c.font='bold 6px "Nunito",Arial,sans-serif';c.textAlign='center';c.fillText('KÜMES',0,5);
   c.restore();
 }
 function drawWindmillToCanvas(c,s){
@@ -2293,22 +2295,22 @@ function drawMiniProduct(c,type,s){
 }
 function toggleMissions(){let box=document.getElementById('missionBox');box.classList.toggle('show')}
 
-function activateTraktor(){S.tractorActive=!S.tractorActive;toast(S.tractorActive?'Traktor aktif! Tikla, 4x10 surulsun':'Traktor kapatildi')}
+function activateTraktör(){S.tractorActive=!S.tractorActive;toast(S.tractorActive?'Traktör aktif! Tıkla, 4x10 sürülsün':'Traktör kapatıldı')}
 function plowArea(r,c){let plowed=0;
   for(let dr=0;dr<4;dr++)for(let dc=0;dc<10;dc++){let rr=r+dr,cc=c+dc;
     if(rr>=0&&rr<ROWS&&cc>=0&&cc<COLS){let idx=rr*COLS+cc;if(!S.plowed.includes(idx)){S.plowed.push(idx);plowed++}}}
-  if(plowed>0){toast(`${plowed} kare suruldu!`);advanceTime()}else{toast('Burasi zaten surulmus')}}
+  if(plowed>0){toast(`${plowed} kare sürüldü!`);advanceTime()}else{toast('Burasi zaten sürülmüş')}}
 
 function genWhole(){S.whH=12+Math.floor(Math.random()*4);S.whM=Math.floor(Math.random()*6)*10}
 function checkWhole(){if(S.whArr||S.whDis)return;if(S.h>S.whH||(S.h===S.whH&&S.m>=S.whM)){S.whArr=true;showWhole()}}
 function showWhole(){let keys=Object.keys(CROPS).concat(['YUMURTA','SUT','YUN']);let wk=keys[Math.floor(Math.random()*keys.length)];
   let wkgs=wk==='YUMURTA'?Math.floor(2+S.ch*2):wk==='SUT'?Math.floor(1+S.co*2):wk==='YUN'?Math.floor(1+S.sh):Math.floor(3+Math.random()*15);
   let bp=CROPS[wk]?CROPS[wk].sell:wk==='YUMURTA'?ANIM.TAVUK.sell:ANIM.INEK.sell;
-  let pr=Math.round(bp*(.8+Math.random()*.4));let nm=CROPS[wk]?CROPS[wk].name:wk==='YUMURTA'?'Yumurta':'Sut';
+  let pr=Math.round(bp*(.8+Math.random()*.4));let nm=CROPS[wk]?CROPS[wk].name:wk==='YUMURTA'?'Yumurta':'Süt';
   S.curW={crop:wk,kg:wkgs,price:pr,name:nm};setTimeout(showWholeDlg,500)}
 function showWholeDlg(){let w=S.curW;if(!w)return;let av=S.inv[w.crop]||0,tot=Math.round(w.kg*w.price);
   let unit=w.crop==='YUMURTA'?'adet':w.crop==='SUT'?'litre':w.crop==='YUN'?'adet':'kg';
-  document.getElementById('wholeI').innerHTML=`<div style="text-align:center;font-size:15px;margin-bottom:6px"><b>${w.name}</b> ariyorum!</div>
+  document.getElementById('wholeI').innerHTML=`<div style="text-align:center;font-size:15px;margin-bottom:6px"><b>${w.name}</b> arıyorum!</div>
     <div style="font-size:13px">Miktar: <b>${w.kg} ${unit}</b></div><div style="font-size:13px">Fiyat: <b>${w.price} TL/${unit}</b></div>
     <div style="font-size:15px;margin-top:4px">Toplam: <b style="color:#8bc34a">${tot.toLocaleString()} TL</b></div>
     <div style="font-size:13px">Sende: <b>${av.toFixed(0)} ${unit}</b></div>`;
@@ -2317,7 +2319,7 @@ function showWholeDlg(){let w=S.curW;if(!w)return;let av=S.inv[w.crop]||0,tot=Ma
 function sellW(){let w=S.curW;if(!w)return;let av=S.inv[w.crop]||0;if(av<w.kg)return;
   let unit=w.crop==='YUMURTA'?'adet':w.crop==='SUT'?'litre':w.crop==='YUN'?'adet':'kg';
   S.inv[w.crop]-=w.kg;S.money+=Math.round(w.kg*w.price);S.totalSold+=Math.round(w.kg*w.price);S.dailySold+=Math.round(w.kg*w.price);
-  toast(`${w.kg} ${unit} ${w.name} satildi! +${Math.round(w.kg*w.price).toLocaleString()} TL`);dismissW();checkMissions()}
+  toast(`${w.kg} ${unit} ${w.name} satıldı! +${Math.round(w.kg*w.price).toLocaleString()} TL`);dismissW();checkMissions()}
 function dismissW(){S.whDis=true;S.curW=null;closeM('whole');updateHUD()}
 
 let lastPlantClick=-1;
@@ -2327,72 +2329,72 @@ CV.addEventListener('click',e=>{
   let gx=mx-GX,gy=my-GY;
   let c=Math.floor(gx/CL),r=Math.floor(gy/CL);
 
-  // Ahıra tıklama - süt sağma (gunluk 2 kez)
+  // Ahıra tıklama - süt sağma (günlük 2 kez)
   if(typeof barnX!=='undefined'){
     let bDx=mx-barnX,bDy=my-barnY;
     if(Math.abs(bDx)<barnS*0.6&&Math.abs(bDy)<barnS*0.6){
-      if(!S.built.ahir){toast('Once ahir insa et!');return}
+      if(!S.built.ahır){toast('Önce ahır inşa et!');return}
       if(S.co>0){
-        if(sutCount>=2){toast('Bugun zaten 2 kez sut sagildi! Yarin tekrar dene.');return}
+        if(sutCount>=2){toast('Bugün zaten 2 kez süt sağıldı! Yarın tekrar dene.');return}
         let sut=Math.min(S.co,3)*2;
         S.inv.SUT=(S.inv.SUT||0)+sut;
         sutCount++;
-        toast(`${sut} lt Sut sagildi! (${sutCount}/2) Toplam: ${(S.inv.SUT||0)} lt`);
+        toast(`${sut} lt Süt sağıldı! (${sutCount}/2) Toplam: ${(S.inv.SUT||0)} lt`);
         advanceTime();draw();return
-      }else{toast('Ahirda inek yok!');return}
+      }else{toast('Ahırda inek yok!');return}
     }
   }
-  // Kümüse tıklama - yumurta toplama (gunluk 1 kez)
-  if(typeof kumesX!=='undefined'){
-    let kDx=mx-kumesX,kDy=my-kumesY;
-    if(Math.abs(kDx)<kumesS*0.6&&Math.abs(kDy)<kumesS*0.6){
-      if(!S.built.kumes){toast('Once kumes insa et!');return}
+  // Kümüse tıklama - yumurta toplama (günlük 1 kez)
+  if(typeof kümesX!=='undefined'){
+    let kDx=mx-kümesX,kDy=my-kümesY;
+    if(Math.abs(kDx)<kümesS*0.6&&Math.abs(kDy)<kümesS*0.6){
+      if(!S.built.kümes){toast('Önce kümes inşa et!');return}
       if(S.ch>0){
-        if(yumurtaCount>=1){toast('Bugun zaten yumurta toplandı! Yarin tekrar dene.');return}
+        if(yumurtaCount>=1){toast('Bugün zaten yumurta toplandı! Yarın tekrar dene.');return}
         let yumurta=Math.min(S.ch,6);
         S.inv.YUMURTA=(S.inv.YUMURTA||0)+yumurta;
         yumurtaCount++;
-        toast(`${yumurta} Yumurta toplandi! (${yumurtaCount}/1) Toplam: ${(S.inv.YUMURTA||0)} adet`);
+        toast(`${yumurta} Yumurta toplandı! (${yumurtaCount}/1) Toplam: ${(S.inv.YUMURTA||0)} adet`);
         advanceTime();draw();return
-      }else{toast('Kumeste tavuk yok!');return}
+      }else{toast('Kümeste tavuk yok!');return}
     }
   }
-  // Kuyuya tıklama - sulama baslat/durdur
+  // Kuyuya tıklama - sulama başlat/durdur
   if(typeof wellX!=='undefined'){
     let wDx=mx-wellX,wDy=my-wellY;
     if(Math.abs(wDx)<wellS*0.6&&Math.abs(wDy)<wellS*0.6){
-      if(!S.built.kuyu){toast('Once kuyu insa et!');return}
+      if(!S.built.kuyu){toast('Önce kuyu inşa et!');return}
       if(S.irrigating){
-        // Sulamayi durdur
+        // Sulamayı durdur
         let elapsedMin=(S.h-S.irrigStartH)*60+(S.m-S.irrigStartM);
         if(elapsedMin<40){
           S.irrigating=false;
           S.plots.forEach(p=>{p.w=false});
-          toast('Sulama iptal edildi! 40 dk altinda kaldigi icin sulanmadi.');
+          toast('Sulama iptal edildi! 40 dk altında kaldığı için sulanmadı.');
         }else{
           S.irrigating=false;
           S.plots.forEach(p=>{p.w=true});
-          toast('Sulama durduruldu! Tarla sulandi. ('+elapsedMin+' dk)');
+          toast('Sulama durduruldu! Tarla sulandı. ('+elapsedMin+' dk)');
         }
         advanceTime();draw();return
       }else{
-        // Sulamayi baslat
+        // Sulamayi başlat
         S.irrigating=true;
         S.irrigStartH=S.h;S.irrigStartM=S.m;
         S.irrigEndH=S.h+1;S.irrigEndM=S.m;
         if(S.irrigEndH>=22){S.irrigEndH=21;S.irrigEndM=50}
-        toast('Sulama baslatildi! Tekrar tiklayarak durdurabilirsin.');
+        toast('Sulama başlatildi! Tekrar tıklayarak durdurabilirsin.');
         advanceTime();draw();return
       }
     }
   }
 
-  if(!S.built.grid){if(!S.buildingMenu)toast('Once tarla insa et! (Tesislerden)');return}
+  if(!S.built.grid){if(!S.buildingMenu)toast('Önce tarla inşa et! (Tesislerden)');return}
   if(S.tractorActive&&r>=0&&r<ROWS&&c>=0&&c<COLS){plowArea(r,c);S.tractorActive=false;draw();return}
   if(r<0||r>=ROWS||c<0||c>=COLS){closeAllModals();lastPlantClick=-1;S.sel=-1;draw();return}
   S.sel=r*COLS+c;let p=getP(r,c);
   if(!p.crop){
-    if(!S.plowed.includes(r*COLS+c)){toast('Once traktorle sur!');return}
+    if(!S.plowed.includes(r*COLS+c)){toast('Önce traktörle sür!');return}
     let idx=r*COLS+c;
     if(lastPlantClick===idx&&document.getElementById('mPlant').classList.contains('active')){closeM('plant');lastPlantClick=-1;draw();return}
     lastPlantClick=idx;openPlantM(r,c);
@@ -2405,7 +2407,7 @@ function getP(r,c){return S.plots.find(p=>p.r===r&&p.c===c)}
 function openPlantM(r,c){let l=document.getElementById('plantList');l.innerHTML='';let isWinter=S.sea===3;
   Object.entries(CROPS).forEach(([k,cr])=>{let ok=!isWinter;
     let d=document.createElement('div');d.className='item';
-    let harvestInfo='3te 1 gun';let winterNote=isWinter?' (Kisin ekilmez)':'';
+    let harvestInfo='3\'te 1 gün';let winterNote=isWinter?' (Kışın ekilmez)':'';
     d.innerHTML=`<div class="inf"><div class="nm">${cr.name}${winterNote}</div><div class="dt">Sebze | Max:${cr.mk}kg | Hasat: ${harvestInfo}</div></div><div class="pr">${cr.buy} TL</div>`;
     if(!ok){d.style.opacity='.3';d.style.cursor='not-allowed'}
     else d.onclick=()=>{if(S.money<cr.buy){toast('Yeterli paran yok!');return}S.money-=cr.buy;let p=getP(r,c);p.crop=k;p.age=0;p.w=false;p.p=false;p.nextHarvest=480;S.plantCount++;advanceTime();closeM('plant');toast(`${cr.name} ekildi!`);draw()};
@@ -2418,13 +2420,13 @@ function openPlotM(r,c){let p=getP(r,c),cr=CROPS[p.crop];if(!cr)return;
   if(!canHarvest){let hrs=Math.floor(p.nextHarvest/60);let mins=p.nextHarvest%60;harvestText=`<div>Siradaki hasat: <b>${hrs}sa ${mins}dk</b></div>`}
   else{harvestText=`<div style="color:#8bc34a;font-weight:bold">Hasat hazir!</div>`}
   document.getElementById('plotT').textContent=cr.name;
-  document.getElementById('plotI').innerHTML=`<div>Yas: <b>${age} yil</b></div><div>Tahmini: <b>${y} kg</b></div>${harvestText}<div>Sulama: <b>${p.w?'Evet':'Yok'}</b></div><div>Ilaclama: <b>${p.p?'Evet':'Yok'}</b></div>`;
+  document.getElementById('plotI').innerHTML=`<div>Yas: <b>${age} yil</b></div><div>Tahmini: <b>${y} kg</b></div>${harvestText}<div>Sulama: <b>${p.w?'Evet':'Yok'}</b></div><div>İlaçlama: <b>${p.p?'Evet':'Yok'}</b></div>`;
   let bH=document.getElementById('bH');bH.disabled=!canHarvest;bH.style.opacity=canHarvest?1:.4;
   document.getElementById('bW').disabled=p.w;document.getElementById('bW').style.opacity=p.w?.4:1;
   document.getElementById('bP').disabled=p.p;document.getElementById('bP').style.opacity=p.p?.4:1;openM('plot')}
 
 function harvestP(){let p=S.plots[S.sel];if(!p||!p.crop)return;
-  if(p.nextHarvest>0){toast('Hasat icin bekleyin!');return}let cr=CROPS[p.crop];if(!cr)return;
+  if(p.nextHarvest>0){toast('Hasat için bekleyin!');return}let cr=CROPS[p.crop];if(!cr)return;
   let ib=p.w?Math.min(.2,S.st.SULAMA*.04):0,pb=p.p?Math.min(.2,S.st.ICLAMA*.04):0;
   let g=Math.min(1,(p.age/365)/cr.my);let y=cr.mk*g*cr.sea[S.sea];
   y/=3;if(p.w)y*=(1+ib);if(p.p)y*=(1+pb);
@@ -2433,9 +2435,9 @@ function harvestP(){let p=S.plots[S.sel];if(!p||!p.crop)return;
     p.age++;p.w=false;p.p=false;p.nextHarvest=480;advanceTime();
     toast(`${cr.name} hasat edildi! +${y.toFixed(1)} kg`);closeM('plot');draw();checkMissions()}
   else if(y>0){toast('Depo dolu!')}}
-function waterP(){let p=S.plots[S.sel];if(p&&!p.w){p.w=true;S.waterCount++;advanceTime();closeM('plot');toast('Sulama yapildi!');draw();checkMissions()}}
-function pestP(){let p=S.plots[S.sel];if(p&&!p.p){p.p=true;advanceTime();closeM('plot');toast('Ilaclama yapildi!');draw()}}
-function removeC(){let p=S.plots[S.sel];if(p){if(S.money<50){toast('50 TL gerekli!');return}S.money-=50;p.crop=null;p.age=0;p.w=false;p.p=false;p.nextHarvest=0;closeM('plot');toast('Sokuldu! -50 TL');draw()}}
+function waterP(){let p=S.plots[S.sel];if(p&&!p.w){p.w=true;S.waterCount++;advanceTime();closeM('plot');toast('Sulama yapıldı!');draw();checkMissions()}}
+function pestP(){let p=S.plots[S.sel];if(p&&!p.p){p.p=true;advanceTime();closeM('plot');toast('İlaçlama yapildi!');draw()}}
+function removeC(){let p=S.plots[S.sel];if(p){if(S.money<50){toast('50 TL gerekli!');return}S.money-=50;p.crop=null;p.age=0;p.w=false;p.p=false;p.nextHarvest=0;closeM('plot');toast('Söküldü! -50 TL');draw()}}
 
 function openM(id){document.getElementById('m'+id.charAt(0).toUpperCase()+id.slice(1)).classList.add('active');renderM(id)}
 function closeM(id){let el=document.getElementById('m'+id.charAt(0).toUpperCase()+id.slice(1));if(el)el.classList.remove('active')}
@@ -2483,14 +2485,14 @@ function renderM(id){
     let info=document.createElement('div');info.className='ac-info';
     info.innerHTML=`${cnt}/${cap}<br>${a.prod} | Her ${a.int} gun`;d.appendChild(info);
     let btn=document.createElement('button');btn.style.cssText='margin-top:4px;background:#5a8c3a;color:#fff;border:1px solid #8bc34a;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:9px;font-weight:bold';
-    btn.textContent=`Satinal ${a.price} TL`;btn.onclick=()=>buyA(k);d.appendChild(btn);
+    btn.textContent=`Satın al ${a.price} TL`;btn.onclick=()=>buyA(k);d.appendChild(btn);
     agrid.appendChild(d)});
     l.appendChild(agrid)}
   if(id==='storage'){let cap=500+S.st.DEPO*200,used=Object.values(S.inv).reduce((a,b)=>a+b,0);
     document.getElementById('storBar').innerHTML=`<div style="font-size:12px;color:#ccc">${used.toFixed(0)} / ${cap} kg</div><div class="sbar"><div class="sfill" style="width:${Math.min(100,used/cap*100)}%"></div></div>`;
     let l=document.getElementById('storList');l.innerHTML='';
     let grid=document.createElement('div');grid.className='catalog-grid';
-    [{k:'DOMATES',n:'Domates',u:'kg'},{k:'PATATES',n:'Patates',u:'kg'},{k:'SALATALIK',n:'Salatalik',u:'kg'},{k:'MARUL',n:'Marul',u:'kg'},{k:'BIBER',n:'Biber',u:'kg'},{k:'PATLICAN',n:'Patlican',u:'kg'},{k:'MISIR',n:'Misir',u:'kg'},{k:'KABAK',n:'Kabak',u:'kg'},{k:'SOGAN',n:'Sogan',u:'kg'},{k:'BUGDAY',n:'Bugday',u:'kg'},{k:'YUMURTA',n:'Yumurta',u:'adet'},{k:'SUT',n:'Sut',u:'litre'},{k:'YUN',n:'Yun',u:'adet'}].forEach(it=>{
+    [{k:'DOMATES',n:'Domates',u:'kg'},{k:'PATATES',n:'Patates',u:'kg'},{k:'SALATALIK',n:'Salatalık',u:'kg'},{k:'MARUL',n:'Marul',u:'kg'},{k:'BIBER',n:'Biber',u:'kg'},{k:'PATLICAN',n:'Patlıcan',u:'kg'},{k:'MISIR',n:'Mısır',u:'kg'},{k:'KABAK',n:'Kabak',u:'kg'},{k:'SOGAN',n:'Soğan',u:'kg'},{k:'BUGDAY',n:'Buğday',u:'kg'},{k:'YUMURTA',n:'Yumurta',u:'adet'},{k:'SUT',n:'Süt',u:'litre'},{k:'YUN',n:'Yün',u:'adet'}].forEach(it=>{
       let amt=S.inv[it.k]||0;
       let d=document.createElement('div');d.className='catalog-item';
       d.style.opacity=amt>0?1:0.3;
@@ -2501,27 +2503,27 @@ function renderM(id){
       d.appendChild(cv);
       let nm=document.createElement('div');nm.className='catalog-name';nm.textContent=it.n;d.appendChild(nm);
       let pr=document.createElement('div');pr.className='catalog-price';
-      pr.textContent=amt>0?amt.toFixed(0)+' '+it.u:'Bos';pr.style.color=amt>0?'#8bc34a':'#666';d.appendChild(pr);
+      pr.textContent=amt>0?amt.toFixed(0)+' '+it.u:'Boş';pr.style.color=amt>0?'#8bc34a':'#666';d.appendChild(pr);
       grid.appendChild(d)});
     l.appendChild(grid);
-    if(!grid.children.length)l.innerHTML='<div style="text-align:center;color:#666;padding:15px">&#128230; Depo bos!</div>'}
+    if(!grid.children.length)l.innerHTML='<div style="text-align:center;color:#666;padding:15px">&#128230; Depo boş!</div>'}
 }
 function buyA(k){let a=ANIM[k];if(S.money<a.price){toast('Yeterli paran yok!');return}
   if(k==='TAVUK'){
-    if(!S.built.kumes){toast('Once kumes insa et!');return}
-    let cap=5+S.st.KUMES;if(S.ch>=cap){toast('Kumes dolu!');return}S.ch++}
+    if(!S.built.kümes){toast('Önce kümes inşa et!');return}
+    let cap=5+S.st.KUMES;if(S.ch>=cap){toast('Kümes dolu!');return}S.ch++}
   else if(k==='INEK'){
-    if(!S.built.ahir){toast('Once ahir insa et!');return}
-    let cap=3+S.st.AHIR;if(S.co>=cap){toast('Ahir dolu!');return}S.co++}
+    if(!S.built.ahır){toast('Önce ahır inşa et!');return}
+    let cap=3+S.st.AHIR;if(S.co>=cap){toast('Ahır dolu!');return}S.co++}
   else if(k==='KOYUN'){
-    if(!S.built.ahir){toast('Once ahir insa et!');return}
-    let cap=3+S.st.AHIR;if(S.sh>=cap){toast('Ahir dolu!');return}S.sh++}
-  S.money-=a.price;toast(`${a.name} alindi!`);updateHUD()}
+    if(!S.built.ahır){toast('Önce ahır inşa et!');return}
+    let cap=3+S.st.AHIR;if(S.sh>=cap){toast('Ahır dolu!');return}S.sh++}
+  S.money-=a.price;toast(`${a.name} alındı!`);updateHUD()}
 function buySeed(k,cr){if(S.money<cr.buy){toast('Yeterli paran yok!');return}S.money-=cr.buy;
-  S.inv[k]=(S.inv[k]||0)+1;toast(`${cr.name} tohumu alindi! (+1 kg)`);updateHUD();renderM('shop')}
+  S.inv[k]=(S.inv[k]||0)+1;toast(`${cr.name} tohumu alındı! (+1 kg)`);updateHUD();renderM('shop')}
 
 function buyBuilding(k,price,name){
-  if(S.built[k]){toast('Zaten insa edildi!');return}
+  if(S.built[k]){toast('Zaten inşa edildi!');return}
   if(S.money<price){toast('Yeterli paran yok! ('+price+' TL)');return}
   S.money-=price;S.built[k]=true;
   if(k==='grid'){
@@ -2531,7 +2533,7 @@ function buyBuilding(k,price,name){
     }
   }
   S.animateBuilding={key:k,t:Date.now()};
-  toast(name+' insa edildi!');updateHUD();
+  toast(name+' inşa edildi!');updateHUD();
 }
 
 function updateHUD(){
@@ -2540,17 +2542,17 @@ function updateHUD(){
   let ss=document.getElementById('hSeason');ss.textContent=SEASONS[S.sea];
   document.getElementById('hYear').textContent=S.yr;
   document.getElementById('hMoney').textContent=S.money.toLocaleString()+' TL';
-  document.getElementById('hWhole').textContent=S.whArr?'Toptanci burada!':`Toptanci: ${String(S.whH).padStart(2,'0')}:${String(S.whM).padStart(2,'0')}`;
-  let wNames={gunesli:'Gunesli',bulutlu:'Bulutlu',yagmurlu:'Yagmurlu',karli:'Karli'};
+  document.getElementById('hWhole').textContent=S.whArr?'Toptancı burada!':`Toptancı: ${String(S.whH).padStart(2,'0')}:${String(S.whM).padStart(2,'0')}`;
+  let wNames={güneşli:'Güneşli',bulutlu:'Bulutlu',yağmurlu:'Yağmurlu',karlı:'Karlı'};
   document.getElementById('hWeather').textContent=WEATHER_ICONS[S.weather]+' '+wNames[S.weather];
   let windIcon=S.windSpeed<5?'&#127794;':S.windSpeed<10?'&#127796;':'&#127744;';
-  document.getElementById('hWind').innerHTML=windIcon+' Ruzgar: '+S.windSpeed+' km/h';
+  document.getElementById('hWind').innerHTML=windIcon+' Rüzgar: '+S.windSpeed+' km/h';
 }
 function toast(m){let t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 
 // ====== TASIMA SISTEMI ======
-const BUILDING_NAMES={ahir:'AHİR',kumes:'KÜMES',degirmen:'DEĞİRMEN',kuyu:'KUYU',grid:'TARLA'};
-const BUILDING_PRICES={ahir:2500,kumes:1500,degirmen:3000,kuyu:2000,grid:100};
+const BUILDING_NAMES={ahır:'AHİR',kümes:'KÜMES',degirmen:'DEĞİRMEN',kuyu:'KUYU',grid:'TARLA'};
+const BUILDING_PRICES={ahır:2500,kümes:1500,degirmen:3000,kuyu:2000,grid:100};
 
 function getBuildingAt(mx,my){
   let keys=Object.keys(BUILDING_NAMES);
@@ -2563,14 +2565,14 @@ function getBuildingAt(mx,my){
       if(!S.built.kuyu)continue;
       if(typeof wellS==='undefined')continue;
       if(Math.abs(mx-wellX)<wellS*0.7&&Math.abs(my-wellY)<wellS*0.7)return k;
-    }else if(k==='ahir'){
-      if(!S.built.ahir)continue;
+    }else if(k==='ahır'){
+      if(!S.built.ahır)continue;
       if(typeof barnS==='undefined')continue;
       if(Math.abs(mx-barnX)<barnS*0.7&&Math.abs(my-barnY)<barnS*0.7)return k;
-    }else if(k==='kumes'){
-      if(!S.built.kumes)continue;
-      if(typeof kumesS==='undefined')continue;
-      if(Math.abs(mx-kumesX)<kumesS*0.7&&Math.abs(my-kumesY)<kumesS*0.7)return k;
+    }else if(k==='kümes'){
+      if(!S.built.kümes)continue;
+      if(typeof kümesS==='undefined')continue;
+      if(Math.abs(mx-kümesX)<kümesS*0.7&&Math.abs(my-kümesY)<kümesS*0.7)return k;
     }else if(k==='degirmen'){
       if(!S.built.degirmen)continue;
       if(typeof wmS==='undefined')continue;
@@ -2582,14 +2584,14 @@ function getBuildingAt(mx,my){
 
 function startDrag(key){
   S.dragging=key;
-  toast('Binayi surukleyip birakin. ESC ile iptal.');
+  toast('Binayı sürükle bırakın. ESC ile iptal.');
 }
 
 function cancelDrag(){
   if(!S.dragging)return;
   S.dragging=null;
   S.buildingMenu=null;
-  toast('Tasima iptal edildi.');
+  toast('Taşıma iptal edildi.');
   draw();
 }
 
@@ -2599,7 +2601,7 @@ function finishDrag(){
   let pos=getBuildingCenter(key);
   if(!pos){cancelDrag();return}
   if(!isValidPlacement(key,pos.x,pos.y)){
-    toast('Gecersiz konum! Baska bir yere birakin.');
+    toast('Geçersiz konum! Başka bir yere bırakın.');
     return;
   }
   S.buildingPos[key]={x:pos.x,y:pos.y};
@@ -2612,7 +2614,7 @@ function finishDrag(){
     S.buildingPos.kuyu.y=pos.y+defKuyu.dy;
   }
   S.dragging=null;
-  toast(BUILDING_NAMES[key]+' yerlestirildi!');
+  toast(BUILDING_NAMES[key]+' yerleştirildi!');
   draw();
 }
 
@@ -2654,7 +2656,7 @@ function isValidPlacement(key,x,y){
 function sellBuilding(key){
   let price=BUILDING_PRICES[key]||0;
   let refund=Math.floor(price*SELL_RATIO);
-  if(!S.built[key]){toast('Bu bina insa edilmemis!');return}
+  if(!S.built[key]){toast('Bu bina inşa edilmemiş!');return}
   S.built[key]=false;
   S.money+=refund;
   S.buildingPos[key]=null;
@@ -2665,7 +2667,7 @@ function sellBuilding(key){
     S.irrigating=false;S.sel=-1;
   }
   S.buildingMenu=null;S.dragging=null;
-  toast(BUILDING_NAMES[key]+' satildi! +'+refund+' TL');
+  toast(BUILDING_NAMES[key]+' satıldı! +'+refund+' TL');
   updateHUD();
 }
 
@@ -2683,7 +2685,7 @@ function drawBuildingMenu(){
   X.fillStyle='rgba(40,25,10,0.95)';
   X.strokeStyle='#c8956c';X.lineWidth=2;
   X.beginPath();X.roundRect(bx,by,120,80,8);X.fill();X.stroke();
-  X.fillStyle='#ffe082';X.font='bold 11px sans-serif';X.textAlign='center';
+  X.fillStyle='#ffe082';X.font='bold 11px "Nunito",Arial,sans-serif';X.textAlign='center';
   X.fillText(BUILDING_NAMES[m.key],bx+60,by+16);
   let items=[
     {text:'📍 Kaydır',y:by+30,action:'drag'},
@@ -2691,7 +2693,7 @@ function drawBuildingMenu(){
     {text:'✖ İptal',y:by+70,action:'cancel'}
   ];
   items.forEach(it=>{
-    X.fillStyle='#d7ccc8';X.font='11px sans-serif';X.textAlign='center';
+    X.fillStyle='#d7ccc8';X.font='11px "Nunito",Arial,sans-serif';X.textAlign='center';
     if(mx>bx&&mx<bx+120&&my>it.y-8&&my<it.y+10){
       X.fillStyle='#ffe082';X.fillRect(bx+2,it.y-10,116,18);
       X.fillStyle='#3e2723';
@@ -2803,9 +2805,9 @@ function load(){let d=localStorage.getItem('farm5');
   if(d){let l=JSON.parse(d);if(l._v!==SAVE_VERSION){localStorage.removeItem('farm5');return}
     Object.assign(S,l);if(!S.dailyHarvest)S.dailyHarvest={};if(!S.dailyAnimal)S.dailyAnimal={};
     if(S.dailySold===undefined)S.dailySold=0;
-    if(!S.built)S.built={degirmen:false,kuyu:false,ahir:false,kumes:false,grid:false};
+    if(!S.built)S.built={degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false};
     if(S.built.grid===undefined)S.built.grid=false;
-    if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahir:null,kumes:null,degirmen:null};
+    if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null};
     S.dragging=null;S.buildingMenu=null;
     Object.keys(CROPS).forEach(k=>{if(S.dailyHarvest[k]===undefined)S.dailyHarvest[k]=0});
     if(S.dailyAnimal.YUMURTA===undefined)S.dailyAnimal.YUMURTA=0;
