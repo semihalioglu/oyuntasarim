@@ -2972,7 +2972,7 @@ function buyA(k){let a=ANIM[k];if(S.money<a.price){toast('Yeterli paran yok!');r
   else if(k==='KOYUN'){
     if(!S.built.ahır){toast('Önce ahır inşa et!');return}
     let cap=3+(S.buildingLevel.ahır||1);if(S.sh>=cap){toast('Ahır dolu!');return}S.sh++}
-  S.money-=a.price;toast(`${a.name} alındı!`);updateHUD()}
+  S.money-=a.price;toast(`${a.name} alındı!`);updateHUD();draw();renderM('animal')}
 function buySeed(k,cr){if(S.money<cr.buy){toast('Yeterli paran yok!');return}S.money-=cr.buy;
   S.inv[k]=(S.inv[k]||0)+1;toast(`${cr.name} tohumu alındı! (+1 kg)`);updateHUD();renderM('shop')}
 
@@ -3141,7 +3141,7 @@ function sellBuilding(key){
   }
   S.buildingMenu=null;S.dragging=null;
   toast(BUILDING_NAMES[key]+' satıldı! +'+refund+' TL');
-  updateHUD();
+  updateHUD();draw();
 }
 
 function showBuildingMenu(key,mx,my){
