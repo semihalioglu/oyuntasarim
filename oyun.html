@@ -87,7 +87,7 @@ canvas{display:block;cursor:pointer}
 .animal-card .ac-info{font-size:8px;color:#bbb;text-align:center}
 .animal-card .ac-price{font-size:9px;color:#8bc34a;font-weight:bold;margin-top:3px}
 .tutorial-overlay{position:fixed;inset:0;z-index:200;display:flex;align-items:center;justify-content:center}
-.tutorial-box{background:rgba(30,18,8,0.92);border:2px solid #8bc34a;border-radius:12px;padding:20px 24px;max-width:420px;width:90vw;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.6)}
+.tutorial-box{background:rgba(30,18,8,0.82);border:2px solid #8bc34a;border-radius:12px;padding:20px 24px;max-width:420px;width:90vw;text-align:center;box-shadow:0 4px 24px rgba(0,0,0,0.6);backdrop-filter:blur(4px)}
 .tutorial-title{color:#8bc34a;font-size:18px;font-weight:bold;margin-bottom:16px}
 .tutorial-chain{display:flex;align-items:center;justify-content:center;gap:4px;margin-bottom:16px;flex-wrap:wrap}
 .tutorial-chain .tc-item{width:48px;height:48px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:24px;border:2px solid #5d4037;background:rgba(0,0,0,0.3);transition:all .3s}
@@ -97,7 +97,7 @@ canvas{display:block;cursor:pointer}
 .tutorial-btn{background:linear-gradient(180deg,#5a8c3a,#3d6b24);color:#fff;border:2px solid #8bc34a;padding:10px 32px;border-radius:8px;font-size:15px;font-weight:bold;cursor:pointer;margin-top:8px}
 .tutorial-btn:hover{transform:scale(1.03)}
 .tutorial-close{position:absolute;top:8px;right:12px;background:none;border:none;color:#999;font-size:18px;cursor:pointer}
-.tutorial-step-popup{position:fixed;right:16px;top:50%;transform:translateY(-50%);background:rgba(30,18,8,0.88);border:2px solid #ff9800;border-radius:10px;padding:14px 18px;max-width:220px;z-index:210;box-shadow:0 4px 16px rgba(0,0,0,0.5)}
+.tutorial-step-popup{position:fixed;right:16px;top:50%;transform:translateY(-50%);background:rgba(30,18,8,0.75);border:2px solid #ff9800;border-radius:10px;padding:14px 18px;max-width:220px;z-index:210;box-shadow:0 4px 16px rgba(0,0,0,0.5);backdrop-filter:blur(4px)}
 .tutorial-step-num{color:#ff9800;font-size:12px;font-weight:bold;margin-bottom:6px}
 .tutorial-step-text{color:#ffe082;font-size:13px;line-height:1.4}
 .tutorial-step-text .step-action{display:inline-block;margin-top:8px;padding:6px 14px;background:#2e7d32;color:#fff;border-radius:6px;font-size:11px;font-weight:bold}
@@ -1570,14 +1570,16 @@ function drawOrganicPath(points,width){
 
 const TUTORIAL_STEPS={
   bread:[
-    {title:'Birlikte Ekmek Üretelim Mi?',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Buğdaydan ekmeğe uzanan yolculuğa hazır mısın?',action:null,speak:'Birlikte ekmek üretelim mi?'},
-    {title:'Adım 1: Tarlayı Sür',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Önce traktörle tarlayı sürmen gerekiyor.',action:'plow',speak:'Önce traktörle tarlayı sür.'},
-    {title:'Adım 2: Buğday Ek',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Şimdi tarlaya buğday tohumu ek.',action:'plant_bugday',speak:'Şimdi tarlaya buğday ek.'},
-    {title:'Adım 3: Sulama Yap',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Buğdayın büyümesi için su ver.',action:'water',speak:'Buğdayın büyümesi için sulama yap.'},
-    {title:'Adım 4: Hasat Et',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Buğday büyüdü! Hasat et.',action:'harvest_bugday',speak:'Buğday büyüdü! Hasat et.'},
-    {title:'Adım 5: Değirmende Öğüt',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Buğdayı değirmene götür, un olsun.',action:'grind',speak:'Buğdayı değirmende öğüt, un olsun.'},
-    {title:'Adım 6: Fırında Pişir',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Unu fırına koy, ekmek pişsin!',action:'bake',speak:'Unu fırında pişir, ekmek olsun!'},
-    {title:'Tebrikler! 🎉',chain:['🌾','⚙','📦','🔥','🍞'],desc:'Ekmeği başardın! Buğdaydan ekmeğe tüm yolu gördün.',action:null,speak:'Tebrikler! Ekmeği başarıyla ürettin!'}
+    {title:'Birlikte Ekmek Üretelim Mi?',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Buğdaydan ekmeğe uzanan yolculuğa hazır mısın?',action:null,speak:'Birlikte ekmek üretelim mi?'},
+    {title:'Adım 1: Tarla İnşa Et',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Önce tesislerden tarla inşa et.',action:'build_grid',speak:'Önce tesislerden tarla inşa et.'},
+    {title:'Adım 2: Tarlayı Sür',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Şimdi traktörle tarlayı sür.',action:'plow',speak:'Şimdi traktörle tarlayı sür.'},
+    {title:'Adım 3: Buğday Ek',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Tarlaya tıkla, buğday tohumu ek.',action:'plant_bugday',speak:'Şimdi tarlaya buğday ek.'},
+    {title:'Adım 4: Kuyu İnşa Et',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Sulama için kuyu inşa et (Tesislerden).',action:'build_kuyu',speak:'Sulama için kuyu inşa et.'},
+    {title:'Adım 5: Sulama Yap',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Kuyuya tıkla, sulamayı başlat.',action:'water',speak:'Kuyuya tıkla, sulamayı başlat.'},
+    {title:'Adım 6: Hasat Et',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Buğday büyüdü! Hasat et.',action:'harvest_bugday',speak:'Buğday büyüdü! Hasat et.'},
+    {title:'Adım 7: Değirmende Öğüt',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Değirmene tıkla, buğdayı un haline getir.',action:'grind',speak:'Buğdayı değirmende öğüt, un olsun.'},
+    {title:'Adım 8: Fırında Pişir',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Fırına tıkla, unu ekmek haline getir!',action:'bake',speak:'Unu fırında pişir, ekmek olsun!'},
+    {title:'Tebrikler! 🎉',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Ekmeği başardın! Buğdaydan ekmeğe tüm yolu gördün.',action:null,speak:'Tebrikler! Ekmeği başarıyla ürettin!'}
   ]
 };
 let tutorialStepDone=false;
@@ -1629,15 +1631,18 @@ function renderTutorial(){
   let stepEl=document.getElementById('tutorialStep');
   let stepNum=document.getElementById('stepNum');
   let stepText=document.getElementById('stepText');
+  let totalSteps=TUTORIAL_STEPS.bread.length-2;
   if(S.tutorial.step>0&&S.tutorial.step<TUTORIAL_STEPS.bread.length-1){
     stepEl.style.display='block';
-    stepNum.textContent='Adım '+S.tutorial.step+'/6';
+    stepNum.textContent='Adım '+S.tutorial.step+'/'+totalSteps;
     stepText.innerHTML=t.desc;
     if(t.action){
       let actLabel='';
-      if(t.action==='plow')actLabel='🚜 Traktörü aktifle';
+      if(t.action==='build_grid')actLabel='🏘 Tesislerden tarla satın al';
+      else if(t.action==='plow')actLabel='🚜 Traktörü aktifle, tarlaya tıkla';
       else if(t.action==='plant_bugday')actLabel='🌱 Tarlaya tıkla, buğday ek';
-      else if(t.action==='water')actLabel='💧 Kaynaktan sulama başlat';
+      else if(t.action==='build_kuyu')actLabel='🏘 Tesislerden kuyu satın al';
+      else if(t.action==='water')actLabel='💧 Kuyuya tıkla, sulama başlat';
       else if(t.action==='harvest_bugday')actLabel='🌾 Büyüyen buğdaya tıkla, hasat et';
       else if(t.action==='grind')actLabel='⚙ Değirmene tıkla, un üret';
       else if(t.action==='bake')actLabel='🔥 Fırına tıkla, ekmek pişir';
@@ -1646,12 +1651,26 @@ function renderTutorial(){
   }else{stepEl.style.display='none'}
 }
 
+function skipCompletedSteps(){
+  while(S.tutorial.step<TUTORIAL_STEPS.bread.length-1){
+    let st=TUTORIAL_STEPS.bread[S.tutorial.step];
+    if(!st)break;
+    let act=st.action;
+    if(!act)break;
+    if(act==='build_grid'&&S.built.grid){S.tutorial.step++;tutorialStepDone=false;continue}
+    if(act==='build_kuyu'&&S.built.kuyu){S.tutorial.step++;tutorialStepDone=false;continue}
+    break;
+  }
+}
+
 function tutorialNext(){
   if(S.tutorial.step===0){
     S.tutorial.step=1;tutorialStepDone=false;
-    renderTutorial();speakTR(TUTORIAL_STEPS.bread[1].speak);
+    skipCompletedSteps();
+    renderTutorial();speakTR(TUTORIAL_STEPS.bread[S.tutorial.step].speak);
   }else if(S.tutorial.step<TUTORIAL_STEPS.bread.length-1){
     S.tutorial.step++;tutorialStepDone=false;
+    skipCompletedSteps();
     renderTutorial();
     let st=TUTORIAL_STEPS.bread[S.tutorial.step];
     if(st)speakTR(st.speak);
@@ -2742,6 +2761,8 @@ function buyBuilding(k,price,name){
   }
   S.animateBuilding={key:k,t:Date.now()};
   toast(name+' inşa edildi!');updateHUD();
+  if(k==='grid')checkTutorialAction('build_grid');
+  if(k==='kuyu')checkTutorialAction('build_kuyu');
 }
 
 function updateHUD(){
