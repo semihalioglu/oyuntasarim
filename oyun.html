@@ -194,6 +194,7 @@ canvas{display:block;cursor:pointer}
     <div class="hud-info" id="hWeather" style="font-size:13px">Güneşli</div>
     <div class="hud-info" id="hWind" style="font-size:12px">Rüzgar: 5 km/h</div>
     <button class="hud-btn" onclick="advanceTime()">+10 DK</button>
+    <button class="hud-btn" onclick="doLogout()" title="Çıkış">🚪</button>
     <div class="hud-money" id="hMoney">5.000 TL</div>
 </div>
 <div class="mission-box" id="missionBox">
@@ -257,6 +258,10 @@ function doRegister(){
 function doGuestLogin(){
   localStorage.removeItem('farm5');
   sessionStorage.setItem('farm_user','Misafir');
+  location.reload();
+}
+function doLogout(){
+  sessionStorage.removeItem('farm_user');
   location.reload();
 }
 function startGame(){
