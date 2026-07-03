@@ -1575,16 +1575,18 @@ function drawOrganicPath(points,width){
 
 const TUTORIAL_STEPS={
   bread:[
-    {title:'Birlikte Ekmek Üretelim Mi?',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Buğdaydan ekmeğe uzanan yolculuğa hazır mısın?',action:null,speak:'Birlikte ekmek üretelim mi?'},
-    {title:'Adım 1: Tarla İnşa Et',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Önce tesislerden tarla inşa et.',action:'build_grid',speak:'Önce tesislerden tarla inşa et.'},
-    {title:'Adım 2: Tarlayı Sür',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Şimdi traktörle tarlayı sür.',action:'plow',speak:'Şimdi traktörle tarlayı sür.'},
-    {title:'Adım 3: Buğday Ek',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Tarlaya tıkla, buğday tohumu ek.',action:'plant_bugday',speak:'Şimdi tarlaya buğday ek.'},
-    {title:'Adım 4: Kuyu İnşa Et',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Sulama için kuyu inşa et (Tesislerden).',action:'build_kuyu',speak:'Sulama için kuyu inşa et.'},
-    {title:'Adım 5: Sulama Yap',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Kuyuya tıkla, sulamayı başlat.',action:'water',speak:'Kuyuya tıkla, sulamayı başlat.'},
-    {title:'Adım 6: Hasat Et',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Buğday büyüdü! Hasat et.',action:'harvest_bugday',speak:'Buğday büyüdü! Hasat et.'},
-    {title:'Adım 7: Değirmende Öğüt',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Değirmene tıkla, buğdayı un haline getir.',action:'grind',speak:'Buğdayı değirmende öğüt, un olsun.'},
-    {title:'Adım 8: Fırında Pişir',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Fırına tıkla, unu ekmek haline getir!',action:'bake',speak:'Unu fırında pişir, ekmek olsun!'},
-    {title:'Tebrikler! 🎉',chain:['🏗','🌾','💧','⚙','📦','🔥','🍞'],desc:'Ekmeği başardın! Buğdaydan ekmeğe tüm yolu gördün.',action:null,speak:'Tebrikler! Ekmeği başarıyla ürettin!'}
+    {title:'Birlikte Ekmek Üretelim Mi?',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Buğdaydan ekmeğe uzanan yolculuğa hazır mısın?',action:null,speak:'Birlikte ekmek üretelim mi?'},
+    {title:'Adım 1: Tarla İnşa Et',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Önce tesislerden tarla inşa et.',action:'build_grid',speak:'Önce tesislerden tarla inşa et.'},
+    {title:'Adım 2: Tarlayı Sür',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Şimdi traktörle tarlayı sür.',action:'plow',speak:'Şimdi traktörle tarlayı sür.'},
+    {title:'Adım 3: Buğday Ek',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Tarlaya tıkla, buğday tohumu ek.',action:'plant_bugday',speak:'Şimdi tarlaya buğday ek.'},
+    {title:'Adım 4: Kuyu İnşa Et',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Sulama için kuyu inşa et (Tesislerden).',action:'build_kuyu',speak:'Sulama için kuyu inşa et.'},
+    {title:'Adım 5: Sulama Yap',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Kuyuya tıkla, sulamayı başlat.',action:'water',speak:'Kuyuya tıkla, sulamayı başlat.'},
+    {title:'Adım 6: Hasat Et',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Buğday büyüdü! Hasat et.',action:'harvest_bugday',speak:'Buğday büyüdü! Hasat et.'},
+    {title:'Adım 7: Değirmen İnşa Et',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Buğdayı un yapmak için değirmen inşa et (Tesislerden).',action:'build_degirmen',speak:'Buğdayı un yapmak için değirmen inşa et.'},
+    {title:'Adım 8: Değirmende Öğüt',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Değirmene tıkla, buğdayı un haline getir.',action:'grind',speak:'Buğdayı değirmende öğüt, un olsun.'},
+    {title:'Adım 9: Fırın İnşa Et',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Ekmeği pişirmek için fırın inşa et (Tesislerden).',action:'build_fırın',speak:'Ekmeği pişirmek için fırın inşa et.'},
+    {title:'Adım 10: Fırında Pişir',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Fırına tıkla, unu ekmek haline getir!',action:'bake',speak:'Unu fırında pişir, ekmek olsun!'},
+    {title:'Tebrikler! 🎉',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Ekmeği başardın! Buğdaydan ekmeğe tüm yolu gördün.',action:null,speak:'Tebrikler! Ekmeği başarıyla ürettin!'}
   ]
 };
 let tutorialStepDone=false;
@@ -1640,7 +1642,7 @@ function renderTutorial(){
   let chainEl=document.getElementById('tutorialChain');
   chainEl.innerHTML='';
   t.chain.forEach((icon,i)=>{
-    if(i>0){let arr=document.createElement('span');arr.className='tutorial-chain';arr.textContent='→';chainEl.appendChild(arr)}
+    if(i>0){let arr=document.createElement('span');arr.className='tc-arrow';arr.textContent='→';chainEl.appendChild(arr)}
     let item=document.createElement('div');
     item.className='tc-item';
     if(i<S.tutorial.step)item.classList.add('done');
@@ -1669,7 +1671,9 @@ function renderTutorial(){
       else if(t.action==='build_kuyu')actLabel='🏘 Tesislerden kuyu satın al';
       else if(t.action==='water')actLabel='💧 Kuyuya tıkla, sulama başlat';
       else if(t.action==='harvest_bugday')actLabel='🌾 Büyüyen buğdaya tıkla, hasat et';
+      else if(t.action==='build_degirmen')actLabel='🏘 Tesislerden değirmen satın al';
       else if(t.action==='grind')actLabel='⚙ Değirmene tıkla, un üret';
+      else if(t.action==='build_fırın')actLabel='🏘 Tesislerden fırın satın al';
       else if(t.action==='bake')actLabel='🔥 Fırına tıkla, ekmek pişir';
       if(actLabel)stepText.innerHTML+='<br><span class="step-action">'+actLabel+'</span>';
     }
@@ -1683,7 +1687,9 @@ function isStepDone(action){
   if(action==='build_kuyu')return S.built.kuyu;
   if(action==='water')return S.plots.some(p=>p.crop==='BUGDAY'&&p.w);
   if(action==='harvest_bugday')return(S.inv.BUGDAY||0)>0;
+  if(action==='build_degirmen')return S.built.degirmen;
   if(action==='grind')return(S.invUN||0)>0;
+  if(action==='build_fırın')return S.built.fırın;
   if(action==='bake')return(S.invEKMEK||0)>0;
   return false;
 }
@@ -2247,7 +2253,7 @@ function harvest(){
     let age=p.age/365,g=Math.min(1,age/cr.my);let y=cr.mk*g*cr.sea[S.sea];
   y/=3;if(p.w)y*=(1+ib);if(p.p)y*=(1+pb);
     if(y>0&&(used+y)<=cap){S.inv[p.crop]=(S.inv[p.crop]||0)+y;S.dailyHarvest[p.crop]=(S.dailyHarvest[p.crop]||0)+y;used+=y}
-    p.age++;p.w=false;p.p=false;p.nextHarvest=480;
+    p.age++;p.w=false;p.p=false;p.nextHarvest=p.crop==='BUGDAY'?120:480;
   });
 }
 
@@ -2671,7 +2677,7 @@ function openPlantM(r,c){let l=document.getElementById('plantList');l.innerHTML=
     let harvestInfo='3\'te 1 gün';let winterNote=isWinter?' (Kışın ekilmez)':'';
     d.innerHTML=`<div class="inf"><div class="nm">${cr.name}${winterNote}</div><div class="dt">Sebze | Max:${cr.mk}kg | Hasat: ${harvestInfo}</div></div><div class="pr">${cr.buy} TL</div>`;
     if(!ok){d.style.opacity='.3';d.style.cursor='not-allowed'}
-    else d.onclick=()=>{if(S.money<cr.buy){toast('Yeterli paran yok!');return}S.money-=cr.buy;let p=getP(r,c);p.crop=k;p.age=0;p.w=false;p.p=false;p.nextHarvest=480;S.plantCount++;advanceTime();closeM('plant');toast(`${cr.name} ekildi!`);if(k==='BUGDAY')checkTutorialAction('plant_bugday');draw()};
+    else d.onclick=()=>{if(S.money<cr.buy){toast('Yeterli paran yok!');return}S.money-=cr.buy;let p=getP(r,c);p.crop=k;p.age=0;p.w=false;p.p=false;p.nextHarvest=k==='BUGDAY'?120:480;S.plantCount++;advanceTime();closeM('plant');toast(`${cr.name} ekildi!`);if(k==='BUGDAY')checkTutorialAction('plant_bugday');draw()};
     l.appendChild(d)});openM('plant')}
 
 function openPlotM(r,c){let p=getP(r,c),cr=CROPS[p.crop];if(!cr)return;
@@ -2693,7 +2699,7 @@ function harvestP(){let p=S.plots[S.sel];if(!p||!p.crop)return;
   y/=3;if(p.w)y*=(1+ib);if(p.p)y*=(1+pb);
   let cap=500+S.st.DEPO*200,used=Object.values(S.inv).reduce((a,b)=>a+b,0);
   if(y>0&&(used+y)<=cap){S.inv[p.crop]=(S.inv[p.crop]||0)+y;S.dailyHarvest[p.crop]=(S.dailyHarvest[p.crop]||0)+y;
-    p.age++;p.w=false;p.p=false;p.nextHarvest=480;advanceTime();
+    p.age++;p.w=false;p.p=false;p.nextHarvest=p.crop==='BUGDAY'?120:480;advanceTime();
     toast(`${cr.name} hasat edildi! +${y.toFixed(1)} kg`);closeM('plot');if(p.crop==='BUGDAY')checkTutorialAction('harvest_bugday');draw();checkMissions()}
   else if(y>0){toast('Depo dolu!')}}
 function waterP(){let p=S.plots[S.sel];if(p&&!p.w){p.w=true;S.waterCount++;advanceTime();closeM('plot');toast('Sulama yapıldı!');draw();checkMissions()}}
@@ -2797,6 +2803,8 @@ function buyBuilding(k,price,name){
   toast(name+' inşa edildi!');updateHUD();
   if(k==='grid')checkTutorialAction('build_grid');
   if(k==='kuyu')checkTutorialAction('build_kuyu');
+  if(k==='degirmen')checkTutorialAction('build_degirmen');
+  if(k==='fırın')checkTutorialAction('build_fırın');
 }
 
 function updateHUD(){
