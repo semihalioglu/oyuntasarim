@@ -1,3 +1,5 @@
+import GameManager from './gameManager.js';
+const CROPS=GameManager.CROPS;
 const Drawing = {
 drawPixelRect(x,y,w,h,color){
   X.fillStyle=color;X.fillRect(Math.floor(x),Math.floor(y),Math.ceil(w),Math.ceil(h));
@@ -1866,7 +1868,7 @@ drawGridToCanvas(c,s){
   c.restore();
 },
 
-drawMiniCrop(c,s){
+drawMiniCrop(c,type,s){
   c.save();c.translate(s/2,s/2);
   let cols=CROPS[type];if(!cols){c.restore();return}
   let c1=cols.col[0],c2=cols.col[1];
