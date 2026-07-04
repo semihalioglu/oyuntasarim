@@ -628,6 +628,7 @@ function loop(){
   requestAnimationFrame(loop);
 }
 
+window.startGame=startGame;
 window.showLoginTab=UIManager.showLoginTab;
 window.showErr=UIManager.showErr;
 window.doLogin=function(){
