@@ -668,6 +668,7 @@ function startGame(){
 
   window.X=X;window.CV=CV;window.W=W;window.H=H;window.DPR=DPR;window.isMobile=isMobile;
   window.S=S;window.CF=CF;window.GX=GX;window.GY=GY;window.CL=CL;window.sceneTop=sceneTop;
+  window.GameManager=GameManager;
   window.ISLANDSCAPE=ISLANDSCAPE;window.GRID_LINKED_KUYU=GRID_LINKED_KUYU;window.ROWS=ROWS;window.COLS=COLS;
   window.barnX=barnX;window.barnY=barnY;window.barnS=barnS;
   window.kümesX=kümesX;window.kümesY=kümesY;window.kümesS=kümesS;

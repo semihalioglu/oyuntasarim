@@ -1,5 +1,3 @@
-import GameManager from './gameManager.js';
-const CROPS=GameManager.CROPS;
 const Drawing = {
 drawPixelRect(x,y,w,h,color){
   X.fillStyle=color;X.fillRect(Math.floor(x),Math.floor(y),Math.ceil(w),Math.ceil(h));
@@ -1870,7 +1868,7 @@ drawGridToCanvas(c,s){
 
 drawMiniCrop(c,type,s){
   c.save();c.translate(s/2,s/2);
-  let cols=CROPS[type];if(!cols){c.restore();return}
+  let cols=GameManager.CROPS[type];if(!cols){c.restore();return}
   let c1=cols.col[0],c2=cols.col[1];
   if(type==='DOMATES'){
     c.fillStyle='#4caf50';c.fillRect(-1,-s*0.35,2,s*0.25);
@@ -1998,7 +1996,7 @@ drawMiniProduct(c,type,s){
     c.fillStyle='#e8c040';c.beginPath();c.arc(-s*0.06,-s*0.04,s*0.03,0,Math.PI*2);c.fill();
     c.beginPath();c.arc(s*0.06,-s*0.04,s*0.03,0,Math.PI*2);c.fill();
   }else{
-    let cols=CROPS[type];
+    let cols=GameManager.CROPS[type];
     if(cols){Drawing.drawMiniCrop(c,type,s)}else{
       c.fillStyle='#8d6e63';c.beginPath();c.arc(0,0,s*0.2,0,Math.PI*2);c.fill();
     }
