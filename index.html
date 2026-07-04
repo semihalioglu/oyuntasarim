@@ -124,6 +124,55 @@ canvas{display:block;cursor:pointer;touch-action:none;image-rendering:auto;-webk
 .login-tab{flex:1;padding:8px;text-align:center;cursor:pointer;border-bottom:2px solid transparent;color:#8d6e63;font-weight:bold;font-size:13px;transition:all .2s}
 .login-tab.active{color:#ffe082;border-bottom-color:#ffe082}
 </style>
+<script>
+window.showLoginTab=function(t){
+  document.querySelectorAll('.login-tab').forEach(function(el){el.classList.remove('active')});
+  document.getElementById('loginForm').style.display=t==='login'?'block':'none';
+  document.getElementById('registerForm').style.display=t==='register'?'block':'none';
+  document.querySelectorAll('.login-tab')[t==='login'?0:1].classList.add('active');
+  document.getElementById('loginErr').style.display='none';
+  document.getElementById('regErr').style.display='none';
+};
+window.showErr=function(id,msg){
+  var e=document.getElementById(id);e.textContent=msg;e.style.display='block';
+};
+window.doLogin=function(){
+  var u=document.getElementById('loginUser').value.trim();
+  var p=document.getElementById('loginPass').value;
+  if(!u||!p){showErr('loginErr','Kullanıcı adı ve şifre gerekli');return}
+  var users;
+  try{users=JSON.parse(localStorage.getItem('farm_users')||'{}')}catch(e){users={}}
+  if(!users[u]){showErr('loginErr','Böyle bir kullanıcı yok');return}
+  if(users[u]!==p){showErr('loginErr','Şifre hatalı');return}
+  sessionStorage.setItem('farm_user',u);
+  if(typeof startGame==='function'){startGame()}
+  else{location.reload()}
+};
+window.doRegister=function(){
+  var u=document.getElementById('regUser').value.trim();
+  var p=document.getElementById('regPass').value;
+  var p2=document.getElementById('regPass2').value;
+  if(!u||u.length<3){showErr('regErr','Kullanıcı adı en az 3 karakter');return}
+  if(!p||p.length<4){showErr('regErr','Şifre en az 4 karakter');return}
+  if(p!==p2){showErr('regErr','Şifreler eşleşmiyor');return}
+  var users;
+  try{users=JSON.parse(localStorage.getItem('farm_users')||'{}')}catch(e){users={}}
+  if(users[u]){showErr('regErr','Bu kullanıcı adı zaten var');return}
+  users[u]=p;localStorage.setItem('farm_users',JSON.stringify(users));
+  sessionStorage.setItem('farm_user',u);
+  if(typeof startGame==='function'){startGame()}
+  else{location.reload()}
+};
+window.doGuestLogin=function(){
+  localStorage.removeItem('farm5');
+  sessionStorage.setItem('farm_user','Misafir');
+  location.reload();
+};
+window.doLogout=function(){
+  sessionStorage.removeItem('farm_user');
+  location.reload();
+};
+</script>
 <script type="module" src="app/js/core.js"></script>
 </head>
 <body>
