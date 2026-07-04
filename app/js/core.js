@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.012';
-import UIManager from './uiManager.js?v=1.012';
-import GameManager from './gameManager.js?v=1.012';
-import Drawing from './drawing.js?v=1.012';
+import StorageManager from './storageManager.js?v=1.013';
+import UIManager from './uiManager.js?v=1.013';
+import GameManager from './gameManager.js?v=1.013';
+import Drawing from './drawing.js?v=1.013';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
@@ -658,8 +658,7 @@ window.doGuestLogin=function(){
   localStorage.removeItem('farm5');
   sessionStorage.setItem('farm_user','Misafir');
   if(typeof startGame==='function'){
-    GameManager.S.plots=[];GameManager.S.plowed=[];
-    GameManager.init();
+    GameManager.resetState();
     startGame();
   }else{location.reload()}
 };
