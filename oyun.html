@@ -11,7 +11,7 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:"Nunito","Segoe UI",Arial,sans-serif;background:#2d5a1e;overflow:hidden;height:100vh;user-select:none}
-canvas{display:block;cursor:pointer}
+canvas{display:block;cursor:pointer;touch-action:none;image-rendering:auto;-webkit-tap-highlight-color:transparent}
 .hud{position:fixed;top:0;left:0;right:0;display:flex;align-items:center;padding:4px 14px;background:linear-gradient(180deg,rgba(60,40,20,0.95),rgba(40,25,10,0.95));border-bottom:3px solid #c8956c;z-index:10;height:38px;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,0.4);font-family:'Courier New',monospace}
 .hud-clock{font-size:18px;font-weight:bold;color:#ffe082}
 .hud-info{font-size:12px;color:#d7ccc8}.hud-info b{color:#fff}
@@ -213,9 +213,9 @@ canvas{display:block;cursor:pointer}
     <div class="hud-info" id="hWeather" style="font-size:13px">Güneşli</div>
     <div class="hud-info" id="hWind" style="font-size:12px">Rüzgar: 5 km/h</div>
     <button class="hud-btn" onclick="advanceTime()">+10 DK</button>
-    <button class="hud-btn" onclick="zoomTarget=Math.max(0.5,zoomTarget-0.2);zoomCX=W/2;zoomCY=H/2;draw()" title="Uzaklaştır">➖</button>
-    <button class="hud-btn" onclick="zoomTarget=1;zoomCX=W/2;zoomCY=H/2;draw()" title="Sıfırla">🔄</button>
-    <button class="hud-btn" onclick="zoomTarget=Math.min(3,zoomTarget+0.2);zoomCX=W/2;zoomCY=H/2;draw()" title="Yakınlaştır">➕</button>
+    <button class="hud-btn" onclick="zoomTarget=Math.max(0.5,zoomTarget-0.2);zoomCX=W/2;zoomCY=H/2;panX=0;panY=0;draw()" title="Uzaklaştır">➖</button>
+    <button class="hud-btn" onclick="zoomTarget=1;zoomCX=W/2;zoomCY=H/2;panX=0;panY=0;draw()" title="Sıfırla">🔄</button>
+    <button class="hud-btn" onclick="zoomTarget=Math.min(3,zoomTarget+0.2);zoomCX=W/2;zoomCY=H/2;panX=0;panY=0;draw()" title="Yakınlaştır">➕</button>
     <button class="hud-btn" onclick="doLogout()" title="Çıkış">🚪</button>
     <div class="hud-money" id="hMoney">5.000 TL</div>
 </div>
@@ -319,26 +319,29 @@ const ROWS=5,COLS=10;
 const SEASONS=['İlkbahar','Yaz','Sonbahar','Kış'];
 const FACTS=['Bir tavuk yılda ~250 yumurta verir.','İnekler günde 8-10 lt süt verebilir.','Marulun %95\'i sudur.','Patates dünyanın en önemli gıdasıdır.','Salatalık yazın çok yetiştirir.','Tarlayi sulamak ürünu %20 artırır.','İlaçlama bocekleri engeller.','Biber C vitamini açısından zengindir.','Mısır lif bakımından faydalıdır.','Kabak omega-3 içerir.','Soğan antibakteriyel özelliğe sahiptir.','Patlıcan kalp sağlığına iyi gelir.','Rüzgar değirmeni enerji üretir!','Sera kış bile ekim yapmaya olanak sağlar.'];
 const CROPS={
-DOMATES:{name:'Domates',my:1,mk:0.6,buy:8,sell:9,sea:[.3,1,.7,0],col:['#c62828','#e53935'],harvestInt:3,maxHarvest:3},
-PATATES:{name:'Patates',my:1,mk:0.8,buy:6,sell:7,sea:[.5,.9,1,0],col:['#6d4c41','#8d6e63'],harvestInt:3,maxHarvest:3},
-SALATALIK:{name:'Salatalık',my:1,mk:0.5,buy:10,sell:10,sea:[.4,1,.8,0],col:['#2e7d32','#43a047'],harvestInt:3,maxHarvest:3},
-MARUL:{name:'Marul',my:0.5,mk:0.4,buy:12,sell:12,sea:[.7,1,.5,0],col:['#558b2f','#7cb342'],harvestInt:3,maxHarvest:2},
-BIBER:{name:'Biber',my:1,mk:0.5,buy:9,sell:10,sea:[.3,1,.6,0],col:['#c62828','#ff5722'],harvestInt:3,maxHarvest:3},
-PATLICAN:{name:'Patlıcan',my:1.2,mk:0.7,buy:11,sell:12,sea:[.2,1,.7,0],col:['#4a148c','#6a1b9a'],harvestInt:3,maxHarvest:3},
-MISIR:{name:'Mısır',my:1,mk:0.8,buy:7,sell:8,sea:[.4,1,.8,0],col:['#f9a825','#fdd835'],harvestInt:3,maxHarvest:1},
-KABAK:{name:'Kabak',my:1,mk:0.6,buy:8,sell:9,sea:[.3,1,.7,0],col:['#e65100','#ff9800'],harvestInt:3,maxHarvest:2},
-SOGAN:{name:'Soğan',my:0.8,mk:0.5,buy:5,sell:6,sea:[.5,.9,1,.1],col:['#8d6e63','#a1887f'],harvestInt:3,maxHarvest:1},
-BUGDAY:{name:'Buğday',my:0.8,mk:0.4,buy:4,sell:5,sea:[.6,.9,.3,0],col:['#d4a017','#c68f00'],harvestInt:4,maxHarvest:1}
+DOMATES:{name:'Domates',my:1,mk:1.2,buy:8,sell:9,sea:[.3,1,.7,0],col:['#c62828','#e53935'],harvestInt:3,maxHarvest:3},
+PATATES:{name:'Patates',my:1,mk:1.0,buy:6,sell:7,sea:[.5,.9,1,0],col:['#6d4c41','#8d6e63'],harvestInt:3,maxHarvest:3},
+SALATALIK:{name:'Salatalık',my:1,mk:1.0,buy:10,sell:10,sea:[.4,1,.8,0],col:['#2e7d32','#43a047'],harvestInt:3,maxHarvest:3},
+MARUL:{name:'Marul',my:0.5,mk:0.8,buy:12,sell:12,sea:[.7,1,.5,0],col:['#558b2f','#7cb342'],harvestInt:3,maxHarvest:2},
+BIBER:{name:'Biber',my:1,mk:1.0,buy:9,sell:10,sea:[.3,1,.6,0],col:['#c62828','#ff5722'],harvestInt:3,maxHarvest:3},
+PATLICAN:{name:'Patlıcan',my:1.2,mk:1.0,buy:11,sell:12,sea:[.2,1,.7,0],col:['#4a148c','#6a1b9a'],harvestInt:3,maxHarvest:3},
+MISIR:{name:'Mısır',my:1,mk:1.0,buy:7,sell:8,sea:[.4,1,.8,0],col:['#f9a825','#fdd835'],harvestInt:3,maxHarvest:1},
+KABAK:{name:'Kabak',my:1,mk:0.8,buy:8,sell:9,sea:[.3,1,.7,0],col:['#e65100','#ff9800'],harvestInt:3,maxHarvest:2},
+SOGAN:{name:'Soğan',my:0.8,mk:0.8,buy:5,sell:6,sea:[.5,.9,1,.1],col:['#8d6e63','#a1887f'],harvestInt:3,maxHarvest:1},
+BUGDAY:{name:'Buğday',my:0.8,mk:1.0,buy:4,sell:5,sea:[.6,.9,.3,0],col:['#d4a017','#c68f00'],harvestInt:4,maxHarvest:1}
 };
 const ANIM={TAVUK:{name:'Tavuk',price:50,int:2,adet:3,prod:'Yumurta',feed:15,sell:2,unit:'adet'},INEK:{name:'İnek',price:200,int:10,litre:8,prod:'Süt',feed:45,sell:12,unit:'litre'},KOYUN:{name:'Koyun',price:150,int:3,adet:1,prod:'Yün',feed:25,sell:8,unit:'adet'}};
 const BUILDING_MAX_LEVEL=10;
-const UPGRADE_COST={ahır:500,kümes:400,kuyu:600,degirmen:800,fırın:700};
+const UPGRADE_COST={ahır:500,kümes:400,kuyu:600,degirmen:800,fırın:700,sutislem:700,peynirfab:800,salçafab:600};
 const UPGRADE_DESC={
   ahır:{name:'Ahır',effect:l=>`+${l} hayvan kapasitesi, +${l*2} lt süt/sağım`,icon:'🐄'},
   kümes:{name:'Kümes',effect:l=>`+${l} tavuk kapasitesi, +${l} yumurta/gün`,icon:'🐔'},
   kuyu:{name:'Kuyu',effect:l=>`Sulama süresi -${l*2} dk (min ${Math.max(10,40-l*3)} dk)`,icon:'💧'},
   degirmen:{name:'Değirmen',effect:l=>`Öğütme hızı x${(1+l*0.1).toFixed(1)}`,icon:'⚙️'},
-  fırın:{name:'Fırın',effect:l=>`Pişirme hızı x${(1+l*0.1).toFixed(1)}`,icon:'🔥'}
+  fırın:{name:'Fırın',effect:l=>`Pişirme hızı x${(1+l*0.1).toFixed(1)}`,icon:'🔥'},
+  sutislem:{name:'Süt İşleme',effect:l=>`Verimlilik +${l*10}%`,icon:'🫙'},
+  peynirfab:{name:'Peynir Fabrikası',effect:l=>`Verimlilik +${l*10}%`,icon:'🧀'},
+  salçafab:{name:'Salça Fabrikası',effect:l=>`Verimlilik +${l*10}%`,icon:'🍅'}
 };
 function getUpgradeCost(key){let lv=S.buildingLevel?S.buildingLevel[key]||1:1;return Math.floor(UPGRADE_COST[key]*lv*1.5)}
 const MISSION_TEMPLATES=[
@@ -361,17 +364,26 @@ let S={money:100000,day:1,sea:0,yr:1,h:6,m:0,
   weather:'güneşli',weatherTimer:0,windSpeed:5,
   irrigating:false,irrigStartH:0,irrigStartM:0,irrigEndH:0,irrigEndM:0,
   irrigDrops:[],
-  built:{degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false,fırın:false},
-  buildingLevel:{ahır:1,kümes:1,kuyu:1,degirmen:1,fırın:1},
+  built:{degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false,fırın:false,sutislem:false,peynirfab:false,salçafab:false},
+  buildingLevel:{ahır:1,kümes:1,kuyu:1,degirmen:1,fırın:1,sutislem:1,peynirfab:1,salçafab:1},
   buildingPos:null,dragging:null,dragOffset:{x:0,y:0},
   longPressTimer:null,buildingMenu:null,animateBuilding:null,
   tutorial:{active:false,step:0,type:'bread',completed:false},invUN:0,invEKMEK:0
 };
-if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null,fırın:null};
-Object.keys(CROPS).forEach(k=>{S.inv[k]=0;S.dailyHarvest[k]=0});S.inv.YUMURTA=0;S.inv.SUT=0;S.inv.YUN=0;S.dailyAnimal.YUMURTA=0;S.dailyAnimal.SUT=0;S.dailyAnimal.YUN=0;
-for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0,harvestCount:0});
+    if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null,fırın:null,sutislem:null,peynirfab:null,salçafab:null};
+Object.keys(CROPS).forEach(k=>{S.inv[k]=0;S.dailyHarvest[k]=0});S.inv.YUMURTA=0;S.inv.SUT=0;S.inv.YUN=0;S.inv.YOGURT=0;S.inv.PEYNIR=0;S.inv.TEREYAGI=0;S.inv.SALCA=0;S.dailyAnimal.YUMURTA=0;S.dailyAnimal.SUT=0;S.dailyAnimal.YUN=0;
+for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0,harvestCount:0,plowTimer:1080,wetTimer:0});
 for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plowed.push(r*COLS+c);
-function resize(){W=window.innerWidth;H=window.innerHeight;CV.width=W;CV.height=H}
+let isMobile=(/Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))||window.innerWidth<768;
+let DPR=Math.min(window.devicePixelRatio||1, isMobile?2:3);
+function resize(){
+  W=window.innerWidth;H=window.innerHeight;
+  isMobile=(/Android|iPhone|iPad|iPod|webOS|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent))||window.innerWidth<768;
+  DPR=Math.min(window.devicePixelRatio||1, isMobile?2:3);
+  CV.width=W*DPR;CV.height=H*DPR;
+  CV.style.width=W+'px';CV.style.height=H+'px';
+  X.setTransform(DPR,0,0,DPR,0,0);
+}
 window.addEventListener('resize',resize);resize();
 
 let GX,GY,CL,sceneTop;
@@ -379,6 +391,9 @@ let barnX=0,barnY=0,barnS=0,kümesX=0,kümesY=0,kümesS=0;
 let wellX=0,wellY=0,wellS=0;
 let wmX=0,wmY=0,wmS=0;
 let firinX=0,firinY=0,firinS=0;
+let sutIslemX=0,sutIslemY=0,sutIslemS=0;
+let peynirX=0,peynirY=0,peynirS=0;
+let salcaX=0,salcaY=0,salcaS=0;
 let sutCount=0,yumurtaCount=0;
 let rainDrops=[],snowFlakes=[];
 const WEATHERS=['güneşli','bulutlu','yağmurlu','karlı'];
@@ -388,6 +403,7 @@ let ISLANDSCAPE=false;
 const GRID_LINKED_KUYU=true;
 const SELL_RATIO=0.6;
 let zoomLevel=1,zoomTarget=1,zoomCX=W/2,zoomCY=H/2;
+let panX=0,panY=0,isPanning=false,wasPanning=false,panStartX=0,panStartY=0,panStartPX=0,panStartPY=0;
 let pinchDist0=0,pinchZoom0=1;
 function calcLayout(){
   let toolbarH=48,hudH=38;
@@ -408,8 +424,8 @@ function calcLayout(){
   }
 }
 calcLayout();window.addEventListener('resize',()=>{calcLayout()});
-function screenToScene(sx,sy){return{x:(sx-zoomCX)/zoomLevel+zoomCX,y:(sy-zoomCY)/zoomLevel+zoomCY}}
-function sceneToScreen(sx,sy){return{x:(sx-zoomCX)*zoomLevel+zoomCX,y:(sy-zoomCY)*zoomLevel+zoomCY}}
+function screenToScene(sx,sy){return{x:(sx-panX-zoomCX)/zoomLevel+zoomCX,y:(sy-panY-zoomCY)/zoomLevel+zoomCY}}
+function sceneToScreen(sx,sy){return{x:(sx-zoomCX)*zoomLevel+zoomCX+panX,y:(sy-zoomCY)*zoomLevel+zoomCY+panY}}
 
 const P={px:W*0.42,py:0};let frameCount=0;let windmillAngle=0;let lastFrameTime=Date.now();
 
@@ -572,6 +588,114 @@ function drawFenceSegment(x1,y1,x2,y2){
     let px=x1+ux*i*15,py=y1+uy*i*15;
     X.fillStyle='#5d4037';X.fillRect(px-1.5,py-6,3,8);
     X.fillStyle='#4e342e';X.beginPath();X.arc(px,py-6,2,0,Math.PI*2);X.fill();
+  }
+}
+
+function drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
+  let targets=[];
+  if(S.built.grid)targets.push({x:gridCX,y:gridBottom,k:'grid'});
+  if(S.built.kuyu){
+    let kx,ky;
+    if(S.buildingPos.kuyu){kx=S.buildingPos.kuyu.x;ky=S.buildingPos.kuyu.y}
+    else if(S.built.grid){kx=gridCX;ky=gridBottom+CL*1.5}
+    else{kx=W*0.5;ky=GY+CL*3}
+    targets.push({x:kx,y:ky,k:'kuyu'});
+  }
+  if(S.built.ahır){
+    let ax,ay;
+    if(S.buildingPos.ahır){ax=S.buildingPos.ahır.x;ay=S.buildingPos.ahır.y}
+    else{ax=S.built.grid?Math.max(gridRight+CL*1.0,Math.min(W*0.88,gridRight+CL*2.5+CL*0.5)):W*0.88;ay=sceneTop+Math.floor((H-86)*0.02)}
+    targets.push({x:ax,y:ay,k:'ahır'});
+  }
+  if(S.built.kümes){
+    let kx,ky;
+    if(S.buildingPos.kümes){kx=S.buildingPos.kümes.x;ky=S.buildingPos.kümes.y}
+    else{
+      let ax2;if(S.buildingPos.ahır)ax2=S.buildingPos.ahır.x;else ax2=S.built.grid?Math.max(gridRight+CL,Math.min(W*0.88,gridRight+CL*3)):W*0.88;
+      let ay2;if(S.buildingPos.ahır)ay2=S.buildingPos.ahır.y;else ay2=sceneTop+2;
+      kx=ax2;ky=ay2+CL*5;
+    }
+    targets.push({x:kx,y:ky,k:'kümes'});
+  }
+  if(S.built.degirmen){
+    let dx,dy;
+    if(S.buildingPos.degirmen){dx=S.buildingPos.degirmen.x;dy=S.buildingPos.degirmen.y}
+    else{dx=hx;dy=hy+houseS*1.5}
+    targets.push({x:dx,y:dy,k:'degirmen'});
+  }
+  if(S.built.fırın){
+    let fx,fy;
+    if(S.buildingPos.fırın){fx=S.buildingPos.fırın.x;fy=S.buildingPos.fırın.y}
+    else{let fs=CL*(ISLANDSCAPE?2.0:1.6);fx=gridRight+fs*1.2;fy=sceneTop+fs*1.8;if(fx+fs>W-fs){fx=hx+houseS*1.5;fy=hy+houseS*1.8}}
+    targets.push({x:fx,y:fy,k:'fırın'});
+  }
+  if(S.built.sutislem){
+    let sx,sy;
+    if(S.buildingPos.sutislem){sx=S.buildingPos.sutislem.x;sy=S.buildingPos.sutislem.y}
+    else{sx=gridRight+CL*2;sy=sceneTop+CL*2}
+    targets.push({x:sx,y:sy,k:'sutislem'});
+  }
+  if(S.built.peynirfab){
+    let px,py;
+    if(S.buildingPos.peynirfab){px=S.buildingPos.peynirfab.x;py=S.buildingPos.peynirfab.y}
+    else{px=gridRight+CL*2;py=sceneTop+CL*5}
+    targets.push({x:px,y:py,k:'peynirfab'});
+  }
+  if(S.built.salçafab){
+    let sx,sy;
+    if(S.buildingPos.salçafab){sx=S.buildingPos.salçafab.x;sy=S.buildingPos.salçafab.y}
+    else{sx=gridRight+CL*2;sy=sceneTop+CL*8}
+    targets.push({x:sx,y:sy,k:'salçafab'});
+  }
+  if(targets.length===0)return;
+  let roadW=CL*0.45;
+  let stoneS=CL*0.22;
+  function drawRoadSegment(x1,y1,x2,y2){
+    let dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy);
+    if(len<1)return;
+    let ux=dx/len,uy=dy/len;
+    let nx=-uy,ny=ux;
+    let hw=roadW/2;
+    X.fillStyle='#8d8d8d';
+    X.beginPath();
+    X.moveTo(x1+nx*hw,y1+ny*hw);
+    X.lineTo(x2+nx*hw,y2+ny*hw);
+    X.lineTo(x2-nx*hw,y2-ny*hw);
+    X.lineTo(x1-nx*hw,y1-ny*hw);
+    X.closePath();X.fill();
+    X.strokeStyle='#6d6d6d';X.lineWidth=1;
+    X.beginPath();X.moveTo(x1+nx*hw,y1+ny*hw);X.lineTo(x2+nx*hw,y2+ny*hw);X.stroke();
+    X.beginPath();X.moveTo(x1-nx*hw,y1-ny*hw);X.lineTo(x2-nx*hw,y2-ny*hw);X.stroke();
+    let tiles=Math.floor(len/stoneS);
+    for(let i=0;i<tiles;i++){
+      let t=i/tiles;
+      let cx=x1+dx*t,cy=y1+dy*t;
+      let shade=((i*7+3)%5)/5*30-15;
+      X.fillStyle=`rgb(${160+shade},${155+shade},${145+shade})`;
+      X.fillRect(cx-stoneS*0.42,cy-stoneS*0.35,stoneS*0.84,stoneS*0.7);
+      X.strokeStyle='#999';X.lineWidth=0.5;
+      X.strokeRect(cx-stoneS*0.42,cy-stoneS*0.35,stoneS*0.84,stoneS*0.7);
+    }
+  }
+  let connected=[{x:hx,y:hy}];
+  let remaining=[...targets];
+  while(remaining.length>0){
+    let bestDist=Infinity,bestC=-1,bestR=-1;
+    for(let c=0;c<connected.length;c++){
+      for(let r=0;r<remaining.length;r++){
+        let dx=remaining[r].x-connected[c].x,dy=remaining[r].y-connected[c].y;
+        let d=Math.sqrt(dx*dx+dy*dy);
+        if(d<bestDist){bestDist=d;bestC=c;bestR=r}
+      }
+    }
+    if(bestR<0)break;
+    let from=connected[bestC];
+    let to=remaining[bestR];
+    let midX=to.x,midY=from.y;
+    drawRoadSegment(from.x,from.y,midX,midY);
+    drawRoadSegment(midX,midY,to.x,to.y);
+    connected.push(to);
+    remaining.splice(bestR,1);
   }
 }
 
@@ -1215,6 +1339,82 @@ function drawCropSprite(x,y,s,type,g,cr){
   X.restore();
 }
 
+function drawHarvestProduct(x,y,s,type,cr){
+  X.save();X.translate(x,y);
+  if(type==='DOMATES'){
+    X.fillStyle='#c62828';X.beginPath();X.arc(0,0,s*0.38,0,Math.PI*2);X.fill();
+    X.fillStyle='#e53935';X.beginPath();X.arc(-s*0.05,-s*0.05,s*0.28,0,Math.PI*2);X.fill();
+    X.fillStyle='#ef5350';X.beginPath();X.arc(-s*0.08,-s*0.08,s*0.15,0,Math.PI*2);X.fill();
+    X.fillStyle='rgba(255,255,255,0.25)';X.beginPath();X.arc(-s*0.12,-s*0.14,s*0.08,0,Math.PI*2);X.fill();
+    X.fillStyle='#558b2f';X.fillRect(-s*0.03,-s*0.42,s*0.06,s*0.12);
+    X.fillStyle='#43a047';X.beginPath();X.ellipse(-s*0.06,-s*0.38,s*0.08,s*0.03,-.4,0,Math.PI*2);X.fill();
+    X.beginPath();X.ellipse(s*0.06,-s*0.36,s*0.07,s*0.03,.4,0,Math.PI*2);X.fill();
+  }else if(type==='PATATES'){
+    X.fillStyle='#8d6e63';X.beginPath();X.ellipse(0,0,s*0.35,s*0.22,0,0,Math.PI*2);X.fill();
+    X.fillStyle='#795548';X.beginPath();X.ellipse(-s*0.05,-s*0.03,s*0.25,s*0.16,0,0,Math.PI*2);X.fill();
+    X.fillStyle='#a1887f';X.beginPath();X.arc(-s*0.08,-s*0.06,s*0.04,0,Math.PI*2);X.fill();
+    X.beginPath();X.arc(s*0.1,s*0.04,s*0.03,0,Math.PI*2);X.fill();
+    X.beginPath();X.arc(-s*0.15,s*0.06,s*0.025,0,Math.PI*2);X.fill();
+  }else if(type==='SALATALIK'){
+    X.fillStyle='#2e7d32';X.beginPath();X.ellipse(0,0,s*0.15,s*0.38,0.1,0,Math.PI*2);X.fill();
+    X.fillStyle='#388e3c';X.beginPath();X.ellipse(-s*0.02,-s*0.02,s*0.1,s*0.3,0.1,0,Math.PI*2);X.fill();
+    X.fillStyle='#43a047';
+    for(let i=0;i<5;i++){X.beginPath();X.ellipse(0,-s*0.25+i*s*0.12,s*0.12+Math.sin(i)*s*0.02,s*0.04,0,0,Math.PI*2);X.fill()}
+    X.fillStyle='#558b2f';X.fillRect(-s*0.02,-s*0.42,s*0.04,s*0.08);
+  }else if(type==='MARUL'){
+    let cols=['#558b2f','#7cb342','#8bc34a','#689f38'];
+    for(let i=4;i>=0;i--){
+      X.fillStyle=cols[i%cols.length];
+      X.beginPath();X.ellipse(0,-i*s*0.04,s*0.3-i*s*0.04,s*0.15-i*s*0.02,0,0,Math.PI*2);X.fill();
+    }
+    X.fillStyle='#33691e';X.beginPath();X.ellipse(0,s*0.08,s*0.06,s*0.1,0,0,Math.PI*2);X.fill();
+  }else if(type==='BIBER'){
+    X.fillStyle='#c62828';X.beginPath();X.ellipse(0,s*0.02,s*0.12,s*0.3,0.05,0,Math.PI*2);X.fill();
+    X.fillStyle='#e53935';X.beginPath();X.ellipse(-s*0.02,0,s*0.08,s*0.22,0.05,0,Math.PI*2);X.fill();
+    X.fillStyle='rgba(255,255,255,0.2)';X.beginPath();X.ellipse(-s*0.06,-s*0.08,s*0.03,s*0.1,0.1,0,Math.PI*2);X.fill();
+    X.fillStyle='#558b2f';X.fillRect(-s*0.02,-s*0.32,s*0.04,s*0.1);
+    X.fillStyle='#43a047';X.beginPath();X.ellipse(0,-s*0.32,s*0.06,s*0.03,0,0,Math.PI*2);X.fill();
+  }else if(type==='PATLICAN'){
+    X.fillStyle='#4a148c';X.beginPath();X.ellipse(0,s*0.02,s*0.14,s*0.32,0.05,0,Math.PI*2);X.fill();
+    X.fillStyle='#6a1b9a';X.beginPath();X.ellipse(-s*0.02,0,s*0.1,s*0.24,0.05,0,Math.PI*2);X.fill();
+    X.fillStyle='rgba(255,255,255,0.15)';X.beginPath();X.ellipse(-s*0.05,-s*0.1,s*0.03,s*0.12,0.1,0,Math.PI*2);X.fill();
+    X.fillStyle='#558b2f';X.fillRect(-s*0.02,-s*0.35,s*0.04,s*0.08);
+    X.fillStyle='#43a047';X.beginPath();X.ellipse(0,-s*0.35,s*0.07,s*0.03,0,0,Math.PI*2);X.fill();
+  }else if(type==='MISIR'){
+    X.fillStyle='#f9a825';X.beginPath();X.ellipse(0,0,s*0.14,s*0.35,0,0,Math.PI*2);X.fill();
+    X.fillStyle='#fdd835';X.beginPath();X.ellipse(-s*0.02,-s*0.02,s*0.1,s*0.27,0,0,Math.PI*2);X.fill();
+    X.fillStyle='#fbc02d';
+    for(let r=0;r<6;r++)for(let c=0;c<3;c++){
+      X.beginPath();X.arc(-s*0.06+c*s*0.06,-s*0.2+r*s*0.08,s*0.025,0,Math.PI*2);X.fill()}
+    X.fillStyle='#8d6e63';X.fillRect(-s*0.015,-s*0.42,s*0.03,s*0.1);
+    X.fillStyle='#a5d6a7';X.beginPath();X.ellipse(-s*0.06,-s*0.38,s*0.06,s*0.08,-.5,0,Math.PI*2);X.fill();
+    X.beginPath();X.ellipse(s*0.06,-s*0.36,s*0.05,s*0.07,.5,0,Math.PI*2);X.fill();
+  }else if(type==='KABAK'){
+    X.fillStyle='#e65100';X.beginPath();X.ellipse(0,s*0.02,s*0.28,s*0.2,0,0,Math.PI*2);X.fill();
+    X.fillStyle='#ff9800';X.beginPath();X.ellipse(-s*0.03,0,s*0.2,s*0.14,0,0,Math.PI*2);X.fill();
+    X.fillStyle='rgba(255,255,255,0.15)';X.beginPath();X.ellipse(-s*0.08,-s*0.06,s*0.08,s*0.06,0,0,Math.PI*2);X.fill();
+    X.fillStyle='#558b2f';X.fillRect(-s*0.02,-s*0.22,s*0.04,s*0.08);
+    X.fillStyle='#43a047';X.beginPath();X.ellipse(0,-s*0.22,s*0.05,s*0.03,0,0,Math.PI*2);X.fill();
+  }else if(type==='SOGAN'){
+    X.fillStyle='#8d6e63';X.beginPath();X.arc(0,s*0.05,s*0.22,0,Math.PI*2);X.fill();
+    X.fillStyle='#a1887f';X.beginPath();X.arc(-s*0.03,0,s*0.16,0,Math.PI*2);X.fill();
+    X.fillStyle='#bcaaa4';X.beginPath();X.arc(-s*0.06,-s*0.04,s*0.08,0,Math.PI*2);X.fill();
+    X.fillStyle='#4caf50';X.fillRect(-s*0.02,-s*0.3,s*0.04,s*0.15);
+    X.fillStyle='#66bb6a';X.beginPath();X.ellipse(-s*0.04,-s*0.32,s*0.04,s*0.06,-.3,0,Math.PI*2);X.fill();
+    X.beginPath();X.ellipse(s*0.04,-s*0.3,s*0.03,s*0.05,.3,0,Math.PI*2);X.fill();
+  }else if(type==='BUGDAY'){
+    X.fillStyle='#8d6e63';X.fillRect(-s*0.015,-s*0.1,s*0.03,s*0.45);
+    X.fillStyle='#d4a017';X.beginPath();X.ellipse(0,-s*0.2,s*0.06,s*0.15,0,0,Math.PI*2);X.fill();
+    X.fillStyle='#c68f00';
+    for(let i=-2;i<=2;i++){
+      X.beginPath();X.ellipse(i*s*0.035,-s*0.22,s*0.025,s*0.08,0.15*i,0,Math.PI*2);X.fill()}
+    X.fillStyle='#b8860b';
+    for(let i=-1;i<=1;i++){
+      X.beginPath();X.ellipse(i*s*0.04,-s*0.32,s*0.02,s*0.05,0.2*i,0,Math.PI*2);X.fill()}
+  }
+  X.restore();
+}
+
 function drawTreeSprite(x,y,s,g,cr){
   X.save();X.translate(x,y);
   X.fillStyle='rgba(0,0,0,0.1)';X.beginPath();X.ellipse(2,s*0.5,s*0.3,s*0.06,0,0,Math.PI*2);X.fill();
@@ -1396,6 +1596,220 @@ function drawFırın(x,y,s){
     X.fillStyle='#ffd54f';X.font=`bold ${s*0.06}px "Nunito",Arial,sans-serif`;X.textAlign='center';X.fillText('Lv.'+fLv,0,-s*0.31);
   }
   X.restore();
+}
+
+function drawSutIslem(x,y,s){
+  X.save();X.translate(x,y);
+  // Gölge
+  X.fillStyle='rgba(0,0,0,0.15)';X.beginPath();X.ellipse(0,s*0.58,s*0.48,s*0.08,0,0,Math.PI*2);X.fill();
+  // Temel - gri beton
+  let stoneC=['#9e9e9e','#b0b0b0','#a0a0a0','#c0c0c0'];
+  for(let i=0;i<4;i++){for(let j=0;j<6;j++){X.fillStyle=stoneC[(i+j)%4];X.beginPath();X.roundRect(-s*0.42+j*s*0.14,s*0.48-i*4,s*0.12,3.5,1);X.fill()}}
+  // Ana bina - beyaz/çelik panel
+  X.fillStyle='#e0e0e0';X.fillRect(-s*0.38,s*0.0,s*0.76,s*0.48);
+  X.fillStyle='#d0d0d0';X.fillRect(-s*0.38,s*0.0,s*0.76,s*0.03);
+  // Çelik paneller - dikey çizgiler
+  X.strokeStyle='#ccc';X.lineWidth=0.5;
+  for(let i=0;i<7;i++){X.beginPath();X.moveTo(-s*0.38+i*s*0.127,s*0.0);X.lineTo(-s*0.38+i*s*0.127,s*0.48);X.stroke()}
+  // Çatı - düz endüstriyel
+  X.fillStyle='#78909c';X.fillRect(-s*0.42,s*-0.06,s*0.84,s*0.08);
+  X.fillStyle='#607d8b';X.fillRect(-s*0.44,s*-0.08,s*0.88,s*0.04);
+  // Süt tankı (sol taraf) - silindirik çelik
+  X.fillStyle='#b0bec5';X.beginPath();X.ellipse(-s*0.28,s*0.12,s*0.08,s*0.2,0,0,Math.PI*2);X.fill();
+  X.fillStyle='#90a4ae';X.beginPath();X.ellipse(-s*0.28,s*0.12,s*0.06,s*0.18,0,0,Math.PI*2);X.fill();
+  X.fillStyle='#cfd8dc';X.beginPath();X.ellipse(-s*0.28,s*0.12,s*0.03,s*0.16,0,0,Math.PI*2);X.fill();
+  // Tank üstü kapak
+  X.fillStyle='#78909c';X.beginPath();X.ellipse(-s*0.28,s*-0.08,s*0.08,s*0.02,0,0,Math.PI*2);X.fill();
+  // Tank borusu
+  X.fillStyle='#90a4ae';X.fillRect(-s*0.21,s*0.08,s*0.06,s*0.02);
+  // Sağ tarafta ikinci tank
+  X.fillStyle='#b0bec5';X.beginPath();X.ellipse(s*0.28,s*0.15,s*0.06,s*0.16,0,0,Math.PI*2);X.fill();
+  X.fillStyle='#90a4ae';X.beginPath();X.ellipse(s*0.28,s*0.15,s*0.04,s*0.14,0,0,Math.PI*2);X.fill();
+  X.fillStyle='#78909c';X.beginPath();X.ellipse(s*0.28,s*0.01,s*0.06,s*0.02,0,0,Math.PI*2);X.fill();
+  // Kapı - çelik mavi
+  X.fillStyle='#1565c0';X.beginPath();X.roundRect(-s*0.08,s*0.18,s*0.16,s*0.3,2);X.fill();
+  X.fillStyle='#0d47a1';X.fillRect(-s*0.08,s*0.18,s*0.16,s*0.03);
+  X.fillStyle='#bbdefb';X.beginPath();X.arc(s*0.06,s*0.33,s*0.012,0,Math.PI*2);X.fill();
+  // Pencere - mavi cam
+  X.fillStyle='#42a5f5';X.fillRect(s*0.12,s*0.1,s*0.14,s*0.12);
+  X.fillStyle='#2196f3';X.fillRect(s*0.12,s*0.1,s*0.14,s*0.02);
+  X.strokeStyle='#fff';X.lineWidth=0.5;X.strokeRect(s*0.12,s*0.1,s*0.14,s*0.12);
+  // Boru hattı - üstten
+  X.fillStyle='#78909c';X.fillRect(-s*0.15,s*0.02,s*0.3,s*0.025);
+  X.fillStyle='#607d8b';X.beginPath();X.arc(-s*0.15,s*0.033,s*0.025,0,Math.PI*2);X.fill();
+  X.fillStyle='#607d8b';X.beginPath();X.arc(s*0.15,s*0.033,s*0.025,0,Math.PI*2);X.fill();
+  // Baca - ince çelik
+  X.fillStyle='#607d8b';X.fillRect(s*0.22,s*-0.25,s*0.05,s*0.2);
+  X.fillStyle='#546e7a';X.fillRect(s*0.2,s*-0.28,s*0.09,s*0.04);
+  // Buhar
+  X.fillStyle='rgba(200,220,240,0.4)';
+  X.beginPath();X.arc(s*0.24,s*-0.32,s*0.03,0,Math.PI*2);X.fill();
+  X.beginPath();X.arc(s*0.27,s*-0.36,s*0.025,0,Math.PI*2);X.fill();
+  X.beginPath();X.arc(s*0.22,s*-0.39,s*0.02,0,Math.PI*2);X.fill();
+  // Etiket
+  X.fillStyle='#fff';X.font=`bold ${s*0.06}px "Nunito",Arial,sans-serif`;X.textAlign='center';
+  X.fillText('SÜT İŞLEME',0,s*0.52);
+  // Level
+  let lv=S.buildingLevel?S.buildingLevel.sutislem||1:1;
+  if(lv>=2){X.fillStyle='rgba(0,0,0,0.5)';X.beginPath();X.roundRect(-s*0.1,-s*0.42,s*0.2,s*0.1,3);X.fill();X.fillStyle='#ffd54f';X.font=`bold ${s*0.06}px "Nunito",Arial,sans-serif`;X.fillText('Lv.'+lv,0,-s*0.35)}
+  X.restore();
+}
+
+function drawPeynirFab(x,y,s){
+  X.save();X.translate(x,y);
+  // Gölge
+  X.fillStyle='rgba(0,0,0,0.15)';X.beginPath();X.ellipse(0,s*0.58,s*0.48,s*0.08,0,0,Math.PI*2);X.fill();
+  // Temel - koyu taş
+  let stoneC2=['#795548','#8d6e63','#6d4c41','#a1887f'];
+  for(let i=0;i<4;i++){for(let j=0;j<6;j++){X.fillStyle=stoneC2[(i+j)%4];X.beginPath();X.roundRect(-s*0.42+j*s*0.14,s*0.48-i*4,s*0.12,3.5,1);X.fill()}}
+  // Ana bina - sıcak tuğla
+  X.fillStyle='#d84315';X.fillRect(-s*0.38,s*0.0,s*0.76,s*0.48);
+  // Tuğla deseni
+  X.strokeStyle='rgba(0,0,0,0.12)';X.lineWidth=0.5;
+  for(let row=0;row<8;row++){
+    let ry=s*0.0+row*s*0.06;
+    for(let col=0;col<7;col++){
+      let offset=(row%2)*s*0.055;
+      X.strokeRect(-s*0.38+col*s*0.11+offset,ry,s*0.11,s*0.06);
+    }
+  }
+  // Çatı - kiremit
+  X.fillStyle='#bf360c';
+  X.beginPath();X.moveTo(-s*0.44,s*0.0);X.lineTo(0,-s*0.22);X.lineTo(s*0.44,s*0.0);X.closePath();X.fill();
+  // Kiremit satırları
+  for(let i=0;i<4;i++){
+    let ry=s*0.0-i*s*0.055;
+    let rw=s*(0.44-i*0.09);
+    X.fillStyle=i%2?'#a32600':'#8b1e00';
+    X.beginPath();X.moveTo(-rw,ry);X.lineTo(rw,ry);X.lineTo(rw-s*0.015,ry-s*0.05);X.lineTo(-rw+s*0.015,ry-s*0.05);X.closePath();X.fill();
+  }
+  // Büyük kemerli kapı
+  X.fillStyle='#3e2723';
+  X.beginPath();X.moveTo(-s*0.1,s*0.48);X.lineTo(-s*0.1,s*0.18);
+  X.arc(0,s*0.18,s*0.1,Math.PI,0);X.lineTo(s*0.1,s*0.48);X.closePath();X.fill();
+  X.fillStyle='#5d4037';X.fillRect(-s*0.09,s*0.2,s*0.18,s*0.28);
+  X.fillStyle='#4e342e';X.fillRect(-s*0.09,s*0.18,s*0.18,s*0.03);
+  // Kapı kolu
+  X.fillStyle='#ffd54f';X.beginPath();X.arc(s*0.06,s*0.34,s*0.012,0,Math.PI*2);X.fill();
+  // Pencereler - kemerli
+  X.fillStyle='#fff9c4';X.fillRect(-s*0.32,s*0.12,s*0.12,s*0.16);
+  X.fillStyle='#fff59d';X.fillRect(-s*0.32,s*0.12,s*0.12,s*0.02);
+  X.strokeStyle='#bf360c';X.lineWidth=1.5;X.strokeRect(-s*0.32,s*0.12,s*0.12,s*0.16);
+  X.fillStyle='#fff9c4';X.fillRect(s*0.2,s*0.12,s*0.12,s*0.16);
+  X.fillStyle='#fff59d';X.fillRect(s*0.2,s*0.12,s*0.12,s*0.02);
+  X.strokeStyle='#bf360c';X.lineWidth=1.5;X.strokeRect(s*0.2,s*0.12,s*0.12,s*0.16);
+  // Peynir tekerleği (sağda)
+  X.fillStyle='#fdd835';X.beginPath();X.arc(s*0.26,s*0.42,s*0.06,0,Math.PI*2);X.fill();
+  X.fillStyle='#f9a825';X.beginPath();X.arc(s*0.26,s*0.42,s*0.04,0,Math.PI*2);X.fill();
+  X.fillStyle='#fff';X.beginPath();X.arc(s*0.25,s*0.41,s*0.008,0,Math.PI*2);X.fill();
+  X.beginPath();X.arc(s*0.27,s*0.43,s*0.006,0,Math.PI*2);X.fill();
+  // Baca - tuğla
+  X.fillStyle='#d84315';X.fillRect(-s*0.28,s*-0.28,s*0.06,s*0.22);
+  X.fillStyle='#bf360c';X.fillRect(-s*0.3,s*-0.3,s*0.1,s*0.04);
+  // Buhar
+  X.fillStyle='rgba(200,180,160,0.35)';
+  X.beginPath();X.arc(-s*0.25,s*-0.34,s*0.03,0,Math.PI*2);X.fill();
+  X.beginPath();X.arc(-s*0.22,s*-0.38,s*0.025,0,Math.PI*2);X.fill();
+  X.beginPath();X.arc(-s*0.27,s*-0.4,s*0.02,0,Math.PI*2);X.fill();
+  // Etiket
+  X.fillStyle='#fff';X.font=`bold ${s*0.06}px "Nunito",Arial,sans-serif`;X.textAlign='center';
+  X.fillText('PEYNİR FAB',0,s*0.52);
+  // Level
+  let lv=S.buildingLevel?S.buildingLevel.peynirfab||1:1;
+  if(lv>=2){X.fillStyle='rgba(0,0,0,0.5)';X.beginPath();X.roundRect(-s*0.1,-s*0.42,s*0.2,s*0.1,3);X.fill();X.fillStyle='#ffd54f';X.font=`bold ${s*0.06}px "Nunito",Arial,sans-serif`;X.fillText('Lv.'+lv,0,-s*0.35)}
+  X.restore();
+}
+
+function drawSalcaFab(x,y,s){
+  X.save();X.translate(x,y);
+  // Gölge
+  X.fillStyle='rgba(0,0,0,0.15)';X.beginPath();X.ellipse(0,s*0.58,s*0.48,s*0.08,0,0,Math.PI*2);X.fill();
+  // Temel - gri-kahverengi
+  let stoneC3=['#8d6e63','#795548','#a1887f','#6d4c41'];
+  for(let i=0;i<4;i++){for(let j=0;j<6;j++){X.fillStyle=stoneC3[(i+j)%4];X.beginPath();X.roundRect(-s*0.42+j*s*0.14,s*0.48-i*4,s*0.12,3.5,1);X.fill()}}
+  // Ana bina - koyu kırmızı tuğla
+  X.fillStyle='#b71c1c';X.fillRect(-s*0.38,s*0.0,s*0.76,s*0.48);
+  // Tuğla deseni
+  X.strokeStyle='rgba(0,0,0,0.15)';X.lineWidth=0.5;
+  for(let row=0;row<8;row++){
+    let ry=s*0.0+row*s*0.06;
+    for(let col=0;col<7;col++){
+      let offset=(row%2)*s*0.055;
+      X.strokeRect(-s*0.38+col*s*0.11+offset,ry,s*0.11,s*0.06);
+    }
+  }
+  // Çatı - düz endüstriyel
+  X.fillStyle='#795548';X.fillRect(-s*0.42,s*-0.06,s*0.84,s*0.08);
+  X.fillStyle='#6d4c41';X.fillRect(-s*0.44,s*-0.08,s*0.88,s*0.04);
+  // Büyük pişirme kazanı (sol)
+  X.fillStyle='#424242';X.beginPath();X.ellipse(-s*0.24,s*0.32,s*0.12,s*0.14,0,0,Math.PI*2);X.fill();
+  X.fillStyle='#616161';X.beginPath();X.ellipse(-s*0.24,s*0.32,s*0.1,s*0.12,0,0,Math.PI*2);X.fill();
+  X.fillStyle='#757575';X.beginPath();X.ellipse(-s*0.24,s*0.32,s*0.07,s*0.09,0,0,Math.PI*2);X.fill();
+  // Kazan içi - kırmızı
+  X.fillStyle='#c62828';X.beginPath();X.ellipse(-s*0.24,s*0.33,s*0.06,s*0.07,0,0,Math.PI*2);X.fill();
+  X.fillStyle='#e53935';X.beginPath();X.ellipse(-s*0.24,s*0.32,s*0.04,s*0.05,0,0,Math.PI*2);X.fill();
+  // Kazan borusu
+  X.fillStyle='#616161';X.fillRect(-s*0.24,s*0.16,s*0.03,s*0.06);
+  // Kapı - endüstriyel
+  X.fillStyle='#3e2723';X.fillRect(-s*0.07,s*0.18,s*0.14,s*0.3);
+  X.fillStyle='#5d4037';X.fillRect(-s*0.06,s*0.19,s*0.12,s*0.28);
+  X.fillStyle='#ffd54f';X.beginPath();X.arc(s*0.04,s*0.33,s*0.012,0,Math.PI*2);X.fill();
+  // Pencere
+  X.fillStyle='#ffcdd2';X.fillRect(s*0.14,s*0.1,s*0.14,s*0.12);
+  X.fillStyle='#ef9a9a';X.fillRect(s*0.14,s*0.1,s*0.14,s*0.02);
+  X.strokeStyle='#b71c1c';X.lineWidth=1;X.strokeRect(s*0.14,s*0.1,s*0.14,s*0.12);
+  // Domates kasaları (sağ alt)
+  X.fillStyle='#8d6e63';X.fillRect(s*0.18,s*0.38,s*0.14,s*0.1);
+  X.fillStyle='#795548';X.fillRect(s*0.18,s*0.36,s*0.14,s*0.03);
+  // Domatesler kasada
+  X.fillStyle='#e53935';
+  X.beginPath();X.arc(s*0.22,s*0.41,s*0.025,0,Math.PI*2);X.fill();
+  X.beginPath();X.arc(s*0.26,s*0.42,s*0.022,0,Math.PI*2);X.fill();
+  X.beginPath();X.arc(s*0.3,s*0.41,s*0.02,0,Math.PI*2);X.fill();
+  X.fillStyle='#c62828';
+  X.beginPath();X.arc(s*0.22,s*0.41,s*0.015,0,Math.PI*2);X.fill();
+  X.beginPath();X.arc(s*0.26,s*0.42,s*0.012,0,Math.PI*2);X.fill();
+  // Baca - yüksek endüstriyel
+  X.fillStyle='#795548';X.fillRect(s*0.26,s*-0.35,s*0.06,s*0.3);
+  X.fillStyle='#6d4c41';X.fillRect(s*0.24,s*-0.38,s*0.1,s*0.05);
+  // Buhar - sıcak
+  X.fillStyle='rgba(220,180,160,0.4)';
+  X.beginPath();X.arc(s*0.29,s*-0.42,s*0.035,0,Math.PI*2);X.fill();
+  X.beginPath();X.arc(s*0.32,s*-0.47,s*0.03,0,Math.PI*2);X.fill();
+  X.beginPath();X.arc(s*0.27,s*-0.5,s*0.025,0,Math.PI*2);X.fill();
+  // Etiket
+  X.fillStyle='#fff';X.font=`bold ${s*0.06}px "Nunito",Arial,sans-serif`;X.textAlign='center';
+  X.fillText('SALÇA FAB',0,s*0.52);
+  // Level
+  let lv=S.buildingLevel?S.buildingLevel.salçafab||1:1;
+  if(lv>=2){X.fillStyle='rgba(0,0,0,0.5)';X.beginPath();X.roundRect(-s*0.1,-s*0.42,s*0.2,s*0.1,3);X.fill();X.fillStyle='#ffd54f';X.font=`bold ${s*0.06}px "Nunito",Arial,sans-serif`;X.fillText('Lv.'+lv,0,-s*0.35)}
+  X.restore();
+}
+
+function drawStoneFoundation(x,y,w,h,colors){
+  if(isMobile){
+    X.fillStyle=colors[0];X.fillRect(x,y,w,h);
+    X.strokeStyle='rgba(0,0,0,0.1)';X.lineWidth=0.5;
+    X.strokeRect(x,y,w,h);
+  }else{
+    let rows=Math.ceil(h/5),cols=5;
+    for(let i=0;i<rows;i++){for(let j=0;j<cols;j++){
+      X.fillStyle=colors[(i+j)%colors.length];
+      X.beginPath();X.roundRect(x+j*(w/cols)+(i%2)*(w/cols/2),y+i*5,w/cols-1,4,1);X.fill();
+    }}
+  }
+}
+
+function drawBrickWall(x,y,w,h,brickColor,mortarColor){
+  X.fillStyle=brickColor;X.fillRect(x,y,w,h);
+  if(!isMobile){
+    X.strokeStyle=mortarColor;X.lineWidth=0.5;
+    let rows=Math.ceil(h/6),cols=Math.ceil(w/11);
+    for(let r=0;r<rows;r++){for(let c=0;c<cols;c++){
+      let off=(r%2)*(w/cols/2);
+      X.strokeRect(x+c*(w/cols)+off,y+r*6,w/cols,6);
+    }}
+  }
 }
 
 function drawPlaceholder(x,y,s,label){
@@ -1654,6 +2068,58 @@ const TUTORIAL_STEPS={
     {title:'Adım 9: Fırın İnşa Et',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Ekmeği pişirmek için fırın inşa et (Tesislerden).',action:'build_fırın',speak:'Ekmeği pişirmek için fırın inşa et.'},
     {title:'Adım 10: Fırında Pişir',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Fırına tıkla, unu ekmek haline getir!',action:'bake',speak:'Unu fırında pişir, ekmek olsun!'},
     {title:'Tebrikler! 🎉',chain:['🏗','🌾','💧','⚙','🏭','📦','🔥','🍞'],desc:'Ekmeği başardın! Buğdaydan ekmeğe tüm yolu gördün.',action:null,speak:'Tebrikler! Ekmeği başarıyla ürettin!'}
+  ],
+  egg:[
+    {title:'Yumurta Üretelim! 🥚',chain:['🐔','🥚'],desc:'Tavuklar yumurta üretir. Haydi kümes kuralım!',action:null,speak:'Yumurta üretelim! Tavuklar yumurta yapar.'},
+    {title:'Adım 1: Kümes İnşa Et',chain:['🐔','🥚'],desc:'Önce tesislerden kümes inşa et.',action:'build_kümes',speak:'Önce tesislerden kümes inşa et.'},
+    {title:'Adım 2: Tavuk Satın Al',chain:['🐔','🥚'],desc:'Kümese tıkla, tavuk satın al.',action:'buy_chicken',speak:'Kümese tıkla, tavuk satın al.'},
+    {title:'Adım 3: Yumurta Topla',chain:['🐔','🥚'],desc:'Tavuklar yumurta bıraktı! Kümese tıkla, yumurtaları topla.',action:'collect_egg',speak:'Tavuklar yumurta bıraktı! Kümese tıkla, yumurtaları topla.'},
+    {title:'Tebrikler! 🎉',chain:['🐔','🥚'],desc:'Yumurtaları başardın! Tavuklar her gün yumurta bırakır.',action:null,speak:'Tebrikler! Yumurtaları başarıyla topladın!'}
+  ],
+  milk:[
+    {title:'Süt Sağalım! 🥛',chain:['🐄','🥛'],desc:'İnekler süt verir. Haydi ahır kuralım!',action:null,speak:'Süt sağalım! İnekler süt verir.'},
+    {title:'Adım 1: Ahır İnşa Et',chain:['🐄','🥛'],desc:'Önce tesislerden ahır inşa et.',action:'build_ahir',speak:'Önce tesislerden ahır inşa et.'},
+    {title:'Adım 2: İnek Satın Al',chain:['🐄','🥛'],desc:'Ahıra tıkla, inek satın al.',action:'buy_cow',speak:'Ahıra tıkla, inek satın al.'},
+    {title:'Adım 3: Süt Sağ',chain:['🐄','🥛'],desc:'İnekler süt verdi! Ahıra tıkla, sütü sağ.',action:'collect_milk',speak:'İnekler süt verdi! Ahıra tıkla, sütü sağ.'},
+    {title:'Tebrikler! 🎉',chain:['🐄','🥛'],desc:'Sütü başardın! İnekler günde 2-3 kez süt verir.',action:null,speak:'Tebrikler! Sütü başarıyla sağdın!'}
+  ],
+  butter:[
+    {title:'Tereyağı Üretelim! 🧈',chain:['🥛','🧈'],desc:'Sütten tereyağı üretmek için süt işleme tesisi lazım.',action:null,speak:'Tereyağı üretelim! Sütten tereyağı yapılır.'},
+    {title:'Adım 1: Süt İşleme Tesisi İnşa Et',chain:['🥛','🧈'],desc:'Önce tesislerden süt işleme tesisi inşa et.',action:'build_sutislem',speak:'Önce tesislerden süt işleme tesisi inşa et.'},
+    {title:'Adım 2: Süt Topla',chain:['🥛','🧈'],desc:'Süt için önce ineklere ihtiyacın var. Ahır kur, inek al, süt sağ.',action:'collect_milk',speak:'Süt için önce ineklere ihtiyacın var. Süt sağ.'},
+    {title:'Adım 3: Tereyağı Üret',chain:['🥛','🧈'],desc:'Süt İşleme Tesisi\'ne tıkla, tereyağı üret.',action:'make_butter',speak:'Süt İşleme Tesisi\'ne tıkla, tereyağı üret.'},
+    {title:'Tebrikler! 🎉',chain:['🥛','🧈'],desc:'Tereyağını başardın! Sütten tereyağı yapımını gördün.',action:null,speak:'Tebrikler! Tereyağını başarıyla ürettin!'}
+  ],
+  cheese:[
+    {title:'Peynir Üretelim! 🧀',chain:['🥛','🧀'],desc:'Sütten peynir üretmek için peynir fabrikası lazım.',action:null,speak:'Peynir üretelim! Sütten peynir yapılır.'},
+    {title:'Adım 1: Peynir Fabrikası İnşa Et',chain:['🥛','🧀'],desc:'Önce tesislerden peynir fabrikası inşa et.',action:'build_peynirfab',speak:'Önce tesislerden peynir fabrikası inşa et.'},
+    {title:'Adım 2: Süt Topla',chain:['🥛','🧀'],desc:'Peynir için süt lazım. İneklerden süt sağ.',action:'collect_milk',speak:'Peynir için süt lazım. Süt sağ.'},
+    {title:'Adım 3: Peynir Üret',chain:['🥛','🧀'],desc:'Peynir Fabrikası\'na tıkla, peynir üret.',action:'make_cheese',speak:'Peynir Fabrikası\'na tıkla, peynir üret.'},
+    {title:'Tebrikler! 🎉',chain:['🥛','🧀'],desc:'Peyniri başardın! 3 sütten 2 peynir yapılır.',action:null,speak:'Tebrikler! Peyniri başarıyla ürettin!'}
+  ],
+  yogurt:[
+    {title:'Yoğurt Üretelim! 🫙',chain:['🥛','🫙'],desc:'Sütten yoğurt üretmek için süt işleme tesisi lazım.',action:null,speak:'Yoğurt üretelim! Sütten yoğurt yapılır.'},
+    {title:'Adım 1: Süt İşleme Tesisi İnşa Et',chain:['🥛','🫙'],desc:'Önce tesislerden süt işleme tesisi inşa et.',action:'build_sutislem',speak:'Önce tesislerden süt işleme tesisi inşa et.'},
+    {title:'Adım 2: Süt Topla',chain:['🥛','🫙'],desc:'Yoğurt için süt lazım. İneklerden süt sağ.',action:'collect_milk',speak:'Yoğurt için süt lazım. Süt sağ.'},
+    {title:'Adım 3: Yoğurt Üret',chain:['🥛','🫙'],desc:'Süt İşleme Tesisi\'ne tıkla, yoğurt üret.',action:'make_yogurt',speak:'Süt İşleme Tesisi\'ne tıkla, yoğurt üret.'},
+    {title:'Tebrikler! 🎉',chain:['🥛','🫙'],desc:'Yoğurdu başardın! 2 sütten 2 yoğurt yapılır.',action:null,speak:'Tebrikler! Yoğurdu başarıyla ürettin!'}
+  ],
+  salca:[
+    {title:'Salça Üretelim! 🍅',chain:['🌱','🍅','salça'],desc:'Domateslerden salça üretmek için salça fabrikası lazım.',action:null,speak:'Salça üretelim! Domateslerden salça yapılır.'},
+    {title:'Adım 1: Tarla & Domates Ek',chain:['🌱','🍅','salça'],desc:'Tarla kur, sür, domates ek ve sulamayı unutma!',action:'plant_domates',speak:'Tarla kur, domates ek.'},
+    {title:'Adım 2: Domates Hasat Et',chain:['🌱','🍅','salça'],desc:'Domatesler büyüdü! Hasat et.',action:'harvest_domates',speak:'Domatesler büyüdü! Hasat et.'},
+    {title:'Adım 3: Salça Fabrikası İnşa Et',chain:['🌱','🍅','salça'],desc:'Önce tesislerden salça fabrikası inşa et.',action:'build_salçafab',speak:'Önce tesislerden salça fabrikası inşa et.'},
+    {title:'Adım 4: Salça Üret',chain:['🌱','🍅','salça'],desc:'Salça Fabrikası\'na tıkla, 4 domatesten 1 salça üret.',action:'make_salca',speak:'Salça Fabrikası\'na tıkla, salça üret.'},
+    {title:'Tebrikler! 🎉',chain:['🌱','🍅','salça'],desc:'Salçayı başardın! Domatesten salça yapımını gördün.',action:null,speak:'Tebrikler! Salçayı başarıyla ürettin!'}
+  ],
+  tomato:[
+    {title:'Domates Ekelim! 🌱',chain:['🌱','💧','🍅'],desc:'Domates ekmeyi ve büyütmeyi öğrenelim!',action:null,speak:'Domates ekelim!'},
+    {title:'Adım 1: Tarla İnşa Et',chain:['🌱','💧','🍅'],desc:'Önce tesislerden tarla inşa et.',action:'build_grid',speak:'Önce tesislerden tarla inşa et.'},
+    {title:'Adım 2: Tarlayı Sür',chain:['🌱','💧','🍅'],desc:'Şimdi traktörle tarlayı sür.',action:'plow',speak:'Şimdi traktörle tarlayı sür.'},
+    {title:'Adım 3: Domates Ek',chain:['🌱','💧','🍅'],desc:'Tarlaya tıkla, domates tohumu ek.',action:'plant_domates',speak:'Şimdi tarlaya domates ek.'},
+    {title:'Adım 4: Sulama Yap',chain:['🌱','💧','🍅'],desc:'Kuyu varsa kuyuya tıkla, yoksa tesislerden kuyu inşa et.',action:'water',speak:'Sulamayı unutma!'},
+    {title:'Adım 5: Hasat Et',chain:['🌱','💧','🍅'],desc:'Domatesler büyüdü! Hasat et.',action:'harvest_domates',speak:'Domatesler büyüdü! Hasat et.'},
+    {title:'Tebrikler! 🎉',chain:['🌱','💧','🍅'],desc:'Domatesleri başardın! Ekimden hasadı gördün.',action:null,speak:'Tebrikler! Domatesleri başarıyla hasat ettin!'}
   ]
 };
 let tutorialStepDone=false;
@@ -1680,29 +2146,68 @@ function speakTR(text){
   speechSynthesis.speak(u);
 }
 
+const FOOD_GUIDES=[
+  {id:'bread',icon:'🍞',name:'Ekmek',color:'#d4a040'},
+  {id:'egg',icon:'🥚',name:'Yumurta',color:'#f5deb3'},
+  {id:'milk',icon:'🥛',name:'Süt',color:'#e3f2fd'},
+  {id:'butter',icon:'🧈',name:'Tereyağı',color:'#fff3e0'},
+  {id:'cheese',icon:'🧀',name:'Peynir',color:'#fdd835'},
+  {id:'yogurt',icon:'🫙',name:'Yoğurt',color:'#f3e5f5'},
+  {id:'salca',icon:'🍅',name:'Salça',color:'#ffcdd2'},
+  {id:'tomato',icon:'🌱',name:'Domates',color:'#c8e6c9'}
+];
+
 function openTutorial(){
-  if(!S.tutorial)S.tutorial={active:true,step:0,type:'bread',completed:false};
+  if(!S.tutorial)S.tutorial={active:true,step:0,type:null,completed:false};
   S.tutorial.active=true;
-  if(S.tutorial.completed){S.tutorial.step=0;S.tutorial.completed=false}
   tutorialStepDone=false;tutorialMinimized=false;
   let box=document.getElementById('tutorialBox');
   if(box){box.classList.remove('minimized')}
   let minBtn=document.getElementById('tutorialMinBtn');
   if(minBtn){minBtn.textContent='➖'}
-  skipCompletedSteps();
-  renderTutorial();
-  let st=TUTORIAL_STEPS.bread[S.tutorial.step];
+  document.getElementById('tutorialOverlay').style.display='flex';
+  document.getElementById('tutorialStep').style.display='none';
+  showProductSelector();
+}
+function showProductSelector(){
+  document.getElementById('tutorialTitle').textContent='📚 Üretim Rehberi — Ürün Seç';
+  document.getElementById('tutorialChain').innerHTML='';
+  document.getElementById('tutorialBtn').style.display='none';
+  document.getElementById('tutorialStep').style.display='none';
+  let chainEl=document.getElementById('tutorialChain');
+  chainEl.style.display='grid';chainEl.style.gridTemplateColumns='repeat(4,1fr)';chainEl.style.gap='8px';
+  FOOD_GUIDES.forEach(fg=>{
+    let d=document.createElement('div');
+    d.style.cssText='width:100%;aspect-ratio:1;border-radius:10px;border:2px solid '+fg.color+';background:rgba(0,0,0,0.3);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:transform 0.15s;font-size:11px;color:'+fg.color+';padding:4px';
+    d.innerHTML='<span style="font-size:28px">'+fg.icon+'</span><span>'+fg.name+'</span>';
+    d.onmouseenter=()=>d.style.transform='scale(1.08)';
+    d.onmouseleave=()=>d.style.transform='scale(1)';
+    d.onclick=()=>startSpecificTutorial(fg.id);
+    chainEl.appendChild(d);
+  });
+}
+function startSpecificTutorial(type){
+  if(!TUTORIAL_STEPS[type]){toast('Bu ürün için rehber henüz hazır değil!');return}
+  S.tutorial.type=type;S.tutorial.step=0;S.tutorial.completed=false;
+  tutorialStepDone=false;
+  let chainEl=document.getElementById('tutorialChain');
+  chainEl.style.display='flex';chainEl.style.gridTemplateColumns='';chainEl.style.gap='';
+  skipCompletedSteps();renderTutorial();
+  let st=TUTORIAL_STEPS[type][S.tutorial.step];
   if(st)speakTR(st.speak);
 }
-
 function closeTutorial(){
   document.getElementById('tutorialOverlay').style.display='none';
   document.getElementById('tutorialStep').style.display='none';
   speechSynthesis.cancel();
+  S.tutorial.active=false;S.tutorial.type=null;
 }
 
 function renderTutorial(){
-  let t=TUTORIAL_STEPS.bread[S.tutorial.step];
+  let type=S.tutorial.type||'bread';
+  let steps=TUTORIAL_STEPS[type];
+  if(!steps)return;
+  let t=steps[S.tutorial.step];
   if(!t)return;
   document.getElementById('tutorialOverlay').style.display='flex';
   document.getElementById('tutorialTitle').textContent=t.title;
@@ -1719,74 +2224,98 @@ function renderTutorial(){
   });
   let btn=document.getElementById('tutorialBtn');
   if(S.tutorial.step===0){btn.textContent='Başla!';btn.style.display='inline-block'}
-  else if(S.tutorial.step>=TUTORIAL_STEPS.bread.length-1){btn.style.display='none'}
+  else if(S.tutorial.step>=steps.length-1){btn.style.display='none'}
   else if(tutorialStepDone){btn.textContent='Sonraki Adım';btn.style.display='inline-block'}
   else{btn.style.display='none'}
   let stepEl=document.getElementById('tutorialStep');
   let stepNum=document.getElementById('stepNum');
   let stepText=document.getElementById('stepText');
-  let totalSteps=TUTORIAL_STEPS.bread.length-2;
-  if(S.tutorial.step>0&&S.tutorial.step<TUTORIAL_STEPS.bread.length-1){
+  let totalSteps=steps.length-2;
+  if(S.tutorial.step>0&&S.tutorial.step<steps.length-1){
     stepEl.style.display='block';
     stepNum.textContent='Adım '+S.tutorial.step+'/'+totalSteps;
     stepText.innerHTML=t.desc;
     if(t.action){
-      let actLabel='';
-      if(t.action==='build_grid')actLabel='🏘 Tesislerden tarla satın al';
-      else if(t.action==='plow')actLabel='🚜 Traktörü aktifle, tarlaya tıkla';
-      else if(t.action==='plant_bugday')actLabel='🌱 Tarlaya tıkla, buğday ek';
-      else if(t.action==='build_kuyu')actLabel='🏘 Tesislerden kuyu satın al';
-      else if(t.action==='water')actLabel='💧 Kuyuya tıkla, sulama başlat';
-      else if(t.action==='harvest_bugday')actLabel='🌾 Büyüyen buğdaya tıkla, hasat et';
-      else if(t.action==='build_degirmen')actLabel='🏘 Tesislerden değirmen satın al';
-      else if(t.action==='grind')actLabel='⚙ Değirmene tıkla, un üret';
-      else if(t.action==='build_fırın')actLabel='🏘 Tesislerden fırın satın al';
-      else if(t.action==='bake')actLabel='🔥 Fırına tıkla, ekmek pişir';
+      let actLabel=ACTION_LABELS[t.action]||'';
       if(actLabel)stepText.innerHTML+='<br><span class="step-action">'+actLabel+'</span>';
     }
   }else{stepEl.style.display='none'}
 }
-
+const ACTION_LABELS={
+  build_grid:'🏘 Tesislerden tarla satın al',plow:'🚜 Traktörü aktifle, tarlaya tıkla',
+  plant_bugday:'🌱 Tarlaya tıkla, buğday ek',build_kuyu:'🏘 Tesislerden kuyu satın al',
+  water:'💧 Kuyuya tıkla, sulama başlat',harvest_bugday:'🌾 Büyüyen buğdaya tıkla, hasat et',
+  build_degirmen:'🏘 Tesislerden değirmen satın al',grind:'⚙ Değirmene tıkla, un üret',
+  build_fırın:'🏘 Tesislerden fırın satın al',bake:'🔥 Fırına tıkla, ekmek pişir',
+  build_kümes:'🏘 Tesislerden kümes satın al',buy_chicken:'🐔 Kümesden tavuk satın al',
+  collect_egg:'🥚 Kümese tıkla, yumurta topla',
+  build_ahir:'🏘 Tesislerden ahır satın al',buy_cow:'🐄 Ahırdan inek satın al',
+  collect_milk:'🥛 Ahıra tıkla, süt sağı',
+  build_sutislem:'🏘 Tesislerden süt işleme satın al',make_yogurt:'🫙 Süt İşleme\'ye tıkla, yoğurt üret',
+  build_peynirfab:'🏘 Tesislerden peynir fabrikası satın al',make_cheese:'🧀 Peynir Fabrikası\'na tıkla, peynir üret',
+  make_butter:'🧈 Süt İşleme\'ye tıkla, tereyağı üret',
+  plant_domates:'🌱 Tarlaya tıkla, domates ek',harvest_domates:'🍅 Büyüyen domatese tıkla, hasat et',
+  build_salçafab:'🏘 Tesislerden salça fabrikası satın al',make_salca:'🍅 Salça Fabrikası\'na tıkla, salça üret'
+};
 function isStepDone(action){
   if(action==='build_grid')return S.built.grid;
   if(action==='plow')return S.plowed.length>0;
   if(action==='plant_bugday')return S.plots.some(p=>p.crop==='BUGDAY');
   if(action==='build_kuyu')return S.built.kuyu;
-  if(action==='water')return S.plots.some(p=>p.crop==='BUGDAY'&&p.w);
+  if(action==='water')return S.plots.some(p=>p.crop&&p.w);
   if(action==='harvest_bugday')return(S.inv.BUGDAY||0)>0;
   if(action==='build_degirmen')return S.built.degirmen;
   if(action==='grind')return(S.invUN||0)>0;
   if(action==='build_fırın')return S.built.fırın;
   if(action==='bake')return(S.invEKMEK||0)>0;
+  if(action==='build_kümes')return S.built.kümes;
+  if(action==='buy_chicken')return S.ch>0;
+  if(action==='collect_egg')return(S.inv.YUMURTA||0)>0;
+  if(action==='build_ahir')return S.built.ahır;
+  if(action==='buy_cow')return S.co>0;
+  if(action==='collect_milk')return(S.inv.SUT||0)>0;
+  if(action==='build_sutislem')return S.built.sutislem;
+  if(action==='make_yogurt')return(S.inv.YOGURT||0)>0;
+  if(action==='build_peynirfab')return S.built.peynirfab;
+  if(action==='make_cheese')return(S.inv.PEYNIR||0)>0;
+  if(action==='make_butter')return(S.inv.TEREYAGI||0)>0;
+  if(action==='plant_domates')return S.plots.some(p=>p.crop==='DOMATES');
+  if(action==='harvest_domates')return(S.inv.DOMATES||0)>0;
+  if(action==='build_salçafab')return S.built.salçafab;
+  if(action==='make_salca')return(S.inv.SALCA||0)>0;
   return false;
 }
 function skipCompletedSteps(){
-  while(S.tutorial.step<TUTORIAL_STEPS.bread.length-1){
-    let st=TUTORIAL_STEPS.bread[S.tutorial.step];
+  let type=S.tutorial.type||'bread';
+  let steps=TUTORIAL_STEPS[type];
+  if(!steps)return;
+  while(S.tutorial.step<steps.length-1){
+    let st=steps[S.tutorial.step];
     if(!st)break;
     if(st.action&&isStepDone(st.action)){S.tutorial.step++;tutorialStepDone=false;continue}
     if(S.tutorial.step>0&&!st.action){S.tutorial.step++;tutorialStepDone=false;continue}
     break;
   }
 }
-
 function tutorialNext(){
+  let type=S.tutorial.type||'bread';
+  let steps=TUTORIAL_STEPS[type];
+  if(!steps)return;
   if(S.tutorial.step===0){
     S.tutorial.step=1;tutorialStepDone=false;
-    skipCompletedSteps();
-    renderTutorial();speakTR(TUTORIAL_STEPS.bread[S.tutorial.step].speak);
-  }else if(S.tutorial.step<TUTORIAL_STEPS.bread.length-1){
+    skipCompletedSteps();renderTutorial();
+    let st=steps[S.tutorial.step];if(st)speakTR(st.speak);
+  }else if(S.tutorial.step<steps.length-1){
     S.tutorial.step++;tutorialStepDone=false;
-    skipCompletedSteps();
-    renderTutorial();
-    let st=TUTORIAL_STEPS.bread[S.tutorial.step];
-    if(st)speakTR(st.speak);
+    skipCompletedSteps();renderTutorial();
+    let st=steps[S.tutorial.step];if(st)speakTR(st.speak);
   }
 }
-
 function checkTutorialAction(action){
-  if(!S.tutorial||!S.tutorial.active)return;
-  let current=TUTORIAL_STEPS.bread[S.tutorial.step];
+  if(!S.tutorial||!S.tutorial.active||!S.tutorial.type)return;
+  let steps=TUTORIAL_STEPS[S.tutorial.type];
+  if(!steps)return;
+  let current=steps[S.tutorial.step];
   if(!current||current.action!==action)return;
   tutorialStepDone=true;
   toast('✅ Tamamlandı! Devam et...');
@@ -1827,7 +2356,7 @@ function draw(){
   X.fillStyle=bgG;X.fillRect(0,0,W,H);
 
   X.save();
-  X.translate(zoomCX,zoomCY);X.scale(zoomLevel,zoomLevel);X.translate(-zoomCX,-zoomCY);
+  X.translate(panX,panY);X.translate(zoomCX,zoomCY);X.scale(zoomLevel,zoomLevel);X.translate(-zoomCX,-zoomCY);
   drawSky();
   drawMountains();
   drawGrassBackground();
@@ -1844,6 +2373,9 @@ function draw(){
   let houseX=Math.min(GX-houseGap, W*0.16+houseS);
   houseX=Math.max(houseS+CL*0.3, houseX);
   let houseY=sceneTop+Math.floor((GY-sceneTop)*0.05);
+
+  // ====== YOL SISTEMI - binalarin altina cizilir ======
+  drawRoads(houseX,houseY,gridCX,gridCY,gridRight,gridBottom,houseS);
   drawHouse(houseX,houseY,houseS);
 
   // ====== GRID ETRAFINA CIT (sadece grid inşa edildiyse) ======
@@ -1866,8 +2398,6 @@ function draw(){
   }
   if(S.built.ahır){
     drawBarn(barnX,barnY,barnS);
-  }else{
-    drawPlaceholder(barnX,barnY,barnS*1.2,'AHİR');
   }
 
   // ====== KUMES - ahır formatında, sag alt ======
@@ -1880,8 +2410,6 @@ function draw(){
   }
   if(S.built.kümes){
     drawKümes(kümesX,kümesY,kümesS);
-  }else{
-    drawPlaceholder(kümesX,kümesY,kümesS*1.2,'KÜMES');
   }
 
   // ====== KUMES ALTINA CIT ======
@@ -1969,8 +2497,6 @@ function draw(){
   }
   if(S.built.kuyu){
     drawWell(wellX,wellY,wellS);
-  }else{
-    drawPlaceholder(wellX,wellY,wellS*1.2,'KUYU');
   }
 
   // ====== DEGIRMEN - evin altinda ======
@@ -1982,8 +2508,6 @@ function draw(){
   }
   if(S.built.degirmen){
     drawWindmill(wmX,wmY,wmS);
-  }else{
-    drawPlaceholder(wmX,wmY,wmS*1.2,'DEĞİRMEN');
   }
 
   // ====== FIRIN ======
@@ -1997,9 +2521,25 @@ function draw(){
   }
   if(S.built.fırın){
     drawFırın(firinX,firinY,firinS);
-  }else{
-    drawPlaceholder(firinX,firinY,firinS*1.2,'FIRIN');
   }
+
+  // ====== SUT ISLEME ======
+  sutIslemS=CL*(ISLANDSCAPE?1.8:1.4);
+  if(S.buildingPos.sutislem){sutIslemX=S.buildingPos.sutislem.x;sutIslemY=S.buildingPos.sutislem.y}
+  else{let gx=gridRight+CL*2;sutIslemX=gx;sutIslemY=sceneTop+CL*2}
+  if(S.built.sutislem){drawSutIslem(sutIslemX,sutIslemY,sutIslemS)}
+
+  // ====== PEYNIR FAB ======
+  peynirS=CL*(ISLANDSCAPE?1.8:1.4);
+  if(S.buildingPos.peynirfab){peynirX=S.buildingPos.peynirfab.x;peynirY=S.buildingPos.peynirfab.y}
+  else{let gx=gridRight+CL*2;peynirX=gx;peynirY=sceneTop+CL*5}
+  if(S.built.peynirfab){drawPeynirFab(peynirX,peynirY,peynirS)}
+
+  // ====== SALCA FAB ======
+  salcaS=CL*(ISLANDSCAPE?1.8:1.4);
+  if(S.buildingPos.salçafab){salcaX=S.buildingPos.salçafab.x;salcaY=S.buildingPos.salçafab.y}
+  else{let gx=gridRight+CL*2;salcaX=gx;salcaY=sceneTop+CL*8}
+  if(S.built.salçafab){drawSalcaFab(salcaX,salcaY,salcaS)}
 
   // ====== ALT SINIR - basit yesil serit ======
   let forestTop=H-48-CL*0.3;
@@ -2047,17 +2587,52 @@ if(S.built.grid){
         let cr=CROPS[p.crop];
         if(cr){
           let age=p.age/365;let g=Math.min(1,age/cr.my);
-          drawCropSprite(x+CL/2,y+CL*0.75,CL*0.7,p.crop,g,cr);
+          if(p.nextHarvest<=0){
+            drawHarvestProduct(x+CL/2,y+CL/2,CL*0.85,p.crop,cr);
+          }else{
+            drawCropSprite(x+CL/2,y+CL*0.75,CL*0.7,p.crop,g,cr);
+          }
         }
         if(p.nextHarvest<=0&&cr){
-          let pulse=Math.sin(t/200)*0.3+0.7;
-          X.fillStyle=`rgba(255,230,80,${pulse*0.3})`;
-          X.beginPath();X.arc(x+CL/2,y+CL/2,CL*0.4,0,Math.PI*2);X.fill();
+          drawCropSprite(x+CL/2,y+CL/2,CL*0.9,p.crop,1,cr);
+          X.save();
+          X.shadowColor='#ffd700';X.shadowBlur=8;
+          X.strokeStyle='#ffd700';X.lineWidth=2.5;
+          X.beginPath();X.roundRect(x+1,y+1,CL-2,CL-2,3);X.stroke();
+          X.restore();
+          X.strokeStyle='rgba(255,215,0,0.2)';X.lineWidth=4;
+          X.beginPath();X.roundRect(x-0.5,y-0.5,CL,CL,4);X.stroke();
         }
       }
       if(S.sel===r*COLS+c){X.strokeStyle='#ffe082';X.lineWidth=2;X.strokeRect(x+1,y+1,CL-2,CL-2)}
-      if(p.w){X.fillStyle='rgba(100,180,255,0.7)';X.beginPath();X.arc(x+CL-5,y+5,4,0,Math.PI*2);X.fill()}
-      if(p.p){X.fillStyle='rgba(255,200,50,0.7)';X.beginPath();X.arc(x+5,y+CL-5,4,0,Math.PI*2);X.fill()}
+      if(p.crop&&!p.p){
+        let t=Date.now()/1000;
+        let seed=p.r*17+p.c*31;
+        let bugCount=1+(seed%4);
+        let types=['fly','beetle','caterpillar','ant'];
+        for(let i=0;i<bugCount;i++){
+          let s2=seed+i*37;
+          let tx=Math.sin(s2)*0.3+0.5;
+          let ty=Math.cos(s2*2)*0.3+0.5;
+          let bx=x+CL*tx+Math.sin(s2+t*1.2+i)*CL*0.12;
+          let by=y+CL*ty+Math.cos(s2+t*0.9+i)*CL*0.1;
+          let tp=types[s2%types.length];
+          if(tp==='fly'){
+            X.fillStyle='#2d2d2d';X.beginPath();X.ellipse(bx,by,CL*0.04,CL*0.03,0,0,Math.PI*2);X.fill();
+            X.strokeStyle='rgba(80,80,80,0.5)';X.lineWidth=0.5;
+            X.beginPath();X.moveTo(bx-CL*0.02,by-CL*0.01);X.lineTo(bx-CL*0.06,by-CL*0.05);X.stroke();
+            X.beginPath();X.moveTo(bx+CL*0.01,by-CL*0.01);X.lineTo(bx+CL*0.05,by-CL*0.04);X.stroke();
+          }else if(tp==='beetle'){
+            X.fillStyle='#5d4037';X.beginPath();X.ellipse(bx,by,CL*0.03,CL*0.025,0.3,0,Math.PI*2);X.fill();
+            X.fillStyle='#3e2723';X.beginPath();X.arc(bx+CL*0.01,by-CL*0.005,CL*0.008,0,Math.PI*2);X.fill();
+          }else if(tp==='caterpillar'){
+            X.fillStyle='rgba(100,60,20,0.6)';
+            for(let j=0;j<3;j++){X.beginPath();X.arc(bx+j*CL*0.02,by+Math.sin(t*3+j)*CL*0.01,CL*0.012,0,Math.PI*2);X.fill()}
+          }else{
+            X.fillStyle='#4a2800';X.beginPath();X.ellipse(bx,by,CL*0.02,CL*0.015,0.5,0,Math.PI*2);X.fill();
+          }
+        }
+      }
     }
   }
 
@@ -2283,6 +2858,12 @@ if(S.built.grid){
       drawWell(dx,dy,CL*2.1);
     }else if(S.dragging==='fırın'){
       drawFırın(dx,dy,CL*(ISLANDSCAPE?2.0:1.6));
+    }else if(S.dragging==='sutislem'){
+      drawSutIslem(dx,dy,CL*(ISLANDSCAPE?1.8:1.4));
+    }else if(S.dragging==='peynirfab'){
+      drawPeynirFab(dx,dy,CL*(ISLANDSCAPE?1.8:1.4));
+    }else if(S.dragging==='salçafab'){
+      drawSalcaFab(dx,dy,CL*(ISLANDSCAPE?1.8:1.4));
     }
     X.globalAlpha=1;
   }
@@ -2303,6 +2884,16 @@ if(S.built.grid){
     X.fillStyle='#4caf50';X.font='bold 14px Nunito,sans-serif';X.textAlign='center';X.textBaseline='middle';
     X.fillText('🌾 Hasat Modu — Hazır tarlalara tıkla, çıkmak için boş yere tıkla',W/2,64);X.textAlign='left';
   }
+  if(S.tractorActive){
+    X.fillStyle='rgba(0,0,0,0.7)';X.fillRect(W/2-160,48,320,32);X.strokeStyle='#8d6e63';X.lineWidth=2;X.strokeRect(W/2-160,48,320,32);
+    X.fillStyle='#8d6e63';X.font='bold 14px Nunito,sans-serif';X.textAlign='center';X.textBaseline='middle';
+    X.fillText('🚜 Sürme Modu — Sürülmemiş tarlalara tıkla, çıkmak için boş yere tıkla',W/2,64);X.textAlign='left';
+  }
+  if(pesticideModeActive){
+    X.fillStyle='rgba(0,0,0,0.7)';X.fillRect(W/2-160,48,320,32);X.strokeStyle='#7b5800';X.lineWidth=2;X.strokeRect(W/2-160,48,320,32);
+    X.fillStyle='#fdd835';X.font='bold 14px Nunito,sans-serif';X.textAlign='center';X.textBaseline='middle';
+    X.fillText('🐛 İlaçlama Modu — İlaçlanmamış tarlalara tıkla, çıkmak için boş yere tıkla',W/2,64);X.textAlign='left';
+  }
 }
 
 function advanceTime(){S.m+=10;while(S.m>=60){S.m-=60;S.h++}if(S.h>=22){newDay();return}
@@ -2311,7 +2902,7 @@ function advanceTime(){S.m+=10;while(S.m>=60){S.m-=60;S.h++}if(S.h>=22){newDay()
       S.irrigating=false;
       let elapsedMin=(S.h-S.irrigStartH)*60+(S.m-S.irrigStartM);
       if(elapsedMin>=40){
-        S.plots.forEach(p=>{p.w=true});
+        S.plots.forEach(p=>{p.w=true;p.wetTimer=1080});
         toast('Sulama tamamlandı! Tarla sulandı. ('+elapsedMin+' dk)');
       }else{
         toast('Sulama süreyi tamamlamadı! ('+elapsedMin+' dk < 40 dk) Sulanmadı.');
@@ -2319,7 +2910,18 @@ function advanceTime(){S.m+=10;while(S.m>=60){S.m-=60;S.h++}if(S.h>=22){newDay()
     }
   }
   Object.keys(S.lastHarvestTime).forEach(k=>{if(S.lastHarvestTime[k]>0)S.lastHarvestTime[k]--});
-  S.plots.forEach(p=>{if(p.crop&&p.nextHarvest>0)p.nextHarvest=Math.max(0,p.nextHarvest-10)});
+  S.plots.forEach(p=>{
+    if(p.crop&&p.nextHarvest>0)p.nextHarvest=Math.max(0,p.nextHarvest-10);
+    if(p.w&&p.wetTimer>0){p.wetTimer-=10;if(p.wetTimer<=0){p.w=false;p.wetTimer=0}}
+    if(S.plowed.includes(p.r*COLS+p.c)&&!p.crop){
+      if(!p.plowTimer)p.plowTimer=60;
+      p.plowTimer-=10;
+      if(p.plowTimer<=0){
+        let idx=p.r*COLS+p.c;let pi=S.plowed.indexOf(idx);if(pi>=0)S.plowed.splice(pi,1);
+        p.plowTimer=60;
+      }
+    }
+  });
   checkWhole();updateHUD();checkMissions();
   let plotModal=document.getElementById('mPlot');
   if(plotModal&&plotModal.classList.contains('active')&&selR>=0){
@@ -2363,9 +2965,11 @@ function harvest(){
   let cap=500+S.st.DEPO*200,used=Object.values(S.inv).reduce((a,b)=>a+b,0);
   S.plots.forEach(p=>{if(!p.crop||p.nextHarvest>0)return;let cr=CROPS[p.crop];if(!cr)return;
     let age=p.age/365,g=Math.min(1,age/cr.my);let y=cr.mk*g*cr.sea[S.sea];
+  if(!p.w)y=0;
+  if(p.crop==='BUGDAY')y=Math.min(y,1);
   y/=3;if(p.w)y*=(1+ib);if(p.p)y*=(1+pb);
     if(y>0&&(used+y)<=cap){S.inv[p.crop]=(S.inv[p.crop]||0)+y;S.dailyHarvest[p.crop]=(S.dailyHarvest[p.crop]||0)+y;used+=y}
-    p.age++;p.w=false;p.p=false;p.nextHarvest=p.crop==='BUGDAY'?120:480;
+    p.age++;p.w=false;p.p=false;p.wetTimer=0;p.nextHarvest=p.crop==='BUGDAY'?120:480;
   });
 }
 
@@ -2373,8 +2977,8 @@ function feedAnimals(){
   S.money-=(S.ch*ANIM.TAVUK.feed+S.co*ANIM.INEK.feed+S.sh*ANIM.KOYUN.feed);
   let kumLv=S.buildingLevel?S.buildingLevel.kümes||1:1;
   let ahirLv=S.buildingLevel?S.buildingLevel.ahır||1:1;
-  if(S.day%ANIM.TAVUK.int===0&&S.ch>0){let a=S.ch*(ANIM.TAVUK.adet+Math.floor(kumLv/3));S.inv.YUMURTA=(S.inv.YUMURTA||0)+a;S.dailyAnimal.YUMURTA=(S.dailyAnimal.YUMURTA||0)+a}
-  if(S.day%ANIM.INEK.int===0&&S.co>0){let a=S.co*(ANIM.INEK.litre+ahirLv*2);S.inv.SUT=(S.inv.SUT||0)+a;S.dailyAnimal.SUT=(S.dailyAnimal.SUT||0)+a}
+  if(S.day%ANIM.TAVUK.int===0&&S.ch>0){let a=S.ch*(ANIM.TAVUK.adet+Math.floor(kumLv/3));S.inv.YUMURTA=(S.inv.YUMURTA||0)+a;S.dailyAnimal.YUMURTA=(S.dailyAnimal.YUMURTA||0)+a;checkTutorialAction('collect_egg')}
+  if(S.day%ANIM.INEK.int===0&&S.co>0){let a=S.co*(ANIM.INEK.litre+ahirLv*2);S.inv.SUT=(S.inv.SUT||0)+a;S.dailyAnimal.SUT=(S.dailyAnimal.SUT||0)+a;checkTutorialAction('collect_milk')}
   if(S.day%ANIM.KOYUN.int===0&&S.sh>0){let a=S.sh*(ANIM.KOYUN.adet+Math.floor(ahirLv/3));S.inv.YUN=(S.inv.YUN||0)+a;S.dailyAnimal.YUN=(S.dailyAnimal.YUN||0)+a}
 }
 
@@ -2398,8 +3002,8 @@ function renderMissions(){let l=document.getElementById('missionList');l.innerHT
     if(done&&!m.rewarded){S.money+=100;m.rewarded=true;toast('Görev tamamlandı! +100 TL')}l.appendChild(d)})}
 function openTesisler(){
   let grid=document.getElementById('tesisGrid');grid.innerHTML='';
-  let tesisFiyat={Ev:0,Ahır:2500,Kümes:1500,Değirmen:3000,Kuyu:2000,Tarla:100,Fırın:2500};
-  let tesisKey={Ev:'ev',Ahır:'ahır',Kümes:'kümes',Değirmen:'degirmen',Kuyu:'kuyu',Tarla:'grid',Fırın:'fırın'};
+  let tesisFiyat={Ev:0,Ahır:2500,Kümes:1500,Değirmen:3000,Kuyu:2000,Tarla:100,Fırın:2500,'Süt İşleme':3500,'Peynir Fab':4000,'Salça Fab':3000};
+  let tesisKey={Ev:'ev',Ahır:'ahır',Kümes:'kümes',Değirmen:'degirmen',Kuyu:'kuyu',Tarla:'grid',Fırın:'fırın','Süt İşleme':'sutislem','Peynir Fab':'peynirfab','Salça Fab':'salçafab'};
   let tesisler=[
     {name:'Ev',fn:drawHouseToCanvas,bg:'#8d6e63',free:true},
     {name:'Tarla',fn:drawGridToCanvas,bg:'#6d4c41'},
@@ -2407,7 +3011,10 @@ function openTesisler(){
     {name:'Kümes',fn:drawKümesToCanvas,bg:'#8B6914'},
     {name:'Değirmen',fn:drawWindmillToCanvas,bg:'#e8e0d0'},
     {name:'Kuyu',fn:drawWellToCanvas,bg:'#29b6f6'},
-    {name:'Fırın',fn:drawFırınToCanvas,bg:'#d84315'}
+    {name:'Fırın',fn:drawFırınToCanvas,bg:'#d84315'},
+    {name:'Süt İşleme',fn:drawSutIslemToCanvas,bg:'#42a5f5'},
+    {name:'Peynir Fab',fn:drawPeynirFabToCanvas,bg:'#fdd835'},
+    {name:'Salça Fab',fn:drawSalcaFabToCanvas,bg:'#e53935'}
   ];
   tesisler.forEach(t=>{
     let d=document.createElement('div');d.className='tesis-item';
@@ -2426,7 +3033,7 @@ function openTesisler(){
       if(!built){
         let btn=document.createElement('button');btn.style.cssText='background:#5a8c3a;color:#fff;border:1px solid #8bc34a;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:4px';
         btn.textContent='Satın al '+tesisFiyat[t.name]+' TL';
-        btn.onclick=function(e){e.stopPropagation();buyBuilding(key,tesisFiyat[t.name],t.name);openTesisler()};
+        btn.onclick=function(e){e.stopPropagation();buyBuilding(key,tesisFiyat[t.name],t.name)};
         d.appendChild(btn);
       }else{
         let lv=S.buildingLevel?S.buildingLevel[key]||1:1;
@@ -2546,6 +3153,89 @@ function drawFırınToCanvas(c,s){
   if(lv>=2){c.fillStyle='#ffd54f';c.font='bold 6px "Nunito",Arial,sans-serif';c.textAlign='center';c.fillText('Lv.'+lv,0,-22)}
   c.restore();
 }
+function drawSutIslemToCanvas(c,s){
+  c.save();c.translate(s/2,s/2+5);
+  // Temel
+  c.fillStyle='#b0b0b0';c.fillRect(-30,12,60,8);
+  // Bina
+  c.fillStyle='#e0e0e0';c.fillRect(-26,-4,52,20);
+  c.fillStyle='#d0d0d0';c.fillRect(-26,-4,52,2);
+  // Çatı
+  c.fillStyle='#78909c';c.fillRect(-28,-8,56,5);
+  // Tank sol
+  c.fillStyle='#b0bec5';c.beginPath();c.ellipse(-16,4,6,10,0,0,Math.PI*2);c.fill();
+  c.fillStyle='#90a4ae';c.beginPath();c.ellipse(-16,4,4,8,0,0,Math.PI*2);c.fill();
+  c.fillStyle='#cfd8dc';c.beginPath();c.ellipse(-16,4,2,6,0,0,Math.PI*2);c.fill();
+  c.fillStyle='#78909c';c.beginPath();c.ellipse(-16,-6,6,1.5,0,0,Math.PI*2);c.fill();
+  // Tank sağ
+  c.fillStyle='#b0bec5';c.beginPath();c.ellipse(16,6,4,7,0,0,Math.PI*2);c.fill();
+  c.fillStyle='#90a4ae';c.beginPath();c.ellipse(16,6,3,5,0,0,Math.PI*2);c.fill();
+  // Kapı
+  c.fillStyle='#1565c0';c.beginPath();c.roundRect(-5,2,10,14,1);c.fill();
+  c.fillStyle='#bbdefb';c.beginPath();c.arc(3,9,1,0,Math.PI*2);c.fill();
+  // Baca
+  c.fillStyle='#607d8b';c.fillRect(14,-16,4,10);
+  c.fillStyle='#546e7a';c.fillRect(13,-18,6,3);
+  // Etiket
+  c.fillStyle='#fff';c.font='bold 5px "Nunito",Arial,sans-serif';c.textAlign='center';c.fillText('SÜT',0,1);
+  c.restore();
+}
+function drawPeynirFabToCanvas(c,s){
+  c.save();c.translate(s/2,s/2+5);
+  // Temel
+  c.fillStyle='#8d6e63';c.fillRect(-30,12,60,8);
+  // Bina
+  c.fillStyle='#d84315';c.fillRect(-26,-4,52,20);
+  // Tuğla
+  c.strokeStyle='rgba(0,0,0,0.12)';c.lineWidth=0.5;
+  for(let r=0;r<3;r++){for(let col=0;col<5;col++){let off=(r%2)*5;c.strokeRect(-26+col*10.4+off,-4+r*6.6,10.4,6.6)}}
+  // Çatı kiremit
+  c.fillStyle='#bf360c';c.beginPath();c.moveTo(-28,-4);c.lineTo(0,-14);c.lineTo(28,-4);c.closePath();c.fill();
+  c.fillStyle='#a32600';c.beginPath();c.moveTo(-28,-4);c.lineTo(0,-10);c.lineTo(28,-4);c.closePath();c.fill();
+  // Kapı kemerli
+  c.fillStyle='#3e2723';c.beginPath();c.moveTo(-5,16);c.lineTo(-5,2);c.arc(0,2,5,Math.PI,0);c.lineTo(5,16);c.closePath();c.fill();
+  c.fillStyle='#5d4037';c.fillRect(-4,3,8,13);
+  // Pencere
+  c.fillStyle='#fff9c4';c.fillRect(-20,0,8,7);c.strokeRect(-20,0,8,7);
+  c.fillStyle='#fff9c4';c.fillRect(12,0,8,7);c.strokeRect(12,0,8,7);
+  // Peynir
+  c.fillStyle='#fdd835';c.beginPath();c.arc(18,12,4,0,Math.PI*2);c.fill();
+  c.fillStyle='#f9a825';c.beginPath();c.arc(18,12,2.5,0,Math.PI*2);c.fill();
+  // Etiket
+  c.fillStyle='#fff';c.font='bold 5px "Nunito",Arial,sans-serif';c.textAlign='center';c.fillText('PEYNİR',0,1);
+  c.restore();
+}
+function drawSalcaFabToCanvas(c,s){
+  c.save();c.translate(s/2,s/2+5);
+  // Temel
+  c.fillStyle='#795548';c.fillRect(-30,12,60,8);
+  // Bina
+  c.fillStyle='#b71c1c';c.fillRect(-26,-4,52,20);
+  // Tuğla
+  c.strokeStyle='rgba(0,0,0,0.15)';c.lineWidth=0.5;
+  for(let r=0;r<3;r++){for(let col=0;col<5;col++){let off=(r%2)*5;c.strokeRect(-26+col*10.4+off,-4+r*6.6,10.4,6.6)}}
+  // Çatı
+  c.fillStyle='#795548';c.fillRect(-28,-8,56,5);
+  c.fillStyle='#6d4c41';c.fillRect(-30,-10,60,3);
+  // Kazan
+  c.fillStyle='#424242';c.beginPath();c.ellipse(-14,8,8,7,0,0,Math.PI*2);c.fill();
+  c.fillStyle='#616161';c.beginPath();c.ellipse(-14,8,6,5,0,0,Math.PI*2);c.fill();
+  c.fillStyle='#c62828';c.beginPath();c.ellipse(-14,8,4,3.5,0,0,Math.PI*2);c.fill();
+  // Kapı
+  c.fillStyle='#3e2723';c.fillRect(-4,2,8,14);
+  c.fillStyle='#5d4037';c.fillRect(-3,3,6,13);
+  // Domates kasası
+  c.fillStyle='#8d6e63';c.fillRect(10,10,14,6);
+  c.fillStyle='#e53935';c.beginPath();c.arc(14,12,2,0,Math.PI*2);c.fill();
+  c.beginPath();c.arc(18,13,1.8,0,Math.PI*2);c.fill();
+  c.beginPath();c.arc(21,12,1.5,0,Math.PI*2);c.fill();
+  // Baca
+  c.fillStyle='#795548';c.fillRect(14,-16,5,10);
+  c.fillStyle='#6d4c41';c.fillRect(13,-18,7,3);
+  // Etiket
+  c.fillStyle='#fff';c.font='bold 5px "Nunito",Arial,sans-serif';c.textAlign='center';c.fillText('SALÇA',0,1);
+  c.restore();
+}
 function drawGridToCanvas(c,s){
   c.save();c.translate(s/2,s/2);
   c.fillStyle='#6d4c41';c.fillRect(-30,-22,60,44);
@@ -2607,7 +3297,7 @@ function drawMiniAnimal(c,type,s){
     c.fillStyle='#f5deb3';c.beginPath();c.ellipse(-s*0.05,s*0.02,s*0.28,s*0.16,0,0,Math.PI*2);c.fill();
     c.fillStyle='#deb887';c.beginPath();c.ellipse(-s*0.08,s*0.05,s*0.18,s*0.1,0,0,Math.PI*2);c.fill();
     // Kanat
-    c.fillStyle='#d2b488';c.beginPath();c.ellipse(-s*0.1,s*0,s**0.12,s*0.08,.2,0,Math.PI*2);c.fill();
+    c.fillStyle='#d2b488';c.beginPath();c.ellipse(-s*0.1,s*0,s*0.12,s*0.08,.2,0,Math.PI*2);c.fill();
     // Kafa
     c.fillStyle='#8d6e63';c.beginPath();c.arc(s*0.2,-s*0.06,s*0.1,0,Math.PI*2);c.fill();
     // Goz
@@ -2692,11 +3382,19 @@ function drawMiniProduct(c,type,s){
 }
 function toggleMissions(){let box=document.getElementById('missionBox');box.classList.toggle('show')}
 
-function activateTraktör(){S.tractorActive=!S.tractorActive;toast(S.tractorActive?'Traktör aktif! Tıkla, 4x10 sürülsün':'Traktör kapatıldı')}
-function plowArea(r,c){let plowed=0;
-  for(let dr=0;dr<4;dr++)for(let dc=0;dc<10;dc++){let rr=r+dr,cc=c+dc;
-    if(rr>=0&&rr<ROWS&&cc>=0&&cc<COLS){let idx=rr*COLS+cc;if(!S.plowed.includes(idx)){S.plowed.push(idx);plowed++}}}
-  if(plowed>0){toast(`${plowed} kare sürüldü!`);advanceTime()}else{toast('Burasi zaten sürülmüş')}}
+function activateTraktör(){S.tractorActive=!S.tractorActive;harvestModeActive=false;plantMode=null;pesticideModeActive=false;
+  toast(S.tractorActive?'Traktör aktif! Sürülmüş tarlalara tıkla.':'Traktör kapatıldı')}
+function plowArea(r,c){
+  if(r<0||r>=ROWS||c<0||c>=COLS)return;
+  let idx=r*COLS+c;
+  if(S.plowed.includes(idx)){toast('Bu kare zaten sürülmüş!');return}
+  S.plowed.push(idx);
+  let p=getP(r,c);if(p)p.plowTimer=60;
+  advanceTime();draw();
+  let allPlowed=true;
+  for(let rr=0;rr<ROWS;rr++)for(let cc=0;cc<COLS;cc++){if(!S.plowed.includes(rr*COLS+cc))allPlowed=false}
+  if(allPlowed){S.tractorActive=false;toast('Tüm tarla sürüldü! Traktör kapatıldı.')}
+}
 
 function genWhole(){S.whH=12+Math.floor(Math.random()*4);S.whM=Math.floor(Math.random()*6)*10}
 function checkWhole(){if(S.whArr||S.whDis)return;if(S.h>S.whH||(S.h===S.whH&&S.m>=S.whM)){S.whArr=true;showWhole()}}
@@ -2723,8 +3421,10 @@ let lastPlantClick=-1;
 let selR=-1,selC=-1;
 let plantMode=null;
 let harvestModeActive=false;
+let pesticideModeActive=false;
 CV.addEventListener('click',e=>{
-  if(S.dragging||S.buildingMenu)return;
+  if(S.dragging||S.buildingMenu||wasPanning){wasPanning=false;return}
+  wasPanning=false;
   let mx=e.clientX,my=e.clientY;
   let sc=screenToScene(mx,my);
   let gx=sc.x-GX,gy=sc.y-GY;
@@ -2772,11 +3472,10 @@ CV.addEventListener('click',e=>{
         let elapsedMin=(S.h-S.irrigStartH)*60+(S.m-S.irrigStartM);
         if(elapsedMin<irrigTime){
           S.irrigating=false;
-          S.plots.forEach(p=>{p.w=false});
           toast('Sulama iptal edildi! '+irrigTime+' dk altında kaldığı için sulanmadı.');
         }else{
           S.irrigating=false;
-          S.plots.forEach(p=>{p.w=true});
+          S.plots.forEach(p=>{p.w=true;p.wetTimer=1080});
           toast('Sulama durduruldu! Tarla sulandı. ('+elapsedMin+' dk)');
         }
         advanceTime();draw();return
@@ -2784,9 +3483,11 @@ CV.addEventListener('click',e=>{
         // Sulamayi başlat
         S.irrigating=true;
         S.irrigStartH=S.h;S.irrigStartM=S.m;
-        S.irrigEndH=S.h+1;S.irrigEndM=S.m;
+        let totalMin=S.h*60+S.m+irrigTime;
+        S.irrigEndH=Math.floor(totalMin/60);S.irrigEndM=totalMin%60;
         if(S.irrigEndH>=22){S.irrigEndH=21;S.irrigEndM=50}
         toast('Sulama başlatıldı! ('+irrigTime+' dk gerekli)');
+        checkTutorialAction('water');
         advanceTime();draw();return
       }
     }
@@ -2820,8 +3521,63 @@ CV.addEventListener('click',e=>{
     }
   }
 
+  // Süt İşleme - Yoğurt veya Tereyağı
+  if(typeof sutIslemX!=='undefined'){
+    let sDx=sc.x-sutIslemX,sDy=sc.y-sutIslemY;
+    if(S.built.sutislem&&Math.abs(sDx)<sutIslemS*0.6&&Math.abs(sDy)<sutIslemS*0.6){
+      let sut=S.inv.SUT||0;
+      if(sut<2){toast('Süt İşleme için en az 2 lt süt gerekli! (Mevcut: '+sut+')');return}
+      let choice=prompt('Süt İşleme:\n1 = 2 lt Süt → 2 kg Yoğurt\n2 = 2 lt Süt → 1 kg Tereyağı\nSeçiminiz (1 veya 2):');
+      if(choice==='1'){
+        S.inv.SUT-=2;S.inv.YOGURT=(S.inv.YOGURT||0)+2;
+        toast('2 lt Süt → 2 kg Yoğurt! (Toplam: '+(S.inv.YOGURT||0)+')');
+        checkTutorialAction('make_yogurt');
+      }else if(choice==='2'){
+        S.inv.SUT-=2;S.inv.TEREYAGI=(S.inv.TEREYAGI||0)+1;
+        toast('2 lt Süt → 1 kg Tereyağı! (Toplam: '+(S.inv.TEREYAGI||0)+')');
+        checkTutorialAction('make_butter');
+      }else{return}
+      advanceTime();draw();return
+    }
+  }
+  // Peynir Fabrikası - Peynir
+  if(typeof peynirX!=='undefined'){
+    let pDx=sc.x-peynirX,pDy=sc.y-peynirY;
+    if(S.built.peynirfab&&Math.abs(pDx)<peynirS*0.6&&Math.abs(pDy)<peynirS*0.6){
+      let sut=S.inv.SUT||0;
+      if(sut<3){toast('Peynir için en az 3 lt süt gerekli! (Mevcut: '+sut+')');return}
+      S.inv.SUT-=3;S.inv.PEYNIR=(S.inv.PEYNIR||0)+2;
+      toast('3 lt Süt → 2 kg Peynir! (Toplam: '+(S.inv.PEYNIR||0)+')');
+      checkTutorialAction('make_cheese');advanceTime();draw();return
+    }
+  }
+  // Salça Fabrikası - Salça
+  if(typeof salcaX!=='undefined'){
+    let slDx=sc.x-salcaX,slDy=sc.y-salcaY;
+    if(S.built.salçafab&&Math.abs(slDx)<salcaS*0.6&&Math.abs(slDy)<salcaS*0.6){
+      let dom=S.inv.DOMATES||0;
+      if(dom<4){toast('Salça için en az 4 kg domates gerekli! (Mevcut: '+dom+')');return}
+      S.inv.DOMATES-=4;S.inv.SALCA=(S.inv.SALCA||0)+1;
+      toast('4 kg Domates → 1 kg Salça! (Toplam: '+(S.inv.SALCA||0)+')');
+      checkTutorialAction('make_salca');advanceTime();draw();return
+    }
+  }
+
   if(!S.built.grid){if(!S.buildingMenu)toast('Önce tarla inşa et! (Tesislerden)');return}
-  if(S.tractorActive&&r>=0&&r<ROWS&&c>=0&&c<COLS){plowArea(r,c);S.tractorActive=false;checkTutorialAction('plow');draw();return}
+  if(S.tractorActive){
+    if(r<0||r>=ROWS||c<0||c>=COLS){S.tractorActive=false;toast('Traktör kapatıldı.');draw();return}
+    plowArea(r,c);checkTutorialAction('plow');draw();return
+  }
+
+  if(pesticideModeActive){
+    if(r<0||r>=ROWS||c<0||c>=COLS){pesticideModeActive=false;toast('İlaçlama modu kapatıldı.');draw();return}
+    let p=getP(r,c);
+    if(!p||!p.crop){toast('Burada ekin yok!');return}
+    if(p.p){toast('Bu tarla zaten ilaçlanmış!');return}
+    if(S.money<50){toast('İlaçlama için 50 TL gerekli!');return}
+    S.money-=50;p.p=true;advanceTime();
+    toast('İlaçlama yapıldı! Böcekler temizlendi. -50 TL');draw();return
+  }
 
   if(plantMode){
     if(r<0||r>=ROWS||c<0||c>=COLS){plantMode=null;toast('Ekim modu kapatıldı.');draw();return}
@@ -2832,7 +3588,9 @@ CV.addEventListener('click',e=>{
     if(!cr){plantMode=null;return}
     if(S.money<cr.buy){toast('Yeterli paran yok! ('+cr.buy+' TL)');return}
     S.money-=cr.buy;p.crop=plantMode;p.age=0;p.w=false;p.p=false;p.nextHarvest=plantMode==='BUGDAY'?120:480;p.harvestCount=0;S.plantCount++;
-    toast(`${cr.name} ekildi! (+${cr.buy} TL)`);if(plantMode==='BUGDAY')checkTutorialAction('plant_bugday');
+    toast(`${cr.name} ekildi! (+${cr.buy} TL)`);
+    if(plantMode==='BUGDAY')checkTutorialAction('plant_bugday');
+    if(plantMode==='DOMATES')checkTutorialAction('plant_domates');
     draw();return;
   }
 
@@ -2844,8 +3602,10 @@ CV.addEventListener('click',e=>{
     let cr=CROPS[p.crop];if(!cr)return;
     let ib=p.w?Math.min(.2,S.st.SULAMA*.04):0,pb=p.p?Math.min(.2,S.st.ICLAMA*.04):0;
     let g=Math.min(1,(p.age/365)/cr.my);let y=cr.mk*g*cr.sea[S.sea];
+    if(!p.w)y=0;
+    if(p.crop==='BUGDAY')y=Math.min(y,1);
     if(p.w)y*=(1+ib);if(p.p)y*=(1+pb);
-    y=Math.max(0.1,y);
+    y=Math.max(y,y>0?0.1:0);
     let cap=500+S.st.DEPO*200,used=Object.values(S.inv).reduce((a,b)=>a+b,0);
     if((used+y)<=cap){
       S.inv[p.crop]=(S.inv[p.crop]||0)+y;S.dailyHarvest[p.crop]=(S.dailyHarvest[p.crop]||0)+y;
@@ -2853,6 +3613,7 @@ CV.addEventListener('click',e=>{
       if(p.harvestCount>=mh){let cn=cr.name;p.crop=null;p.age=0;p.w=false;p.p=false;p.nextHarvest=0;p.harvestCount=0;toast(`${cn} bitkiniz tükendi! Yeni tohum ek.`)}
       else{p.age+=5;p.w=false;p.p=false;p.nextHarvest=p.crop==='BUGDAY'?120:480;toast(`${cr.name} hasat edildi! +${y.toFixed(1)} kg (Kalan: ${mh-p.harvestCount})`)}
       if(p.crop&&p.crop==='BUGDAY')checkTutorialAction('harvest_bugday');
+      if(p.crop&&p.crop==='DOMATES')checkTutorialAction('harvest_domates');
     }else{toast('Depo dolu!')}
     draw();return;
   }
@@ -2866,24 +3627,45 @@ CV.addEventListener('click',e=>{
     lastPlantClick=idx;openPlantM(r,c);
   }else{lastPlantClick=-1;selR=r;selC=c;openPlotM(r,c)}draw();
 });
-document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeAllModals();S.tractorActive=false;lastPlantClick=-1;S.sel=-1;selR=-1;selC=-1;plantMode=null;harvestModeActive=false;draw()}});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    if(S.dragging){cancelDrag()}
+    else if(S.buildingMenu){S.buildingMenu=null}
+    else{closeAllModals();S.tractorActive=false;pesticideModeActive=false;lastPlantClick=-1;S.sel=-1;selR=-1;selC=-1;plantMode=null;harvestModeActive=false}
+    draw();
+  }
+  if(e.key==='+'||e.key==='='){zoomTarget=Math.min(3,zoomTarget+0.2);zoomCX=W/2;zoomCY=H/2;panX=0;panY=0;draw()}
+  if(e.key==='-'){zoomTarget=Math.max(0.5,zoomTarget-0.2);zoomCX=W/2;zoomCY=H/2;panX=0;panY=0;draw()}
+  if(e.key==='0'){zoomTarget=1;zoomCX=W/2;zoomCY=H/2;panX=0;panY=0;draw()}
+});
 function closeAllModals(){['plant','plot','shop','animal','storage','whole','tesisler'].forEach(m=>closeM(m))}
 function getP(r,c){return S.plots.find(p=>p.r===r&&p.c===c)}
 
 function openPlantM(r,c){let l=document.getElementById('plantList');l.innerHTML='';let isWinter=S.sea===3;
   let tip=document.createElement('div');tip.style.cssText='color:#ffe082;font-size:11px;margin-bottom:6px;padding:4px 8px;background:rgba(0,0,0,0.3);border-radius:4px';
   tip.textContent='Tohum seç → tarlalara tıkla → boş yere tıkla = bitir';l.appendChild(tip);
+  let grid=document.createElement('div');grid.className='catalog-grid';
   Object.entries(CROPS).forEach(([k,cr])=>{let ok=!isWinter;
-    let d=document.createElement('div');d.className='item';
-    let harvestInfo='3\'te 1 gün';let winterNote=isWinter?' (Kışın ekilmez)':'';
-    d.innerHTML=`<div class="inf"><div class="nm">${cr.name}${winterNote}</div><div class="dt">Sebze | Max:${cr.mk}kg | Hasat: ${harvestInfo}</div></div><div class="pr">${cr.buy} TL</div>`;
+    let d=document.createElement('div');d.className='catalog-item';
+    let cv=document.createElement('canvas');cv.width=50;cv.height=50;
+    drawMiniCrop(cv.getContext('2d'),k,50);
+    d.appendChild(cv);
+    let nm=document.createElement('div');nm.className='catalog-name';nm.textContent=cr.name;d.appendChild(nm);
+    let pr=document.createElement('div');pr.className='catalog-price';pr.textContent=cr.buy+' TL';d.appendChild(pr);
+    let det=document.createElement('div');det.className='catalog-detail';
+    det.innerHTML=`<b>${cr.name}</b><span>Max: ${cr.mk}kg</span><span>Hasat: ${cr.harvestInt}</span>${isWinter?'<span style="color:#ef5350">Kışın ekilmez!</span>':''}`;
+    d.appendChild(det);
     if(!ok){d.style.opacity='.3';d.style.cursor='not-allowed'}
     else d.onclick=()=>{if(S.money<cr.buy){toast('Yeterli paran yok!');return}plantMode=k;closeM('plant');lastPlantClick=-1;toast(`${cr.name} ekim modu! Tarlalara tıkla. Çıkmak için boş yere tıkla.`);draw()};
-    l.appendChild(d)});openM('plant')}
+    grid.appendChild(d)});
+  l.appendChild(grid);openM('plant')}
 
 function openPlotM(r,c){let p=getP(r,c),cr=CROPS[p.crop];if(!cr)return;
   let age=(p.age/365).toFixed(1),ib=p.w?Math.min(.2,S.st.SULAMA*.04):0,pb=p.p?Math.min(.2,S.st.ICLAMA*.04):0;
-  let g=Math.min(1,(p.age/365)/cr.my),y=cr.mk*g*cr.sea[S.sea]*(1+ib)*(1+pb);y=Math.max(0.1,y);let ys=y.toFixed(1);
+  let g=Math.min(1,(p.age/365)/cr.my),y=cr.mk*g*cr.sea[S.sea];
+  if(!p.w)y=0;if(p.crop==='BUGDAY')y=Math.min(y,1);
+  if(p.w)y*=(1+ib);if(p.p)y*=(1+pb);
+  y=Math.max(y,y>0?0.1:0);let ys=y.toFixed(1);
   let harvestText='';let canHarvest=p.nextHarvest<=0;
   if(!canHarvest){let hrs=Math.floor(p.nextHarvest/60);let mins=p.nextHarvest%60;harvestText=`<div>Siradaki hasat: <b>${hrs}sa ${mins}dk</b></div>`}
   else{harvestText=`<div style="color:#8bc34a;font-weight:bold">Hasat hazir!</div>`}
@@ -2898,8 +3680,10 @@ function harvestP(){let p=getP(selR,selC);if(!p||!p.crop)return;
   if(p.nextHarvest>0){toast('Hasat için bekleyin!');return}let cr=CROPS[p.crop];if(!cr)return;
   let ib=p.w?Math.min(.2,S.st.SULAMA*.04):0,pb=p.p?Math.min(.2,S.st.ICLAMA*.04):0;
   let g=Math.min(1,(p.age/365)/cr.my);let y=cr.mk*g*cr.sea[S.sea];
+  if(!p.w)y=0;
+  if(p.crop==='BUGDAY')y=Math.min(y,1);
   if(p.w)y*=(1+ib);if(p.p)y*=(1+pb);
-  y=Math.max(0.1,y);
+  y=Math.max(y,y>0?0.1:0);
   let cap=500+S.st.DEPO*200,used=Object.values(S.inv).reduce((a,b)=>a+b,0);
   if(y>0&&(used+y)<=cap){S.inv[p.crop]=(S.inv[p.crop]||0)+y;S.dailyHarvest[p.crop]=(S.dailyHarvest[p.crop]||0)+y;
     p.harvestCount=(p.harvestCount||0)+1;let mh=cr.maxHarvest||1;
@@ -2908,8 +3692,8 @@ function harvestP(){let p=getP(selR,selC);if(!p||!p.crop)return;
     if(p.crop&&p.crop==='BUGDAY')checkTutorialAction('harvest_bugday')}
   else if(y>0){toast('Depo dolu!')}
   harvestModeActive=true;closeM('plot');toast('Hasat modu! Diğer hazır tarlalara tıkla. Çıkmak için boş yere tıkla.');draw();checkMissions()}
-function waterP(){let p=getP(selR,selC);if(p&&!p.w){p.w=true;S.waterCount++;advanceTime();closeM('plot');toast('Sulama yapıldı!');draw();checkMissions()}}
-function pestP(){let p=getP(selR,selC);if(p&&!p.p){p.p=true;advanceTime();closeM('plot');toast('İlaçlama yapildi!');draw()}}
+function waterP(){let p=getP(selR,selC);if(p&&!p.w){p.w=true;p.wetTimer=1080;S.waterCount++;advanceTime();closeM('plot');toast('Sulama yapıldı! 18 saat geçerli.');draw();checkMissions()}}
+function pestP(){let p=getP(selR,selC);if(p&&!p.p){if(S.money<50){toast('İlaçlama için 50 TL gerekli!');return}S.money-=50;p.p=true;advanceTime();closeM('plot');pesticideModeActive=true;S.tractorActive=false;harvestModeActive=false;plantMode=null;toast('İlaçlama yapıldı! Diğer ilaçlanmamış tarlalara tıkla.');draw();updateHUD()}}
 function removeC(){let p=getP(selR,selC);if(p){if(S.money<50){toast('50 TL gerekli!');return}S.money-=50;p.crop=null;p.age=0;p.w=false;p.p=false;p.nextHarvest=0;closeM('plot');toast('Söküldü! -50 TL');draw()}}
 
 function openM(id){document.getElementById('m'+id.charAt(0).toUpperCase()+id.slice(1)).classList.add('active');renderM(id)}
@@ -2965,7 +3749,7 @@ function renderM(id){
     document.getElementById('storBar').innerHTML=`<div style="font-size:12px;color:#ccc">${used.toFixed(0)} / ${cap} kg</div><div class="sbar"><div class="sfill" style="width:${Math.min(100,used/cap*100)}%"></div></div>`;
     let l=document.getElementById('storList');l.innerHTML='';
     let grid=document.createElement('div');grid.className='catalog-grid';
-    [{k:'DOMATES',n:'Domates',u:'kg'},{k:'PATATES',n:'Patates',u:'kg'},{k:'SALATALIK',n:'Salatalık',u:'kg'},{k:'MARUL',n:'Marul',u:'kg'},{k:'BIBER',n:'Biber',u:'kg'},{k:'PATLICAN',n:'Patlıcan',u:'kg'},{k:'MISIR',n:'Mısır',u:'kg'},{k:'KABAK',n:'Kabak',u:'kg'},{k:'SOGAN',n:'Soğan',u:'kg'},{k:'BUGDAY',n:'Buğday',u:'kg'},{k:'YUMURTA',n:'Yumurta',u:'adet'},{k:'SUT',n:'Süt',u:'litre'},{k:'YUN',n:'Yün',u:'adet'},{k:'UN',n:'Un',u:'kg'},{k:'EKMEK',n:'Ekmek',u:'adet'}].forEach(it=>{
+    [{k:'DOMATES',n:'Domates',u:'kg'},{k:'PATATES',n:'Patates',u:'kg'},{k:'SALATALIK',n:'Salatalık',u:'kg'},{k:'MARUL',n:'Marul',u:'kg'},{k:'BIBER',n:'Biber',u:'kg'},{k:'PATLICAN',n:'Patlıcan',u:'kg'},{k:'MISIR',n:'Mısır',u:'kg'},{k:'KABAK',n:'Kabak',u:'kg'},{k:'SOGAN',n:'Soğan',u:'kg'},{k:'BUGDAY',n:'Buğday',u:'kg'},{k:'YUMURTA',n:'Yumurta',u:'adet'},{k:'SUT',n:'Süt',u:'litre'},{k:'YUN',n:'Yün',u:'adet'},{k:'UN',n:'Un',u:'kg'},{k:'EKMEK',n:'Ekmek',u:'adet'},{k:'YOGURT',n:'Yoğurt',u:'kg'},{k:'PEYNIR',n:'Peynir',u:'kg'},{k:'TEREYAGI',n:'Tereyağı',u:'kg'},{k:'SALCA',n:'Salça',u:'kg'}].forEach(it=>{
       let amt=it.k==='UN'?(S.invUN||0):it.k==='EKMEK'?(S.invEKMEK||0):(S.inv[it.k]||0);
       let d=document.createElement('div');d.className='catalog-item';
       d.style.opacity=amt>0?1:0.3;
@@ -2984,16 +3768,17 @@ function renderM(id){
 function buyA(k){let a=ANIM[k];if(S.money<a.price){toast('Yeterli paran yok!');return}
   if(k==='TAVUK'){
     if(!S.built.kümes){toast('Önce kümes inşa et!');return}
-    let cap=5+(S.buildingLevel.kümes||1);if(S.ch>=cap){toast('Kümes dolu!');return}S.ch++}
-  else if(k==='INEK'){
+    let cap=5+(S.buildingLevel.kümes||1);if(S.ch>=cap){toast('Kümes dolu!');return}S.ch++;
+    checkTutorialAction('buy_chicken');
+  }else if(k==='INEK'){
     if(!S.built.ahır){toast('Önce ahır inşa et!');return}
-    let cap=3+(S.buildingLevel.ahır||1);if(S.co>=cap){toast('Ahır dolu!');return}S.co++}
-  else if(k==='KOYUN'){
+    let cap=3+(S.buildingLevel.ahır||1);if(S.co>=cap){toast('Ahır dolu!');return}S.co++;
+    checkTutorialAction('buy_cow');
+  }else if(k==='KOYUN'){
     if(!S.built.ahır){toast('Önce ahır inşa et!');return}
     let cap=3+(S.buildingLevel.ahır||1);if(S.sh>=cap){toast('Ahır dolu!');return}S.sh++}
   S.money-=a.price;toast(`${a.name} alındı!`);updateHUD();draw();renderM('animal')}
-function buySeed(k,cr){if(S.money<cr.buy){toast('Yeterli paran yok!');return}S.money-=cr.buy;
-  S.inv[k]=(S.inv[k]||0)+1;toast(`${cr.name} tohumu alındı! (+1 kg)`);updateHUD();renderM('shop')}
+function buySeed(k,cr){plantMode=k;closeM('shop');lastPlantClick=-1;toast(`${cr.name} ekim modu! Tarlalara tıkla. Çıkmak için boş yere tıkla.`);draw()}
 
 function buyBuilding(k,price,name){
   if(S.built[k]){toast('Zaten inşa edildi!');return}
@@ -3001,16 +3786,28 @@ function buyBuilding(k,price,name){
   S.money-=price;S.built[k]=true;
   if(k==='grid'){
     for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
-      if(!S.plots.find(p=>p.r===r&&p.c===c))S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0,harvestCount:0});
+      if(!S.plots.find(p=>p.r===r&&p.c===c))S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0,harvestCount:0,plowTimer:1080,wetTimer:0});
       if(!S.plowed.includes(r*COLS+c))S.plowed.push(r*COLS+c);
     }
   }
   S.animateBuilding={key:k,t:Date.now()};
-  toast(name+' inşa edildi!');updateHUD();draw();
-  if(k==='grid')checkTutorialAction('build_grid');
+  closeM('tesisler');
+  updateHUD();draw();
+  if(k==='grid'){
+    checkTutorialAction('build_grid');
+  }else{
+    startDrag(k);
+    S.dragX=W/2;S.dragY=H/2;
+    draw();
+  }
   if(k==='kuyu')checkTutorialAction('build_kuyu');
   if(k==='degirmen')checkTutorialAction('build_degirmen');
   if(k==='fırın')checkTutorialAction('build_fırın');
+  if(k==='kümes')checkTutorialAction('build_kümes');
+  if(k==='ahır')checkTutorialAction('build_ahir');
+  if(k==='sutislem')checkTutorialAction('build_sutislem');
+  if(k==='peynirfab')checkTutorialAction('build_peynirfab');
+  if(k==='salçafab')checkTutorialAction('build_salçafab');
 }
 function upgradeBuilding(k){
   if(!S.built[k]){toast('Önce inşa et!');return}
@@ -3038,8 +3835,8 @@ function updateHUD(){
 function toast(m){let t=document.getElementById('toast');t.textContent=m;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 
 // ====== TASIMA SISTEMI ======
-const BUILDING_NAMES={ahır:'AHİR',kümes:'KÜMES',degirmen:'DEĞİRMEN',kuyu:'KUYU',grid:'TARLA',fırın:'FIRIN'};
-const BUILDING_PRICES={ahır:2500,kümes:1500,degirmen:3000,kuyu:2000,grid:100,fırın:2500};
+const BUILDING_NAMES={ahır:'AHİR',kümes:'KÜMES',degirmen:'DEĞİRMEN',kuyu:'KUYU',grid:'TARLA',fırın:'FIRIN',sutislem:'SÜT İŞLEME',peynirfab:'PEYNİR FAB',salçafab:'SALÇA FAB'};
+const BUILDING_PRICES={ahır:2500,kümes:1500,degirmen:3000,kuyu:2000,grid:100,fırın:2500,sutislem:3500,peynirfab:4000,salçafab:3000};
 
 function getBuildingAt(mx,my){
   let sc=screenToScene(mx,my);let sx=sc.x,sy=sc.y;
@@ -3069,6 +3866,18 @@ function getBuildingAt(mx,my){
       if(!S.built.fırın)continue;
       if(typeof firinS==='undefined')continue;
       if(Math.abs(sx-firinX)<firinS*0.7&&Math.abs(sy-firinY)<firinS*0.7)return k;
+    }else if(k==='sutislem'){
+      if(!S.built.sutislem)continue;
+      if(typeof sutIslemS==='undefined')continue;
+      if(Math.abs(sx-sutIslemX)<sutIslemS*0.7&&Math.abs(sy-sutIslemY)<sutIslemS*0.7)return k;
+    }else if(k==='peynirfab'){
+      if(!S.built.peynirfab)continue;
+      if(typeof peynirS==='undefined')continue;
+      if(Math.abs(sx-peynirX)<peynirS*0.7&&Math.abs(sy-peynirY)<peynirS*0.7)return k;
+    }else if(k==='salçafab'){
+      if(!S.built.salçafab)continue;
+      if(typeof salcaS==='undefined')continue;
+      if(Math.abs(sx-salcaX)<salcaS*0.7&&Math.abs(sy-salcaY)<salcaS*0.7)return k;
     }
   }
   return null;
@@ -3106,6 +3915,7 @@ function finishDrag(){
     S.buildingPos.kuyu.y=pos.y+defKuyu.dy;
   }
   S.dragging=null;
+  wasPanning=true;
   toast(BUILDING_NAMES[key]+' yerleştirildi!');
   draw();
 }
@@ -3154,7 +3964,7 @@ function sellBuilding(key){
   S.buildingPos[key]=null;
   if(key==='grid'){
     S.plots=[];S.plowed=[];
-    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0,harvestCount:0});
+for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0,harvestCount:0,plowTimer:1080,wetTimer:0});
     for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++)S.plowed.push(r*COLS+c);
     S.irrigating=false;S.sel=-1;
   }
@@ -3186,10 +3996,6 @@ function drawBuildingMenu(){
   ];
   items.forEach(it=>{
     X.fillStyle='#d7ccc8';X.font='11px "Nunito",Arial,sans-serif';X.textAlign='center';
-    if(mx>bx&&mx<bx+120&&my>it.y-8&&my<it.y+10){
-      X.fillStyle='#ffe082';X.fillRect(bx+2,it.y-10,116,18);
-      X.fillStyle='#3e2723';
-    }
     X.fillText(it.text,bx+60,it.y+3);
   });
   S.buildingMenu.items=items;
@@ -3199,16 +4005,13 @@ let longPressTimer=null;
 let longPressPos={x:0,y:0};
 let mouseDownTime=0;
 let mouseDownPos={x:0,y:0};
+let dragStartedThisClick=false;
 
 CV.addEventListener('mousedown',e=>{
   let mx=e.clientX,my=e.clientY;
   mouseDownTime=Date.now();
   mouseDownPos={x:mx,y:my};
-  if(S.dragging){
-    let sc=screenToScene(mx,my);S.dragX=sc.x;S.dragY=sc.y;
-    finishDrag();
-    return;
-  }
+  isPanning=false;panStartX=mx;panStartY=my;panStartPX=panX;panStartPY=panY;
   if(S.buildingMenu){
     let m=S.buildingMenu;
     let bx=m.x-60,by=m.y-90;
@@ -3216,7 +4019,7 @@ CV.addEventListener('mousedown',e=>{
     if(mx>bx&&mx<bx+120&&m.items){
       for(let it of m.items){
         if(my>it.y-8&&my<it.y+10){
-          if(it.action==='drag'){S.buildingMenu=null;startDrag(m.key)}
+          if(it.action==='drag'){S.buildingMenu=null;startDrag(m.key);dragStartedThisClick=true}
           else if(it.action==='sell')sellBuilding(m.key);
           else{S.buildingMenu=null;draw()}
           return;
@@ -3226,8 +4029,7 @@ CV.addEventListener('mousedown',e=>{
     S.buildingMenu=null;draw();return;
   }
   longPressTimer=setTimeout(()=>{
-    let b=getBuildingAt(mx,my);
-    if(b){showBuildingMenu(b,mx,my)}
+    if(!isPanning){let b=getBuildingAt(mx,my);if(b){showBuildingMenu(b,mx,my)}}
   },500);
 });
 
@@ -3239,7 +4041,17 @@ CV.addEventListener('mousemove',e=>{
     draw();
     return;
   }
-  if(mouseDownTime>0&&Date.now()-mouseDownTime>300){
+  if(mouseDownTime>0&&!isPanning&&!S.buildingMenu){
+    let dx=mx-panStartX,dy=my-panStartY;
+    if(Math.sqrt(dx*dx+dy*dy)>8){
+      isPanning=true;clearTimeout(longPressTimer);longPressTimer=null;
+    }
+  }
+  if(isPanning){
+    e.preventDefault();
+    panX=panStartPX+(mx-panStartX);panY=panStartPY+(my-panStartY);
+    draw();
+  }else if(mouseDownTime>0&&!S.buildingMenu&&Date.now()-mouseDownTime>300){
     let dx=mx-mouseDownPos.x,dy=my-mouseDownPos.y;
     if(Math.sqrt(dx*dx+dy*dy)>10){
       clearTimeout(longPressTimer);longPressTimer=null;
@@ -3250,8 +4062,11 @@ CV.addEventListener('mousemove',e=>{
 });
 
 CV.addEventListener('mouseup',e=>{
-  mouseDownTime=0;
+  wasPanning=isPanning;
+  mouseDownTime=0;isPanning=false;
   clearTimeout(longPressTimer);longPressTimer=null;
+  if(S.dragging&&!dragStartedThisClick){finishDrag()}
+  dragStartedThisClick=false;
 });
 
 CV.addEventListener('touchstart',e=>{
@@ -3262,13 +4077,30 @@ CV.addEventListener('touchstart',e=>{
     pinchZoom0=zoomTarget;
     zoomCX=(t1.clientX+t2.clientX)/2;
     zoomCY=(t1.clientY+t2.clientY)/2;
-    mouseDownTime=0;return;
+    mouseDownTime=0;isPanning=false;return;
   }
   let t=e.touches[0];let mx=t.clientX,my=t.clientY;
   mouseDownTime=Date.now();mouseDownPos={x:mx,y:my};
+  isPanning=false;panStartX=mx;panStartY=my;panStartPX=panX;panStartPY=panY;
+  if(S.dragging){return}
+  if(S.buildingMenu){
+    let m=S.buildingMenu;
+    let bx=m.x-60,by=m.y-90;
+    if(by<10)by=m.y+10;
+    if(mx>bx&&mx<bx+120&&m.items){
+      for(let it of m.items){
+        if(my>it.y-8&&my<it.y+10){
+          if(it.action==='drag'){S.buildingMenu=null;startDrag(m.key);dragStartedThisClick=true}
+          else if(it.action==='sell')sellBuilding(m.key);
+          else{S.buildingMenu=null;draw()}
+          return;
+        }
+      }
+    }
+    S.buildingMenu=null;draw();return;
+  }
   longPressTimer=setTimeout(()=>{
-    let b=getBuildingAt(mx,my);
-    if(b){showBuildingMenu(b,mx,my)}
+    if(!isPanning){let b=getBuildingAt(mx,my);if(b){showBuildingMenu(b,mx,my)}}
   },500);
 },{passive:true});
 
@@ -3289,7 +4121,17 @@ CV.addEventListener('touchmove',e=>{
     let sc=screenToScene(mx,my);S.dragX=sc.x;S.dragY=sc.y;
     draw();return;
   }
-  if(mouseDownTime>0&&Date.now()-mouseDownTime>300){
+  if(mouseDownTime>0&&!isPanning&&!S.buildingMenu){
+    let dx=mx-panStartX,dy=my-panStartY;
+    if(Math.sqrt(dx*dx+dy*dy)>10){
+      isPanning=true;clearTimeout(longPressTimer);longPressTimer=null;
+    }
+  }
+  if(isPanning){
+    e.preventDefault();
+    panX=panStartPX+(mx-panStartX);panY=panStartPY+(my-panStartY);
+    draw();
+  }else if(mouseDownTime>0&&!S.buildingMenu&&Date.now()-mouseDownTime>300){
     let dx=mx-mouseDownPos.x,dy=my-mouseDownPos.y;
     if(Math.sqrt(dx*dx+dy*dy)>10){
       clearTimeout(longPressTimer);longPressTimer=null;
@@ -3300,18 +4142,13 @@ CV.addEventListener('touchmove',e=>{
 },{passive:false});
 
 CV.addEventListener('touchend',e=>{
-  mouseDownTime=0;
+  wasPanning=isPanning;
+  mouseDownTime=0;isPanning=false;
   clearTimeout(longPressTimer);longPressTimer=null;
-  if(S.dragging){finishDrag()}
+  if(S.dragging&&!dragStartedThisClick){finishDrag()}
+  dragStartedThisClick=false;
 });
 
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape'&&S.dragging){cancelDrag()}
-  if(e.key==='Escape'&&S.buildingMenu){S.buildingMenu=null;draw()}
-  if(e.key==='+'||e.key==='='){zoomTarget=Math.min(3,zoomTarget+0.2);zoomCX=W/2;zoomCY=H/2;draw()}
-  if(e.key==='-'){zoomTarget=Math.max(0.5,zoomTarget-0.2);zoomCX=W/2;zoomCY=H/2;draw()}
-  if(e.key==='0'){zoomTarget=1;zoomCX=W/2;zoomCY=H/2;draw()}
-});
 CV.addEventListener('wheel',e=>{
   e.preventDefault();
   let delta=e.deltaY>0?-0.15:0.15;
@@ -3326,11 +4163,11 @@ function load(){let d=localStorage.getItem('farm5');
   if(d){let l=JSON.parse(d);if(l._v!==SAVE_VERSION){localStorage.removeItem('farm5');return}
     Object.assign(S,l);if(!S.dailyHarvest)S.dailyHarvest={};if(!S.dailyAnimal)S.dailyAnimal={};
     if(S.dailySold===undefined)S.dailySold=0;
-    if(!S.built)S.built={degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false,fırın:false};
+    if(!S.built)S.built={degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false,fırın:false,sutislem:false,peynirfab:false,salçafab:false};
     if(S.built.grid===undefined)S.built.grid=false;
     if(S.built.fırın===undefined)S.built.fırın=false;
-    if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null,fırın:null};
-    if(!S.buildingLevel)S.buildingLevel={ahır:1,kümes:1,kuyu:1,degirmen:1,fırın:1};
+if(!S.buildingPos)S.buildingPos={grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null,fırın:null,sutislem:null,peynirfab:null,salçafab:null};
+    if(!S.buildingLevel)S.buildingLevel={ahır:1,kümes:1,kuyu:1,degirmen:1,fırın:1,sutislem:1,peynirfab:1,salçafab:1};
     if(!S.tutorial)S.tutorial={active:false,step:0,type:'bread',completed:false};
     if(S.invUN===undefined)S.invUN=0;
     if(S.invEKMEK===undefined)S.invEKMEK=0;
@@ -3339,6 +4176,7 @@ function load(){let d=localStorage.getItem('farm5');
     if(S.dailyAnimal.YUMURTA===undefined)S.dailyAnimal.YUMURTA=0;
     if(S.dailyAnimal.SUT===undefined)S.dailyAnimal.SUT=0;
     if(S.dailyAnimal.YUN===undefined)S.dailyAnimal.YUN=0;
+    S.plots.forEach(p=>{if(p.plowTimer===undefined)p.plowTimer=60;if(p.wetTimer===undefined)p.wetTimer=0});
   }
 }
 function loop(){
