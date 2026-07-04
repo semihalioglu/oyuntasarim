@@ -229,19 +229,19 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
     return{x:Math.max(l,Math.min(r,sx)),y:Math.max(tp,Math.min(b,sy))};
   }
   function segCross(x1,y1,x2,y2){
-    if(Math.abs(y1-y2)<1){let y=y1;return y>=gy1&&y<=gy2&&Math.max(x1,x2)>gx1&&Math.min(x1,x2)<gx2}
-    if(Math.abs(x1-x2)<1){let x=x1;return x>=gx1&&x<=gx2&&Math.max(y1,y2)>gy1&&Math.min(y1,y2)<gy2}
+    if(Math.abs(y1-y2)<1){let y=y1;return y>gy1&&y<gy2&&Math.max(x1,x2)>gx1&&Math.min(x1,x2)<gx2}
+    if(Math.abs(x1-x2)<1){let x=x1;return x>gx1&&x<gx2&&Math.max(y1,y2)>gy1&&Math.min(y1,y2)<gy2}
     return false;
   }
   function routeTo(sx,sy,t){
     let e=getEntry(sx,sy,t);
     let mx=e.x,my=sy;
     if(segCross(sx,sy,mx,my)){
-      let ay=sy<gridCY?gy1:gy2;
+      let ay=sy<gridCY?gy1-buf:gy2+buf;
       return[{x:sx,y:sy},{x:sx,y:ay},{x:mx,y:ay},e];
     }
     if(segCross(mx,my,e.x,e.y)){
-      let ax=mx<gridCX?gx1:gx2;
+      let ax=mx<gridCX?gx1-buf:gx2+buf;
       return[{x:sx,y:sy},{x:mx,y:my},{x:ax,y:my},{x:ax,y:e.y},e];
     }
     return[{x:sx,y:sy},{x:mx,y:my},e];
