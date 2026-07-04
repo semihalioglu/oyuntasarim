@@ -143,7 +143,6 @@ const BUILDING_NAMES = { ahır: 'AHİR', kümes: 'KÜMES', degirmen: 'DEĞİRMEN
 const BUILDING_PRICES = { ahır: 2500, kümes: 1500, degirmen: 3000, kuyu: 2000, grid: 100, fırın: 2500, sutislem: 3500, peynirfab: 4000, salçafab: 3000 };
 const SELL_RATIO = 0.6;
 const GRID_LINKED_KUYU = true;
-const SAVE_VERSION = 11;
 
 let longPressTimer = null;
 let longPressPos = { x: 0, y: 0 };
@@ -401,7 +400,6 @@ const UIManager = {
             d.appendChild(moveBtn);
           }
         }
-      }
       grid.appendChild(d);
     });
     let rl = S.roadLevel || 0;
