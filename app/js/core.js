@@ -657,7 +657,11 @@ window.doRegister=function(){
 window.doGuestLogin=function(){
   localStorage.removeItem('farm5');
   sessionStorage.setItem('farm_user','Misafir');
-  location.reload();
+  if(typeof startGame==='function'){
+    GameManager.S.plots=[];GameManager.S.plowed=[];
+    GameManager.init();
+    startGame();
+  }else{location.reload()}
 };
 window.doLogout=function(){
   sessionStorage.removeItem('farm_user');

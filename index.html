@@ -166,7 +166,11 @@ window.doRegister=function(){
 window.doGuestLogin=function(){
   localStorage.removeItem('farm5');
   sessionStorage.setItem('farm_user','Misafir');
-  location.reload();
+  if(typeof startGame==='function'&&typeof GameManager!=='undefined'){
+    GameManager.S.plots=[];GameManager.S.plowed=[];
+    GameManager.init();
+    startGame();
+  }else{location.reload()}
 };
 window.doLogout=function(){
   sessionStorage.removeItem('farm_user');
@@ -179,7 +183,7 @@ window.doLogout=function(){
 <div class="login-bg" id="loginBg">
   <div class="login-box">
     <div class="login-logo">🌾🐄</div>
-    <div class="login-version" style="color:#8bc34a;font-size:12px;margin-bottom:8px;opacity:0.7">v1.007</div>
+    <div class="login-version" style="color:#8bc34a;font-size:12px;margin-bottom:8px;opacity:0.7">v1.008</div>
     <div class="login-tabs">
       <div class="login-tab active" onclick="showLoginTab('login')">Giriş Yap</div>
       <div class="login-tab" onclick="showLoginTab('register')">Kayıt Ol</div>
