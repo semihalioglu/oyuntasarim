@@ -165,7 +165,6 @@ drawFenceSegment(x1,y1,x2,y2){
 drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
   let buf=CL*0.5;
   let targets=[];
-  if(S.built.grid)targets.push({k:'grid',cx:gridCX,cy:gridCY,hw:COLS*CL/2+buf,hh:ROWS*CL/2+buf});
   if(S.built.kuyu){
     let kx,ky;
     if(S.buildingPos.kuyu){kx=S.buildingPos.kuyu.x;ky=S.buildingPos.kuyu.y}
@@ -224,27 +223,45 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
   let roadW=CL*0.45;
   let stoneS=CL*0.22;
   let rl=S.roadLevel||0;
-  function getEntry(sx,sy,t){
+  function getEdge(sx,sy,t){
     let l=t.cx-t.hw,r=t.cx+t.hw,tp=t.cy-t.hh,b=t.cy+t.hh;
     return{x:Math.max(l,Math.min(r,sx)),y:Math.max(tp,Math.min(b,sy))};
   }
-  function segCross(x1,y1,x2,y2){
-    if(Math.abs(y1-y2)<1){let y=y1;return y>gy1&&y<gy2&&Math.max(x1,x2)>gx1&&Math.min(x1,x2)<gx2}
-    if(Math.abs(x1-x2)<1){let x=x1;return x>gx1&&x<gx2&&Math.max(y1,y2)>gy1&&Math.min(y1,y2)<gy2}
-    return false;
+  function horizCross(x1,x2,y){
+    return y>gy1&&y<gy2&&Math.max(x1,x2)>gx1&&Math.min(x1,x2)<gx2;
+  }
+  function vertCross(y1,y2,x){
+    return x>gx1&&x<gx2&&Math.max(y1,y2)>gy1&&Math.min(y1,y2)<gy2;
   }
   function routeTo(sx,sy,t){
-    let e=getEntry(sx,sy,t);
-    let mx=e.x,my=sy;
-    if(segCross(sx,sy,mx,my)){
-      let ay=sy<gridCY?gy1-buf:gy2+buf;
-      return[{x:sx,y:sy},{x:sx,y:ay},{x:mx,y:ay},e];
+    let e=getEdge(sx,sy,t);
+    let path=[{x:sx,y:sy}];
+    let curX=sx,curY=sy;
+    let hCross=horizCross(sx,e.x,sy);
+    let vCross=vertCross(sy,e.y,e.x);
+    if(hCross&&vCross){
+      let goAbove=sy<gridCY;
+      let avoidY=goAbove?gy1:gy2;
+      let goLeft=e.x<gridCX;
+      let avoidX=goLeft?gx1:gx2;
+      path.push({x:sx,y:avoidY});
+      path.push({x:avoidX,y:avoidY});
+      path.push({x:avoidX,y:e.y});
+    }else if(hCross){
+      let goAbove=sy<gridCY;
+      let avoidY=goAbove?gy1:gy2;
+      path.push({x:sx,y:avoidY});
+      path.push({x:e.x,y:avoidY});
+    }else if(vCross){
+      let goLeft=e.x<gridCX;
+      let avoidX=goLeft?gx1:gx2;
+      path.push({x:avoidX,y:sy});
+      path.push({x:avoidX,y:e.y});
+    }else{
+      path.push({x:e.x,y:sy});
     }
-    if(segCross(mx,my,e.x,e.y)){
-      let ax=mx<gridCX?gx1-buf:gx2+buf;
-      return[{x:sx,y:sy},{x:mx,y:my},{x:ax,y:my},{x:ax,y:e.y},e];
-    }
-    return[{x:sx,y:sy},{x:mx,y:my},e];
+    path.push(e);
+    return path;
   }
   function drawRoadSegment(x1,y1,x2,y2){
     let dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy);
