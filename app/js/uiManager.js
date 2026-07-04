@@ -344,8 +344,8 @@ const UIManager = {
 
   openTesisler: function() {
     let grid = document.getElementById('tesisGrid'); grid.innerHTML = '';
-    let tesisFiyat = { Ev: 0, Ahır: 2500, Kümes: 1500, Değirmen: 3000, Kuyu: 2000, Tarla: 100, Fırın: 2500, 'Süt İşleme': 3500, 'Peynir Fab': 4000, 'Salça Fab': 3000 };
-    let tesisKey = { Ev: 'ev', Ahır: 'ahır', Kümes: 'kümes', Değirmen: 'degirmen', Kuyu: 'kuyu', Tarla: 'grid', Fırın: 'fırın', 'Süt İşleme': 'sutislem', 'Peynir Fab': 'peynirfab', 'Salça Fab': 'salçafab' };
+    let tesisFiyat = { Ev: 0, Ahır: 2500, Kümes: 1500, Değirmen: 3000, Kuyu: 2000, Tarla: 100, Fırın: 2500, 'Süt İşleme': 3500, 'Peynir Fab': 4000, 'Salça Fab': 3000, 'Yol Tesisi': 2000 };
+    let tesisKey = { Ev: 'ev', Ahır: 'ahır', Kümes: 'kümes', Değirmen: 'degirmen', Kuyu: 'kuyu', Tarla: 'grid', Fırın: 'fırın', 'Süt İşleme': 'sutislem', 'Peynir Fab': 'peynirfab', 'Salça Fab': 'salçafab', 'Yol Tesisi': 'yoltesisi' };
     let tesisler = [
       { name: 'Ev', fn: Drawing.drawHouseToCanvas, bg: '#8d6e63', free: true },
       { name: 'Tarla', fn: Drawing.drawGridToCanvas, bg: '#6d4c41' },
@@ -356,7 +356,8 @@ const UIManager = {
       { name: 'Fırın', fn: Drawing.drawFırınToCanvas, bg: '#d84315' },
       { name: 'Süt İşleme', fn: Drawing.drawSutIslemToCanvas, bg: '#42a5f5' },
       { name: 'Peynir Fab', fn: Drawing.drawPeynirFabToCanvas, bg: '#fdd835' },
-      { name: 'Salça Fab', fn: Drawing.drawSalcaFabToCanvas, bg: '#e53935' }
+      { name: 'Salça Fab', fn: Drawing.drawSalcaFabToCanvas, bg: '#e53935' },
+      { name: 'Yol Tesisi', fn: Drawing.drawRoadTesisToCanvas, bg: '#5d4037' }
     ];
     tesisler.forEach(t => {
       let d = document.createElement('div'); d.className = 'tesis-item';
@@ -378,27 +379,48 @@ const UIManager = {
           btn.onclick = function(e) { e.stopPropagation(); UIManager.buyBuilding(key, tesisFiyat[t.name], t.name) };
           d.appendChild(btn);
         } else {
-          let lv = S.buildingLevel ? S.buildingLevel[key] || 1 : 1;
-          let lvDiv = document.createElement('div'); lvDiv.style.cssText = 'font-size:11px;color:#ffeb3b;margin-top:3px;font-weight:bold';
-          lvDiv.textContent = 'Seviye: ' + lv + '/' + BUILDING_MAX_LEVEL;
-          d.appendChild(lvDiv);
-          if (key !== 'grid' && lv < BUILDING_MAX_LEVEL) {
-            let cost = getUpgradeCost(key);
-            let desc = UPGRADE_DESC[key] ? UPGRADE_DESC[key].effect(lv + 1) : '';
-            let upgBtn = document.createElement('button'); upgBtn.style.cssText = 'background:#6a1b9a;color:#fff;border:1px solid #ab47bc;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:3px';
-            upgBtn.textContent = '⬆ Geliştir ' + cost.toLocaleString() + ' TL';
-            upgBtn.title = desc;
-            upgBtn.onclick = function(e) { e.stopPropagation(); UIManager.upgradeBuilding(key); UIManager.openTesisler() };
-            d.appendChild(upgBtn);
-          } else if (key !== 'grid' && lv >= BUILDING_MAX_LEVEL) {
-            let maxDiv = document.createElement('div'); maxDiv.style.cssText = 'font-size:10px;color:#ffd54f;margin-top:3px;font-weight:bold';
-            maxDiv.textContent = '⭐ Maks Seviye!';
-            d.appendChild(maxDiv);
+          if (key === 'yoltesisi') {
+            let rl = S.roadLevel || 0;
+            let roadNames = ['Toprak Yol', 'Taş Yol', 'Asfalt Yol'];
+            let lvDiv = document.createElement('div'); lvDiv.style.cssText = 'font-size:11px;color:#ffeb3b;margin-top:3px;font-weight:bold';
+            lvDiv.textContent = 'Yol: ' + roadNames[rl] + ' (' + rl + '/2)';
+            d.appendChild(lvDiv);
+            if (rl < 2) {
+              let roadCosts = [0, 3000, 8000];
+              let nextNames = ['', 'Taş Yol', 'Asfalt Yol'];
+              let cost = roadCosts[rl + 1];
+              let upgBtn = document.createElement('button'); upgBtn.style.cssText = 'background:#6a1b9a;color:#fff;border:1px solid #ab47bc;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:3px';
+              upgBtn.textContent = '⬆ ' + nextNames[rl + 1] + ' Yap ' + cost.toLocaleString() + ' TL';
+              upgBtn.onclick = function(e) { e.stopPropagation(); window.upgradeRoad(); UIManager.openTesisler() };
+              d.appendChild(upgBtn);
+            } else {
+              let maxDiv = document.createElement('div'); maxDiv.style.cssText = 'font-size:10px;color:#ffd54f;margin-top:3px;font-weight:bold';
+              maxDiv.textContent = '⭐ Maks Yol Kalitesi!';
+              d.appendChild(maxDiv);
+            }
+          } else {
+            let lv = S.buildingLevel ? S.buildingLevel[key] || 1 : 1;
+            let lvDiv = document.createElement('div'); lvDiv.style.cssText = 'font-size:11px;color:#ffeb3b;margin-top:3px;font-weight:bold';
+            lvDiv.textContent = 'Seviye: ' + lv + '/' + BUILDING_MAX_LEVEL;
+            d.appendChild(lvDiv);
+            if (key !== 'grid' && lv < BUILDING_MAX_LEVEL) {
+              let cost = getUpgradeCost(key);
+              let desc = UPGRADE_DESC[key] ? UPGRADE_DESC[key].effect(lv + 1) : '';
+              let upgBtn = document.createElement('button'); upgBtn.style.cssText = 'background:#6a1b9a;color:#fff;border:1px solid #ab47bc;padding:4px 10px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:3px';
+              upgBtn.textContent = '⬆ Geliştir ' + cost.toLocaleString() + ' TL';
+              upgBtn.title = desc;
+              upgBtn.onclick = function(e) { e.stopPropagation(); UIManager.upgradeBuilding(key); UIManager.openTesisler() };
+              d.appendChild(upgBtn);
+            } else if (key !== 'grid' && lv >= BUILDING_MAX_LEVEL) {
+              let maxDiv = document.createElement('div'); maxDiv.style.cssText = 'font-size:10px;color:#ffd54f;margin-top:3px;font-weight:bold';
+              maxDiv.textContent = '⭐ Maks Seviye!';
+              d.appendChild(maxDiv);
+            }
+            let moveBtn = document.createElement('button'); moveBtn.style.cssText = 'background:#5d4037;color:#ffe082;border:1px solid #c8956c;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:4px';
+            moveBtn.textContent = '📍 Taşıma Modu';
+            moveBtn.onclick = function(e) { e.stopPropagation(); UIManager.closeM('tesisler'); UIManager.startDrag(key) };
+            d.appendChild(moveBtn);
           }
-          let moveBtn = document.createElement('button'); moveBtn.style.cssText = 'background:#5d4037;color:#ffe082;border:1px solid #c8956c;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:4px';
-          moveBtn.textContent = '📍 Taşıma Modu';
-          moveBtn.onclick = function(e) { e.stopPropagation(); UIManager.closeM('tesisler'); UIManager.startDrag(key) };
-          d.appendChild(moveBtn);
         }
       }
       grid.appendChild(d);

@@ -221,31 +221,75 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
   if(targets.length===0)return;
   let roadW=CL*0.45;
   let stoneS=CL*0.22;
+  let rl=S.roadLevel||0;
   function drawRoadSegment(x1,y1,x2,y2){
     let dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy);
     if(len<1)return;
     let ux=dx/len,uy=dy/len;
     let nx=-uy,ny=ux;
     let hw=roadW/2;
-    X.fillStyle='#8d8d8d';
-    X.beginPath();
-    X.moveTo(x1+nx*hw,y1+ny*hw);
-    X.lineTo(x2+nx*hw,y2+ny*hw);
-    X.lineTo(x2-nx*hw,y2-ny*hw);
-    X.lineTo(x1-nx*hw,y1-ny*hw);
-    X.closePath();X.fill();
-    X.strokeStyle='#6d6d6d';X.lineWidth=1;
-    X.beginPath();X.moveTo(x1+nx*hw,y1+ny*hw);X.lineTo(x2+nx*hw,y2+ny*hw);X.stroke();
-    X.beginPath();X.moveTo(x1-nx*hw,y1-ny*hw);X.lineTo(x2-nx*hw,y2-ny*hw);X.stroke();
-    let tiles=Math.floor(len/stoneS);
-    for(let i=0;i<tiles;i++){
-      let t=i/tiles;
-      let cx=x1+dx*t,cy=y1+dy*t;
-      let shade=((i*7+3)%5)/5*30-15;
-      X.fillStyle=`rgb(${160+shade},${155+shade},${145+shade})`;
-      X.fillRect(cx-stoneS*0.42,cy-stoneS*0.35,stoneS*0.84,stoneS*0.7);
-      X.strokeStyle='#999';X.lineWidth=0.5;
-      X.strokeRect(cx-stoneS*0.42,cy-stoneS*0.35,stoneS*0.84,stoneS*0.7);
+    if(rl===0){
+      X.fillStyle='#a0825a';
+      X.beginPath();
+      X.moveTo(x1+nx*hw,y1+ny*hw);
+      X.lineTo(x2+nx*hw,y2+ny*hw);
+      X.lineTo(x2-nx*hw,y2-ny*hw);
+      X.lineTo(x1-nx*hw,y1-ny*hw);
+      X.closePath();X.fill();
+      X.strokeStyle='#8a6e42';X.lineWidth=1;
+      X.beginPath();X.moveTo(x1+nx*hw,y1+ny*hw);X.lineTo(x2+nx*hw,y2+ny*hw);X.stroke();
+      X.beginPath();X.moveTo(x1-nx*hw,y1-ny*hw);X.lineTo(x2-nx*hw,y2-ny*hw);X.stroke();
+      let dots=Math.floor(len/(stoneS*1.5));
+      for(let i=0;i<dots;i++){
+        let t=(i+0.3)/dots;
+        let cx=x1+dx*t,cy=y1+dy*t;
+        let sh=((i*5+2)%7)/7*20-10;
+        X.fillStyle=`rgb(${145+sh},${115+sh},${75+sh})`;
+        X.beginPath();X.arc(cx+nx*((i%3-1)*hw*0.3),cy+ny*((i%3-1)*hw*0.3),stoneS*0.18,0,Math.PI*2);X.fill();
+      }
+    }else if(rl===1){
+      X.fillStyle='#8d8d8d';
+      X.beginPath();
+      X.moveTo(x1+nx*hw,y1+ny*hw);
+      X.lineTo(x2+nx*hw,y2+ny*hw);
+      X.lineTo(x2-nx*hw,y2-ny*hw);
+      X.lineTo(x1-nx*hw,y1-ny*hw);
+      X.closePath();X.fill();
+      X.strokeStyle='#6d6d6d';X.lineWidth=1;
+      X.beginPath();X.moveTo(x1+nx*hw,y1+ny*hw);X.lineTo(x2+nx*hw,y2+ny*hw);X.stroke();
+      X.beginPath();X.moveTo(x1-nx*hw,y1-ny*hw);X.lineTo(x2-nx*hw,y2-ny*hw);X.stroke();
+      let tiles=Math.floor(len/stoneS);
+      for(let i=0;i<tiles;i++){
+        let t=i/tiles;
+        let cx=x1+dx*t,cy=y1+dy*t;
+        let shade=((i*7+3)%5)/5*30-15;
+        X.fillStyle=`rgb(${160+shade},${155+shade},${145+shade})`;
+        X.fillRect(cx-stoneS*0.42,cy-stoneS*0.35,stoneS*0.84,stoneS*0.7);
+        X.strokeStyle='#999';X.lineWidth=0.5;
+        X.strokeRect(cx-stoneS*0.42,cy-stoneS*0.35,stoneS*0.84,stoneS*0.7);
+      }
+    }else{
+      hw=roadW*0.55/2;
+      X.fillStyle='#3a3a3a';
+      X.beginPath();
+      X.moveTo(x1+nx*hw,y1+ny*hw);
+      X.lineTo(x2+nx*hw,y2+ny*hw);
+      X.lineTo(x2-nx*hw,y2-ny*hw);
+      X.lineTo(x1-nx*hw,y1-ny*hw);
+      X.closePath();X.fill();
+      X.strokeStyle='#555';X.lineWidth=1.5;
+      X.beginPath();X.moveTo(x1+nx*hw,y1+ny*hw);X.lineTo(x2+nx*hw,y2+ny*hw);X.stroke();
+      X.beginPath();X.moveTo(x1-nx*hw,y1-ny*hw);X.lineTo(x2-nx*hw,y2-ny*hw);X.stroke();
+      let dashLen=CL*0.3,dashGap=CL*0.2;
+      let total=dashLen+dashGap;
+      let dashes=Math.floor(len/total);
+      X.strokeStyle='#e0c848';X.lineWidth=1.5;
+      for(let i=0;i<dashes;i++){
+        let t0=(i*total)/len,t1=(i*total+dashLen)/len;
+        if(t1>1)break;
+        X.beginPath();
+        X.moveTo(x1+dx*t0,y1+dy*t0);X.lineTo(x1+dx*t1,y1+dy*t1);X.stroke();
+      }
     }
   }
   let connected=[{x:hx,y:hy}];
@@ -1957,6 +2001,26 @@ drawMiniProduct(c,type,s){
       c.fillStyle='#8d6e63';c.beginPath();c.arc(0,0,s*0.2,0,Math.PI*2);c.fill();
     }
   }
+  c.restore();
+},
+
+drawRoadTesisToCanvas(c,s){
+  c.save();c.translate(s/2,s/2+5);
+  c.fillStyle='#795548';c.fillRect(-30,14,60,6);
+  c.fillStyle='#5d4037';c.fillRect(-24,-4,48,20);
+  c.fillStyle='#4e342e';c.fillRect(-26,-6,52,4);
+  c.strokeStyle='rgba(0,0,0,0.12)';c.lineWidth=0.5;
+  for(let r=0;r<2;r++)for(let col=0;col<4;col++){let off=(r%2)*6;c.strokeRect(-24+col*12+off,-4+r*10,12,10)}
+  c.fillStyle='#3e2723';c.fillRect(-4,6,8,10);
+  c.fillStyle='#5d4037';c.fillRect(-3,7,6,9);
+  c.fillStyle='#616161';c.fillRect(-22,-10,8,6);
+  c.fillStyle='#757575';c.beginPath();c.arc(-18,-7,3,0,Math.PI*2);c.fill();
+  c.fillStyle='#8d6e63';c.fillRect(10,10,12,8);
+  c.fillStyle='#a1887f';c.fillRect(11,11,10,3);
+  c.fillStyle='#8d6e63';c.fillRect(14,6,4,4);
+  c.fillStyle='#616161';c.fillRect(16,-4,3,12);
+  c.fillStyle='#90a4ae';c.beginPath();c.arc(17,-6,3,0,Math.PI*2);c.fill();
+  c.fillStyle='#fff';c.font='bold 5px "Nunito",Arial,sans-serif';c.textAlign='center';c.fillText('YOL',0,2);
   c.restore();
 },
 

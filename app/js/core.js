@@ -703,6 +703,7 @@ function startGame(){
   window.openPlotM=UIManager.openPlotM;window.openPlantM=UIManager.openPlantM;
   window.buySeed=UIManager.buySeed;window.buyA=UIManager.buyA;
   window.buyBuilding=UIManager.buyBuilding;window.upgradeBuilding=UIManager.upgradeBuilding;
+  window.upgradeRoad=GameManager.upgradeRoad.bind(GameManager);
   window.speakTR=UIManager.speakTR;
   window.startDrag=UIManager.startDrag;window.cancelDrag=UIManager.cancelDrag;
   window.finishDrag=UIManager.finishDrag;window.getBuildingAt=UIManager.getBuildingAt;

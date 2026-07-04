@@ -132,11 +132,13 @@ FOOD_GUIDES:[
   {id:'salca',icon:'🍅',name:'Salça',color:'#ffcdd2'},
   {id:'tomato',icon:'🌱',name:'Domates',color:'#c8e6c9'}
 ],
-BUILDING_NAMES:{ahır:'AHİR',kümes:'KÜMES',degirmen:'DEĞİRMEN',kuyu:'KUYU',grid:'TARLA',fırın:'FIRIN',sutislem:'SÜT İŞLEME',peynirfab:'PEYNİR FAB',salçafab:'SALÇA FAB'},
-BUILDING_PRICES:{ahır:2500,kümes:1500,degirmen:3000,kuyu:2000,grid:100,fırın:2500,sutislem:3500,peynirfab:4000,salçafab:3000},
+BUILDING_NAMES:{ahır:'AHİR',kümes:'KÜMES',degirmen:'DEĞİRMEN',kuyu:'KUYU',grid:'TARLA',fırın:'FIRIN',sutislem:'SÜT İŞLEME',peynirfab:'PEYNİR FAB',salçafab:'SALÇA FAB',yoltesisi:'YOL TESİSİ'},
+BUILDING_PRICES:{ahır:2500,kümes:1500,degirmen:3000,kuyu:2000,grid:100,fırın:2500,sutislem:3500,peynirfab:4000,salçafab:3000,yoltesisi:2000},
+ROAD_LEVEL_NAMES:['Toprak Yol','Taş Yol','Asfalt Yol'],
+ROAD_UPGRADE_COST:[0,3000,8000],
 GRID_LINKED_KUYU:true,
 SELL_RATIO:0.6,
-SAVE_VERSION:11,
+SAVE_VERSION:12,
 
 S:{
   money:100000,day:1,sea:0,yr:1,h:6,m:0,
@@ -150,9 +152,10 @@ S:{
   weather:'güneşli',weatherTimer:0,windSpeed:5,
   irrigating:false,irrigStartH:0,irrigStartM:0,irrigEndH:0,irrigEndM:0,
   irrigDrops:[],
-  built:{degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false,fırın:false,sutislem:false,peynirfab:false,salçafab:false},
+  built:{degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false,fırın:false,sutislem:false,peynirfab:false,salçafab:false,yoltesisi:false},
   buildingLevel:{ahır:1,kümes:1,kuyu:1,degirmen:1,fırın:1,sutislem:1,peynirfab:1,salçafab:1},
-  buildingPos:{grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null,fırın:null,sutislem:null,peynirfab:null,salçafab:null},
+  buildingPos:{grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null,fırın:null,sutislem:null,peynirfab:null,salçafab:null,yoltesisi:null},
+  roadLevel:0,
   dragging:null,dragOffset:{x:0,y:0},
   longPressTimer:null,buildingMenu:null,animateBuilding:null,
   tutorial:{active:false,step:0,type:'bread',completed:false},invUN:0,invEKMEK:0
@@ -518,6 +521,20 @@ sellBuilding(key){
   }
   S.buildingMenu=null;S.dragging=null;
   toast(BUILDING_NAMES[key]+' satıldı! +'+refund+' TL');
+  updateHUD();draw();
+},
+
+upgradeRoad(){
+  const S=this.S;
+  const{ROAD_LEVEL_NAMES,ROAD_UPGRADE_COST}=this;
+  let lv=S.roadLevel||0;
+  if(lv>=2){toast('Yollar zaten maksimum seviyede!');return}
+  let cost=ROAD_UPGRADE_COST[lv+1];
+  if(!cost){toast('Daha fazla geliştirilemez!');return}
+  if(S.money<cost){toast('Yeterli paran yok! ('+cost+' TL)');return}
+  S.money-=cost;
+  S.roadLevel=lv+1;
+  toast(ROAD_LEVEL_NAMES[S.roadLevel]+' yapıldı! Yollar iyileştirildi. ('+ROAD_LEVEL_NAMES[S.roadLevel]+')');
   updateHUD();draw();
 },
 
