@@ -687,15 +687,17 @@ showBuildingMenu(key,mx,my){
 },
 
 save(){
+  let user=sessionStorage.getItem('farm_user')||'default';
   this.S._v=this.SAVE_VERSION;
-  localStorage.setItem('farm5',JSON.stringify(this.S));
+  localStorage.setItem('farm5_'+user,JSON.stringify(this.S));
 },
 
 load(){
   const S=this.S;
   const{ROWS,COLS,CROPS,SAVE_VERSION}=this;
-  let d=localStorage.getItem('farm5');
-  if(d){let l=JSON.parse(d);if(l._v!==SAVE_VERSION){localStorage.removeItem('farm5');return}
+  let user=sessionStorage.getItem('farm_user')||'default';
+  let d=localStorage.getItem('farm5_'+user);
+  if(d){let l=JSON.parse(d);if(l._v!==SAVE_VERSION){localStorage.removeItem('farm5_'+user);return}
     Object.assign(S,l);if(!S.dailyHarvest)S.dailyHarvest={};if(!S.dailyAnimal)S.dailyAnimal={};
     if(S.dailySold===undefined)S.dailySold=0;
     if(!S.built)S.built={degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false,fırın:false,sutislem:false,peynirfab:false,salçafab:false};
