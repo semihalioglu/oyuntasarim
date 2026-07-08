@@ -672,33 +672,45 @@ const UIManager = {
   },
 
   buyBuilding: function(k, price, name) {
-    if (S.built[k]) { UIManager.toast('Zaten inşa edildi!'); return }
-    if (S.money < price) { UIManager.toast('Yeterli paran yok! (' + price + ' TL)'); return }
-    S.money -= price; S.built[k] = true;
-    if (k === 'grid') {
-      for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
-        if (!S.plots.find(p => p.r === r && p.c === c)) S.plots.push({ r, c, crop: null, age: 0, w: false, p: false, nextHarvest: 0, harvestCount: 0, plowTimer: 1080, wetTimer: 0 });
-        if (!S.plowed.includes(r * COLS + c)) S.plowed.push(r * COLS + c);
+    console.log('[buyBuilding] called:', k, price, name, 'S.built[k]=', S.built[k], 'S.money=', S.money);
+    try {
+      if (S.built[k]) { UIManager.toast('Zaten inşa edildi!'); return }
+      if (S.money < price) { UIManager.toast('Yeterli paran yok! (' + price + ' TL)'); return }
+      S.money -= price; S.built[k] = true;
+      console.log('[buyBuilding] built set, money=', S.money);
+      if (k === 'grid') {
+        for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
+          if (!S.plots.find(p => p.r === r && p.c === c)) S.plots.push({ r, c, crop: null, age: 0, w: false, p: false, nextHarvest: 0, harvestCount: 0, plowTimer: 1080, wetTimer: 0 });
+          if (!S.plowed.includes(r * COLS + c)) S.plowed.push(r * COLS + c);
+        }
       }
+      S.animateBuilding = { key: k, t: Date.now() };
+      UIManager.closeM('tesisler');
+      console.log('[buyBuilding] modal closed, calling updateHUD+draw');
+      UIManager.updateHUD(); window.draw();
+      if (k === 'grid') {
+        UIManager.checkTutorialAction('build_grid');
+      } else {
+        console.log('[buyBuilding] starting drag for', k);
+        UIManager.startDrag(k);
+        S.dragX = window.W / 2; S.dragY = window.H / 2;
+        console.log('[buyBuilding] dragX=', S.dragX, 'dragY=', S.dragY, 'W=', window.W, 'H=', window.H);
+        window.draw();
+        console.log('[buyBuilding] draw after drag called');
+      }
+      if (k === 'kuyu') UIManager.checkTutorialAction('build_kuyu');
+      if (k === 'degirmen') UIManager.checkTutorialAction('build_degirmen');
+      if (k === 'fırın') UIManager.checkTutorialAction('build_fırın');
+      if (k === 'kümes') UIManager.checkTutorialAction('build_kümes');
+      if (k === 'ahır') UIManager.checkTutorialAction('build_ahir');
+      if (k === 'sutislem') UIManager.checkTutorialAction('build_sutislem');
+      if (k === 'peynirfab') UIManager.checkTutorialAction('build_peynirfab');
+      if (k === 'salçafab') UIManager.checkTutorialAction('build_salçafab');
+      console.log('[buyBuilding] completed successfully');
+    } catch (e) {
+      console.error('[buyBuilding] ERROR:', e.message, e.stack);
+      UIManager.toast('Hata oluştu: ' + e.message);
     }
-    S.animateBuilding = { key: k, t: Date.now() };
-    UIManager.closeM('tesisler');
-    UIManager.updateHUD(); window.draw();
-    if (k === 'grid') {
-      UIManager.checkTutorialAction('build_grid');
-    } else {
-      UIManager.startDrag(k);
-      S.dragX = window.W / 2; S.dragY = window.H / 2;
-      window.draw();
-    }
-    if (k === 'kuyu') UIManager.checkTutorialAction('build_kuyu');
-    if (k === 'degirmen') UIManager.checkTutorialAction('build_degirmen');
-    if (k === 'fırın') UIManager.checkTutorialAction('build_fırın');
-    if (k === 'kümes') UIManager.checkTutorialAction('build_kümes');
-    if (k === 'ahır') UIManager.checkTutorialAction('build_ahir');
-    if (k === 'sutislem') UIManager.checkTutorialAction('build_sutislem');
-    if (k === 'peynirfab') UIManager.checkTutorialAction('build_peynirfab');
-    if (k === 'salçafab') UIManager.checkTutorialAction('build_salçafab');
   },
 
   upgradeBuilding: function(k) {
@@ -846,27 +858,38 @@ const UIManager = {
   },
 
   finishDrag: function() {
-    if (!S.dragging) return;
-    let key = S.dragging;
-    let pos = UIManager.getBuildingCenter(key);
-    if (!pos) { UIManager.cancelDrag(); return }
-    if (!UIManager.isValidPlacement(key, pos.x, pos.y)) {
-      UIManager.toast('Geçersiz konum! Başka bir yere bırakın.');
-      return;
-    }
-    S.buildingPos[key] = { x: pos.x, y: pos.y };
-    if (key === 'grid' && GRID_LINKED_KUYU && S.built.kuyu) {
-      let defKuyu = UIManager.getDefaultKuyuPos();
-      if (!S.buildingPos.kuyu) {
-        S.buildingPos.kuyu = { x: defKuyu.x, y: defKuyu.y };
+    console.log('[finishDrag] called, S.dragging=', S.dragging, 'S.dragX=', S.dragX, 'S.dragY=', S.dragY);
+    try {
+      if (!S.dragging) { console.log('[finishDrag] no dragging, abort'); return; }
+      let key = S.dragging;
+      let pos = UIManager.getBuildingCenter(key);
+      console.log('[finishDrag] pos=', pos);
+      if (!pos) { UIManager.cancelDrag(); return }
+      let valid = UIManager.isValidPlacement(key, pos.x, pos.y);
+      console.log('[finishDrag] valid=', valid, 'key=', key, 'x=', pos.x, 'y=', pos.y);
+      if (!valid) {
+        UIManager.toast('Geçersiz konum! Başka bir yere bırakın.');
+        return;
       }
-      S.buildingPos.kuyu.x = pos.x + defKuyu.dx;
-      S.buildingPos.kuyu.y = pos.y + defKuyu.dy;
+      S.buildingPos[key] = { x: pos.x, y: pos.y };
+      console.log('[finishDrag] saved buildingPos[key]=', S.buildingPos[key]);
+      if (key === 'grid' && GRID_LINKED_KUYU && S.built.kuyu) {
+        let defKuyu = UIManager.getDefaultKuyuPos();
+        if (!S.buildingPos.kuyu) {
+          S.buildingPos.kuyu = { x: defKuyu.x, y: defKuyu.y };
+        }
+        S.buildingPos.kuyu.x = pos.x + defKuyu.dx;
+        S.buildingPos.kuyu.y = pos.y + defKuyu.dy;
+      }
+      S.dragging = null;
+      window.wasPanning = true;
+      UIManager.toast(BUILDING_NAMES[key] + ' yerleştirildi!');
+      window.draw();
+      console.log('[finishDrag] completed successfully');
+    } catch (e) {
+      console.error('[finishDrag] ERROR:', e.message, e.stack);
+      UIManager.toast('Hata oluştu: ' + e.message);
     }
-    S.dragging = null;
-    window.wasPanning = true;
-    UIManager.toast(BUILDING_NAMES[key] + ' yerleştirildi!');
-    window.draw();
   },
 
   getBuildingCenter: function(key) {
@@ -884,7 +907,7 @@ const UIManager = {
 
   isValidPlacement: function(key, x, y) {
     let pad = window.CL * 0.5;
-    if (x < pad || x > window.W - pad || y < pad || y > window.H - 48 - pad) return false;
+    if (x < pad || x > window.W - pad || y < pad || y > window.H - 48 - pad) { console.log('[isValidPlacement] FAIL bounds: x=', x, 'y=', y, 'pad=', pad, 'W=', window.W, 'H=', window.H); return false; }
     let hx = (function () {
       let hs = window.CL * (window.ISLANDSCAPE ? 2.8 : 2.0);
       let hg = window.CL * 1.2;
@@ -951,6 +974,7 @@ const UIManager = {
   },
 
   handleCanvasClick: function(e) {
+    console.log('[handleCanvasClick] S.dragging=', S.dragging, 'S.buildingMenu=', !!S.buildingMenu, 'wasPanning=', window.wasPanning);
     if (S.dragging || S.buildingMenu || window.wasPanning) { window.wasPanning = false; return }
     window.wasPanning = false;
     let mx = e.clientX, my = e.clientY;
@@ -1160,6 +1184,7 @@ const UIManager = {
 
   handleMouseDown: function(e) {
     let mx = e.clientX, my = e.clientY;
+    console.log('[handleMouseDown] mx=', mx, 'my=', my, 'S.dragging=', S.dragging, 'S.buildingMenu=', !!S.buildingMenu);
     mouseDownTime = Date.now();
     mouseDownPos = { x: mx, y: my };
     window.isPanning = false; window.panStartX = mx; window.panStartY = my; window.panStartPX = window.panX; window.panStartPY = window.panY;
@@ -1189,6 +1214,7 @@ const UIManager = {
     if (S.dragging) {
       e.preventDefault();
       let sc = window.screenToScene(mx, my); S.dragX = sc.x; S.dragY = sc.y;
+      console.log('[handleMouseMove] drag mode: sc=', sc.x, sc.y);
       window.draw();
       return;
     }
@@ -1213,10 +1239,11 @@ const UIManager = {
   },
 
   handleMouseUp: function(e) {
+    console.log('[handleMouseUp] S.dragging=', S.dragging, 'dragStartedThisClick=', dragStartedThisClick, 'isPanning=', window.isPanning);
     window.wasPanning = window.isPanning;
     mouseDownTime = 0; window.isPanning = false;
     clearTimeout(longPressTimer); longPressTimer = null;
-    if (S.dragging && !dragStartedThisClick) { UIManager.finishDrag() }
+    if (S.dragging && !dragStartedThisClick) { console.log('[handleMouseUp] calling finishDrag'); UIManager.finishDrag() }
     dragStartedThisClick = false;
   },
 

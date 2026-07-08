@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.018';
-import UIManager from './uiManager.js?v=1.018';
-import GameManager from './gameManager.js?v=1.018';
-import Drawing from './drawing.js?v=1.018';
+import StorageManager from './storageManager.js?v=1.019';
+import UIManager from './uiManager.js?v=1.019';
+import GameManager from './gameManager.js?v=1.019';
+import Drawing from './drawing.js?v=1.019';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
@@ -559,6 +559,7 @@ if(S.built.grid){
   X.fillText('EV: Dinlen | MAGAZA: Alışveriş | HAYVAN: Bakım | DEPO: Ürünler | Traktör: Sur',16,H-22);
 
     if(S.dragging){
+    console.log('[draw] rendering drag ghost: key=', S.dragging, 'dx=', S.dragX, 'dy=', S.dragY);
     let dx=S.dragX,dy=S.dragY;
     let valid=GameManager.isValidPlacement(S.dragging,dx,dy);
     X.globalAlpha=0.5;

@@ -403,33 +403,40 @@ buySeed(k,cr){
 buyBuilding(k,price,name){
   const S=this.S;
   const{ROWS,COLS,CROPS}=this;
-  if(S.built[k]){window.toast('Zaten inşa edildi!');return}
-  if(S.money<price){window.toast('Yeterli paran yok! ('+price+' TL)');return}
-  S.money-=price;S.built[k]=true;
-  if(k==='grid'){
-    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
-      if(!S.plots.find(p=>p.r===r&&p.c===c))S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0,harvestCount:0,plowTimer:1080,wetTimer:0});
-      if(!S.plowed.includes(r*COLS+c))S.plowed.push(r*COLS+c);
+  console.log('[GM.buyBuilding] called:', k, price, name);
+  try {
+    if(S.built[k]){window.toast('Zaten inşa edildi!');return}
+    if(S.money<price){window.toast('Yeterli paran yok! ('+price+' TL)');return}
+    S.money-=price;S.built[k]=true;
+    if(k==='grid'){
+      for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
+        if(!S.plots.find(p=>p.r===r&&p.c===c))S.plots.push({r,c,crop:null,age:0,w:false,p:false,nextHarvest:0,harvestCount:0,plowTimer:1080,wetTimer:0});
+        if(!S.plowed.includes(r*COLS+c))S.plowed.push(r*COLS+c);
+      }
     }
+    S.animateBuilding={key:k,t:Date.now()};
+    window.closeM('tesisler');
+    window.updateHUD();window.draw();
+    if(k==='grid'){
+      this.checkTutorialAction('build_grid');
+    }else{
+      window.startDrag(k);
+      S.dragX=window.W/2;S.dragY=window.H/2;
+      window.draw();
+    }
+    if(k==='kuyu')this.checkTutorialAction('build_kuyu');
+    if(k==='degirmen')this.checkTutorialAction('build_degirmen');
+    if(k==='fırın')this.checkTutorialAction('build_fırın');
+    if(k==='kümes')this.checkTutorialAction('build_kümes');
+    if(k==='ahır')this.checkTutorialAction('build_ahir');
+    if(k==='sutislem')this.checkTutorialAction('build_sutislem');
+    if(k==='peynirfab')this.checkTutorialAction('build_peynirfab');
+    if(k==='salçafab')this.checkTutorialAction('build_salçafab');
+    console.log('[GM.buyBuilding] completed');
+  } catch(e) {
+    console.error('[GM.buyBuilding] ERROR:', e.message, e.stack);
+    window.toast('Hata: ' + e.message);
   }
-  S.animateBuilding={key:k,t:Date.now()};
-  window.closeM('tesisler');
-  window.updateHUD();window.draw();
-  if(k==='grid'){
-    this.checkTutorialAction('build_grid');
-  }else{
-    window.startDrag(k);
-    S.dragX=window.W/2;S.dragY=window.H/2;
-    window.draw();
-  }
-  if(k==='kuyu')this.checkTutorialAction('build_kuyu');
-  if(k==='degirmen')this.checkTutorialAction('build_degirmen');
-  if(k==='fırın')this.checkTutorialAction('build_fırın');
-  if(k==='kümes')this.checkTutorialAction('build_kümes');
-  if(k==='ahır')this.checkTutorialAction('build_ahir');
-  if(k==='sutislem')this.checkTutorialAction('build_sutislem');
-  if(k==='peynirfab')this.checkTutorialAction('build_peynirfab');
-  if(k==='salçafab')this.checkTutorialAction('build_salçafab');
 },
 
 upgradeBuilding(k){
