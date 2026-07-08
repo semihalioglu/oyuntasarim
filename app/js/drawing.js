@@ -223,44 +223,88 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
   let roadW=CL*0.45;
   let stoneS=CL*0.22;
   let rl=S.roadLevel||0;
+  let obstacles=[{x1:gx1,y1:gy1,x2:gx2,y2:gy2,k:'grid'}];
+  let rb=CL*0.3;
+  targets.forEach(t=>{
+    if(t.k!=='grid'){
+      obstacles.push({x1:t.cx-t.hw-rb,y1:t.cy-t.hh-rb,x2:t.cx+t.hw+rb,y2:t.cy+t.hh+rb,k:t.k});
+    }
+  });
+  function segHitsRect(x1,y1,x2,y2,r,skip){
+    if(skip&&(skip===r.k))return false;
+    let minX=Math.min(x1,x2),maxX=Math.max(x1,x2);
+    let minY=Math.min(y1,y2),maxY=Math.max(y1,y2);
+    if(maxX<r.x1||minX>r.x2||maxY<r.y1||minY>r.y2)return false;
+    let dx=x2-x1,dy=y2-y1;
+    if(Math.abs(dx)<0.01&&Math.abs(dy)<0.01)return(x1>=r.x1&&x1<=r.x2&&y1>=r.y1&&y1<=r.y2);
+    let tmin=-Infinity,tmax=Infinity;
+    if(Math.abs(dx)>0.01){
+      let t1=(r.x1-x1)/dx,t2=(r.x2-x1)/dx;
+      if(t1>t2){let tmp=t1;t1=t2;t2=tmp}
+      tmin=Math.max(tmin,t1);tmax=Math.min(tmax,t2);
+    }else{
+      if(x1<r.x1||x1>r.x2)return false;
+    }
+    if(Math.abs(dy)>0.01){
+      let t1=(r.y1-y1)/dy,t2=(r.y2-y1)/dy;
+      if(t1>t2){let tmp=t1;t1=t2;t2=tmp}
+      tmin=Math.max(tmin,t1);tmax=Math.min(tmax,t2);
+    }else{
+      if(y1<r.y1||y1>r.y2)return false;
+    }
+    return tmin<=tmax&&tmax>=0&&tmin<=1;
+  }
   function getEdge(sx,sy,t){
     let l=t.cx-t.hw,r=t.cx+t.hw,tp=t.cy-t.hh,b=t.cy+t.hh;
     return{x:Math.max(l,Math.min(r,sx)),y:Math.max(tp,Math.min(b,sy))};
   }
-  function horizCross(x1,x2,y){
-    return y>gy1&&y<gy2&&Math.max(x1,x2)>gx1&&Math.min(x1,x2)<gx2;
-  }
-  function vertCross(y1,y2,x){
-    return x>gx1&&x<gx2&&Math.max(y1,y2)>gy1&&Math.min(y1,y2)<gy2;
-  }
-  function routeTo(sx,sy,t){
+  function routeTo(sx,sy,t,skipK){
     let e=getEdge(sx,sy,t);
     let path=[{x:sx,y:sy}];
-    let curX=sx,curY=sy;
-    let hCross=horizCross(sx,e.x,sy);
-    let vCross=vertCross(sy,e.y,e.x);
-    if(hCross&&vCross){
-      let goAbove=sy<gridCY;
-      let avoidY=goAbove?gy1:gy2;
-      let goLeft=e.x<gridCX;
-      let avoidX=goLeft?gx1:gx2;
-      path.push({x:sx,y:avoidY});
-      path.push({x:avoidX,y:avoidY});
-      path.push({x:avoidX,y:e.y});
-    }else if(hCross){
-      let goAbove=sy<gridCY;
-      let avoidY=goAbove?gy1:gy2;
-      path.push({x:sx,y:avoidY});
-      path.push({x:e.x,y:avoidY});
-    }else if(vCross){
-      let goLeft=e.x<gridCX;
-      let avoidX=goLeft?gx1:gx2;
-      path.push({x:avoidX,y:sy});
-      path.push({x:avoidX,y:e.y});
+    let obstacles2=obstacles.filter(o=>o.k!==skipK&&o.k!==t.k);
+    let segHits=obstacles2.filter(r=>segHitsRect(sx,sy,e.x,e.y,r,skipK));
+    if(segHits.length>0){
+      let r=segHits[0];
+      let rcx=(r.x1+r.x2)/2,rcy=(r.y1+r.y2)/2;
+      let goAbove=sy<rcy;
+      let goLeft=sx<rcx;
+      let bypassX=goLeft?r.x1-CL*0.6:r.x2+CL*0.6;
+      let bypassY=goAbove?r.y1-CL*0.6:r.y2+CL*0.6;
+      path.push({x:sx,y:bypassY});
+      path.push({x:bypassX,y:bypassY});
+      path.push({x:bypassX,y:e.y});
     }else{
       path.push({x:e.x,y:sy});
     }
     path.push(e);
+    return refinePath(path,obstacles2);
+  }
+  function refinePath(path,obs){
+    let changed=true;
+    let maxIter=5;
+    while(changed&&maxIter-->0){
+      changed=false;
+      let newPath=[path[0]];
+      for(let i=0;i<path.length-1;i++){
+        let hits=obs.filter(r=>segHitsRect(path[i].x,path[i].y,path[i+1].x,path[i+1].y,r,null));
+        if(hits.length>0){
+          changed=true;
+          let r=hits[0];
+          let mx=(path[i].x+path[i+1].x)/2,my=(path[i].y+path[i+1].y)/2;
+          let rcx=(r.x1+r.x2)/2,rcy=(r.y1+r.y2)/2;
+          let goAbove=my<rcy;
+          let goLeft=mx<rcx;
+          let bx=goLeft?r.x1-CL*0.6:r.x2+CL*0.6;
+          let by=goAbove?r.y1-CL*0.6:r.y2+CL*0.6;
+          newPath.push({x:path[i].x,y:by});
+          newPath.push({x:bx,y:by});
+          newPath.push({x:bx,y:path[i+1].y});
+        }else{
+          newPath.push(path[i+1]);
+        }
+      }
+      path=newPath;
+    }
     return path;
   }
   function drawRoadSegment(x1,y1,x2,y2){
@@ -333,7 +377,7 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
       }
     }
   }
-  let connected=[{x:hx,y:hy}];
+  let connected=[{x:hx,y:hy,k:'house'}];
   let remaining=[...targets];
   while(remaining.length>0){
     let bestDist=Infinity,bestC=-1,bestR=-1;
@@ -347,11 +391,11 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
     if(bestR<0)break;
     let from=connected[bestC];
     let to=remaining[bestR];
-    let path=routeTo(from.x,from.y,to);
+    let path=routeTo(from.x,from.y,to,from.k);
     for(let i=1;i<path.length;i++){
       drawRoadSegment(path[i-1].x,path[i-1].y,path[i].x,path[i].y);
     }
-    connected.push(path[path.length-1]);
+    connected.push({x:path[path.length-1].x,y:path[path.length-1].y,k:to.k});
     remaining.splice(bestR,1);
   }
 },
