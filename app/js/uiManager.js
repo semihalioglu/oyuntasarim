@@ -181,19 +181,6 @@ function isStepDone(action) {
   return false;
 }
 
-function checkTutorialAction(action) {
-  if (!S.tutorial || !S.tutorial.active || !S.tutorial.type) return;
-  let steps = TUTORIAL_STEPS[S.tutorial.type];
-  if (!steps) return;
-  let current = steps[S.tutorial.step];
-  if (!current || current.action !== action) return;
-  window.tutorialStepDone = true;
-  toast('✅ Tamamlandı! Devam et...');
-  let btn = document.getElementById('tutorialBtn');
-  btn.textContent = 'Sonraki Adım'; btn.style.display = 'inline-block';
-  speakTR('Tamamlandı!');
-}
-
 const UIManager = {
   openM: function(id) {
     document.getElementById('m' + id.charAt(0).toUpperCase() + id.slice(1)).classList.add('active');
@@ -547,6 +534,19 @@ const UIManager = {
     S.tutorial.active = false; S.tutorial.type = null;
   },
 
+  checkTutorialAction: function(action) {
+    if (!S.tutorial || !S.tutorial.active || !S.tutorial.type) return;
+    let steps = TUTORIAL_STEPS[S.tutorial.type];
+    if (!steps) return;
+    let current = steps[S.tutorial.step];
+    if (!current || current.action !== action) return;
+    window.tutorialStepDone = true;
+    UIManager.toast('✅ Tamamlandı! Devam et...');
+    let btn = document.getElementById('tutorialBtn');
+    if (btn) { btn.textContent = 'Sonraki Adım'; btn.style.display = 'inline-block'; }
+    speakTR('Tamamlandı!');
+  },
+
   skipCompletedSteps: function() {
     let type = S.tutorial.type || 'bread';
     let steps = TUTORIAL_STEPS[type];
@@ -633,7 +633,7 @@ const UIManager = {
       p.harvestCount = (p.harvestCount || 0) + 1; let mh = cr.maxHarvest || 1;
       if (p.harvestCount >= mh) { let cn = cr.name; p.crop = null; p.age = 0; p.w = false; p.p = false; p.nextHarvest = 0; p.harvestCount = 0; UIManager.toast(`${cn} bitkiniz tükendi! Yeni tohum ek.`) }
       else { p.age += 5; p.w = false; p.p = false; p.nextHarvest = p.crop === 'BUGDAY' ? 120 : 480; UIManager.toast(`${cr.name} hasat edildi! +${y.toFixed(1)} kg (Kalan: ${mh - p.harvestCount})`) }
-      if (p.crop && p.crop === 'BUGDAY') checkTutorialAction('harvest_bugday');
+      if (p.crop && p.crop === 'BUGDAY') UIManager.checkTutorialAction('harvest_bugday');
     } else if (y > 0) { UIManager.toast('Depo dolu!') }
     window.harvestModeActive = true; UIManager.closeM('plot'); UIManager.toast('Hasat modu! Diğer hazır tarlalara tıkla. Çıkmak için boş yere tıkla.'); window.draw(); UIManager.checkMissions();
   },
@@ -655,11 +655,11 @@ const UIManager = {
     if (k === 'TAVUK') {
       if (!S.built.kümes) { UIManager.toast('Önce kümes inşa et!'); return }
       let cap = 5 + (S.buildingLevel.kümes || 1); if (S.ch >= cap) { UIManager.toast('Kümes dolu!'); return } S.ch++;
-      checkTutorialAction('buy_chicken');
+      UIManager.checkTutorialAction('buy_chicken');
     } else if (k === 'INEK') {
       if (!S.built.ahır) { UIManager.toast('Önce ahır inşa et!'); return }
       let cap = 3 + (S.buildingLevel.ahır || 1); if (S.co >= cap) { UIManager.toast('Ahır dolu!'); return } S.co++;
-      checkTutorialAction('buy_cow');
+      UIManager.checkTutorialAction('buy_cow');
     } else if (k === 'KOYUN') {
       if (!S.built.ahır) { UIManager.toast('Önce ahır inşa et!'); return }
       let cap = 3 + (S.buildingLevel.ahır || 1); if (S.sh >= cap) { UIManager.toast('Ahır dolu!'); return } S.sh++;
@@ -685,20 +685,20 @@ const UIManager = {
     UIManager.closeM('tesisler');
     UIManager.updateHUD(); window.draw();
     if (k === 'grid') {
-      checkTutorialAction('build_grid');
+      UIManager.checkTutorialAction('build_grid');
     } else {
       UIManager.startDrag(k);
       S.dragX = window.W / 2; S.dragY = window.H / 2;
       window.draw();
     }
-    if (k === 'kuyu') checkTutorialAction('build_kuyu');
-    if (k === 'degirmen') checkTutorialAction('build_degirmen');
-    if (k === 'fırın') checkTutorialAction('build_fırın');
-    if (k === 'kümes') checkTutorialAction('build_kümes');
-    if (k === 'ahır') checkTutorialAction('build_ahir');
-    if (k === 'sutislem') checkTutorialAction('build_sutislem');
-    if (k === 'peynirfab') checkTutorialAction('build_peynirfab');
-    if (k === 'salçafab') checkTutorialAction('build_salçafab');
+    if (k === 'kuyu') UIManager.checkTutorialAction('build_kuyu');
+    if (k === 'degirmen') UIManager.checkTutorialAction('build_degirmen');
+    if (k === 'fırın') UIManager.checkTutorialAction('build_fırın');
+    if (k === 'kümes') UIManager.checkTutorialAction('build_kümes');
+    if (k === 'ahır') UIManager.checkTutorialAction('build_ahir');
+    if (k === 'sutislem') UIManager.checkTutorialAction('build_sutislem');
+    if (k === 'peynirfab') UIManager.checkTutorialAction('build_peynirfab');
+    if (k === 'salçafab') UIManager.checkTutorialAction('build_salçafab');
   },
 
   upgradeBuilding: function(k) {
@@ -1010,7 +1010,7 @@ const UIManager = {
           S.irrigEndH = Math.floor(totalMin / 60); S.irrigEndM = totalMin % 60;
           if (S.irrigEndH >= 22) { S.irrigEndH = 21; S.irrigEndM = 50 }
           UIManager.toast('Sulama başlatıldı! (' + irrigTime + ' dk gerekli)');
-          checkTutorialAction('water');
+          UIManager.checkTutorialAction('water');
           UIManager.advanceTime(); window.draw(); return
         }
       }
@@ -1026,7 +1026,7 @@ const UIManager = {
         if (bugday < wmCost) { UIManager.toast('Değirmen için en az ' + wmCost + ' buğday gerekli! (Mevcut: ' + bugday + ')'); return }
         S.inv.BUGDAY -= wmCost; S.invUN = (S.invUN || 0) + 1 + wmBonus;
         UIManager.toast(wmCost + ' Buğday → ' + (1 + wmBonus) + ' Un! (Toplam un: ' + S.invUN + ')');
-        checkTutorialAction('grind'); UIManager.advanceTime(); window.draw(); return
+        UIManager.checkTutorialAction('grind'); UIManager.advanceTime(); window.draw(); return
       }
     }
     if (typeof window.firinX !== 'undefined') {
@@ -1038,7 +1038,7 @@ const UIManager = {
         if (un < 1) { UIManager.toast('Fırın için en az 1 un gerekli! (Mevcut: ' + un + ')'); return }
         S.invUN -= 1; S.invEKMEK = (S.invEKMEK || 0) + 1 + fBonus;
         UIManager.toast('1 Un → ' + (1 + fBonus) + ' Ekmek pişirildi! (Toplam ekmek: ' + S.invEKMEK + ')');
-        checkTutorialAction('bake'); UIManager.advanceTime(); window.draw(); return
+        UIManager.checkTutorialAction('bake'); UIManager.advanceTime(); window.draw(); return
       }
     }
 
@@ -1051,11 +1051,11 @@ const UIManager = {
         if (choice === '1') {
           S.inv.SUT -= 2; S.inv.YOGURT = (S.inv.YOGURT || 0) + 2;
           UIManager.toast('2 lt Süt → 2 kg Yoğurt! (Toplam: ' + (S.inv.YOGURT || 0) + ')');
-          checkTutorialAction('make_yogurt');
+          UIManager.checkTutorialAction('make_yogurt');
         } else if (choice === '2') {
           S.inv.SUT -= 2; S.inv.TEREYAGI = (S.inv.TEREYAGI || 0) + 1;
           UIManager.toast('2 lt Süt → 1 kg Tereyağı! (Toplam: ' + (S.inv.TEREYAGI || 0) + ')');
-          checkTutorialAction('make_butter');
+          UIManager.checkTutorialAction('make_butter');
         } else { return }
         UIManager.advanceTime(); window.draw(); return
       }
@@ -1067,7 +1067,7 @@ const UIManager = {
         if (sut < 3) { UIManager.toast('Peynir için en az 3 lt süt gerekli! (Mevcut: ' + sut + ')'); return }
         S.inv.SUT -= 3; S.inv.PEYNIR = (S.inv.PEYNIR || 0) + 2;
         UIManager.toast('3 lt Süt → 2 kg Peynir! (Toplam: ' + (S.inv.PEYNIR || 0) + ')');
-        checkTutorialAction('make_cheese'); UIManager.advanceTime(); window.draw(); return
+        UIManager.checkTutorialAction('make_cheese'); UIManager.advanceTime(); window.draw(); return
       }
     }
     if (typeof window.salcaX !== 'undefined') {
@@ -1077,14 +1077,14 @@ const UIManager = {
         if (dom < 4) { UIManager.toast('Salça için en az 4 kg domates gerekli! (Mevcut: ' + dom + ')'); return }
         S.inv.DOMATES -= 4; S.inv.SALCA = (S.inv.SALCA || 0) + 1;
         UIManager.toast('4 kg Domates → 1 kg Salça! (Toplam: ' + (S.inv.SALCA || 0) + ')');
-        checkTutorialAction('make_salca'); UIManager.advanceTime(); window.draw(); return
+        UIManager.checkTutorialAction('make_salca'); UIManager.advanceTime(); window.draw(); return
       }
     }
 
     if (!S.built.grid) { if (!S.buildingMenu) UIManager.toast('Önce tarla inşa et! (Tesislerden)'); return }
     if (S.tractorActive) {
       if (r < 0 || r >= ROWS || c < 0 || c >= COLS) { S.tractorActive = false; UIManager.toast('Traktör kapatıldı.'); window.draw(); return }
-      UIManager.plowArea(r, c); checkTutorialAction('plow'); window.draw(); return
+      UIManager.plowArea(r, c); UIManager.checkTutorialAction('plow'); window.draw(); return
     }
 
     if (window.pesticideModeActive) {
@@ -1107,8 +1107,8 @@ const UIManager = {
       if (S.money < cr.buy) { UIManager.toast('Yeterli paran yok! (' + cr.buy + ' TL)'); return }
       S.money -= cr.buy; p.crop = window.plantMode; p.age = 0; p.w = false; p.p = false; p.nextHarvest = window.plantMode === 'BUGDAY' ? 120 : 480; p.harvestCount = 0; S.plantCount++;
       UIManager.toast(`${cr.name} ekildi! (+${cr.buy} TL)`);
-      if (window.plantMode === 'BUGDAY') checkTutorialAction('plant_bugday');
-      if (window.plantMode === 'DOMATES') checkTutorialAction('plant_domates');
+      if (window.plantMode === 'BUGDAY') UIManager.checkTutorialAction('plant_bugday');
+      if (window.plantMode === 'DOMATES') UIManager.checkTutorialAction('plant_domates');
       window.draw(); return;
     }
 
@@ -1130,8 +1130,8 @@ const UIManager = {
         p.harvestCount = (p.harvestCount || 0) + 1; let mh = cr.maxHarvest || 1;
         if (p.harvestCount >= mh) { let cn = cr.name; p.crop = null; p.age = 0; p.w = false; p.p = false; p.nextHarvest = 0; p.harvestCount = 0; UIManager.toast(`${cn} bitkiniz tükendi! Yeni tohum ek.`) }
         else { p.age += 5; p.w = false; p.p = false; p.nextHarvest = p.crop === 'BUGDAY' ? 120 : 480; UIManager.toast(`${cr.name} hasat edildi! +${y.toFixed(1)} kg (Kalan: ${mh - p.harvestCount})`) }
-        if (p.crop && p.crop === 'BUGDAY') checkTutorialAction('harvest_bugday');
-        if (p.crop && p.crop === 'DOMATES') checkTutorialAction('harvest_domates');
+        if (p.crop && p.crop === 'BUGDAY') UIManager.checkTutorialAction('harvest_bugday');
+        if (p.crop && p.crop === 'DOMATES') UIManager.checkTutorialAction('harvest_domates');
       } else { UIManager.toast('Depo dolu!') }
       window.draw(); return;
     }

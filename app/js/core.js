@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.017';
-import UIManager from './uiManager.js?v=1.017';
-import GameManager from './gameManager.js?v=1.017';
-import Drawing from './drawing.js?v=1.017';
+import StorageManager from './storageManager.js?v=1.018';
+import UIManager from './uiManager.js?v=1.018';
+import GameManager from './gameManager.js?v=1.018';
+import Drawing from './drawing.js?v=1.018';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
