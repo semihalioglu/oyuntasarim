@@ -103,6 +103,7 @@ function draw(){
   syncFromWindow();
   X.clearRect(0,0,W,H);
   calcLayout();
+  console.log('[draw] called, S.built.grid=', GameManager.S.built.grid, 'GX=', GX, 'GY=', GY, 'CL=', CL, 'W=', W, 'H=', H);
   zoomLevel+=(zoomTarget-zoomLevel)*0.15;
   if(Math.abs(zoomLevel-zoomTarget)<0.005)zoomLevel=zoomTarget;
   if(S.buildingPos.grid){
