@@ -82,7 +82,7 @@ const StorageManager = {
         return await _firebase.Auth.guest();
       }
       let oldUser = this._getCurrentUser();
-      if (oldUser) this.Data.deleteSave(oldUser);
+      if (oldUser) localStorage.removeItem('farm5_' + oldUser);
       this._setCurrentUser('Misafir');
       return { success: true };
     },
