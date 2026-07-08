@@ -1,3 +1,4 @@
+import StorageManager from './storageManager.js';
 const GameManager={
 ROWS:5,COLS:10,
 SEASONS:['İlkbahar','Yaz','Sonbahar','Kış'],
@@ -208,9 +209,9 @@ advanceTime(){
       let elapsedMin=(S.h-S.irrigStartH)*60+(S.m-S.irrigStartM);
       if(elapsedMin>=40){
         S.plots.forEach(p=>{p.w=true;p.wetTimer=1080});
-        toast('Sulama tamamlandı! Tarla sulandı. ('+elapsedMin+' dk)');
+        window.toast('Sulama tamamlandı! Tarla sulandı. ('+elapsedMin+' dk)');
       }else{
-        toast('Sulama süreyi tamamlamadı! ('+elapsedMin+' dk < 40 dk) Sulanmadı.');
+        window.toast('Sulama süreyi tamamlamadı! ('+elapsedMin+' dk < 40 dk) Sulanmadı.');
       }
     }
   }
@@ -227,11 +228,11 @@ advanceTime(){
       }
     }
   });
-  this.checkWhole();updateHUD();this.checkMissions();
+  this.checkWhole();window.updateHUD();this.checkMissions();
   let plotModal=document.getElementById('mPlot');
-  if(plotModal&&plotModal.classList.contains('active')&&selR>=0){
-    let sp=this.getP(selR,selC);
-    if(sp&&sp.crop)openPlotM(selR,selC);
+  if(plotModal&&plotModal.classList.contains('active')&&window.selR>=0){
+    let sp=this.getP(window.selR,window.selC);
+    if(sp&&sp.crop)window.openPlotM(window.selR,window.selC);
   }
 },
 
@@ -246,8 +247,8 @@ changeWeather(){
   let r=Math.random(),cum=0;
   for(let i=0;i<WEATHERS.length;i++){cum+=weights[i];if(r<cum){S.weather=WEATHERS[i];break}}
   window.rainDrops=[];window.snowFlakes=[];
-  if(S.weather==='yağmurlu')for(let i=0;i<150;i++)window.rainDrops.push({x:Math.random()*W,y:Math.random()*H,spd:4+Math.random()*4});
-  if(S.weather==='karlı')for(let i=0;i<80;i++)window.snowFlakes.push({x:Math.random()*W,y:Math.random()*H,r:1+Math.random()*2,spd:1+Math.random()*2});
+  if(S.weather==='yağmurlu')for(let i=0;i<150;i++)window.rainDrops.push({x:Math.random()*window.W,y:Math.random()*window.H,spd:4+Math.random()*4});
+  if(S.weather==='karlı')for(let i=0;i<80;i++)window.snowFlakes.push({x:Math.random()*window.W,y:Math.random()*window.H,r:1+Math.random()*2,spd:1+Math.random()*2});
   if(S.weather==='güneşli')S.windSpeed=3+Math.floor(Math.random()*5);
   else if(S.weather==='bulutlu')S.windSpeed=5+Math.floor(Math.random()*8);
   else if(S.weather==='yağmurlu')S.windSpeed=8+Math.floor(Math.random()*12);
@@ -288,11 +289,11 @@ newDay(){
   Object.keys(S.dailyHarvest).forEach(k=>S.dailyHarvest[k]=0);
   S.dailyAnimal.YUMURTA=0;S.dailyAnimal.SUT=0;S.dailySold=0;
   S.plantCount=0;S.waterCount=0;
-  sutCount=0;yumurtaCount=0;
+  window.sutCount=0;window.yumurtaCount=0;
   this.changeWeather();
   document.getElementById('infoPanel').textContent=FACTS[Math.floor(Math.random()*FACTS.length)];
   document.getElementById('infoPanel').style.opacity='1';setTimeout(()=>{document.getElementById('infoPanel').style.opacity='0'},20000);
-  this.generateMissions();updateHUD();this.renderMissions();
+  this.generateMissions();window.updateHUD();this.renderMissions();
 },
 
 generateMissions(){
@@ -319,7 +320,7 @@ renderMissions(){
   S.missions.forEach((m,i)=>{let prog=Math.min(S.missionProgress[i]||0,m.target);let done=prog>=m.target;
     let d=document.createElement('div');d.className='mi'+(done?' done':'');
     d.innerHTML=`<span class="check"></span>${m.text} (${prog}/${m.target})`;
-    if(done&&!m.rewarded){S.money+=100;m.rewarded=true;toast('Görev tamamlandı! +100 TL')}l.appendChild(d)})
+    if(done&&!m.rewarded){S.money+=100;m.rewarded=true;window.toast('Görev tamamlandı! +100 TL')}l.appendChild(d)})
 },
 
 genWhole(){this.S.whH=12+Math.floor(Math.random()*4);this.S.whM=Math.floor(Math.random()*6)*10},
@@ -349,7 +350,7 @@ showWholeDlg(){
     <div style="font-size:15px;margin-top:4px">Toplam: <b style="color:#8bc34a">${tot.toLocaleString()} TL</b></div>
     <div style="font-size:13px">Sende: <b>${av.toFixed(0)} ${unit}</b></div>`;
   let b=document.getElementById('btnSell');if(av>=w.kg){b.textContent=`Sat (${tot.toLocaleString()} TL)`;b.disabled=false;b.style.opacity=1}
-  else{b.textContent='Yetersiz stok';b.disabled=true;b.style.opacity=.4}openM('whole')
+  else{b.textContent='Yetersiz stok';b.disabled=true;b.style.opacity=.4}window.openM('whole')
 },
 
 sellW(){
@@ -358,52 +359,52 @@ sellW(){
   let w=S.curW;if(!w)return;let av=S.inv[w.crop]||0;if(av<w.kg)return;
   let unit=w.crop==='YUMURTA'?'adet':w.crop==='SUT'?'litre':w.crop==='YUN'?'adet':'kg';
   S.inv[w.crop]-=w.kg;S.money+=Math.round(w.kg*w.price);S.totalSold+=Math.round(w.kg*w.price);S.dailySold+=Math.round(w.kg*w.price);
-  toast(`${w.kg} ${unit} ${w.name} satıldı! +${Math.round(w.kg*w.price).toLocaleString()} TL`);this.dismissW();this.checkMissions()
+  window.toast(`${w.kg} ${unit} ${w.name} satıldı! +${Math.round(w.kg*w.price).toLocaleString()} TL`);this.dismissW();this.checkMissions()
 },
 
-dismissW(){this.S.whDis=true;this.S.curW=null;closeM('whole');updateHUD()},
+dismissW(){this.S.whDis=true;this.S.curW=null;window.closeM('whole');window.updateHUD()},
 
 plowArea(r,c){
   const S=this.S;
   const{ROWS,COLS}=this;
   if(r<0||r>=ROWS||c<0||c>=COLS)return;
   let idx=r*COLS+c;
-  if(S.plowed.includes(idx)){toast('Bu kare zaten sürülmüş!');return}
+  if(S.plowed.includes(idx)){window.toast('Bu kare zaten sürülmüş!');return}
   S.plowed.push(idx);
   let p=this.getP(r,c);if(p)p.plowTimer=60;
-  this.advanceTime();draw();
+  this.advanceTime();window.draw();
   let allPlowed=true;
   for(let rr=0;rr<ROWS;rr++)for(let cc=0;cc<COLS;cc++){if(!S.plowed.includes(rr*COLS+cc))allPlowed=false}
-  if(allPlowed){S.tractorActive=false;toast('Tüm tarla sürüldü! Traktör kapatıldı.')}
+  if(allPlowed){S.tractorActive=false;window.toast('Tüm tarla sürüldü! Traktör kapatıldı.')}
 },
 
 buyA(k){
   const S=this.S;
   const{ANIM}=this;
-  let a=ANIM[k];if(S.money<a.price){toast('Yeterli paran yok!');return}
+  let a=ANIM[k];if(S.money<a.price){window.toast('Yeterli paran yok!');return}
   if(k==='TAVUK'){
-    if(!S.built.kümes){toast('Önce kümes inşa et!');return}
-    let cap=5+(S.buildingLevel.kümes||1);if(S.ch>=cap){toast('Kümes dolu!');return}S.ch++;
+    if(!S.built.kümes){window.toast('Önce kümes inşa et!');return}
+    let cap=5+(S.buildingLevel.kümes||1);if(S.ch>=cap){window.toast('Kümes dolu!');return}S.ch++;
     this.checkTutorialAction('buy_chicken');
   }else if(k==='INEK'){
-    if(!S.built.ahır){toast('Önce ahır inşa et!');return}
-    let cap=3+(S.buildingLevel.ahır||1);if(S.co>=cap){toast('Ahır dolu!');return}S.co++;
+    if(!S.built.ahır){window.toast('Önce ahır inşa et!');return}
+    let cap=3+(S.buildingLevel.ahır||1);if(S.co>=cap){window.toast('Ahır dolu!');return}S.co++;
     this.checkTutorialAction('buy_cow');
   }else if(k==='KOYUN'){
-    if(!S.built.ahır){toast('Önce ahır inşa et!');return}
-    let cap=3+(S.buildingLevel.ahır||1);if(S.sh>=cap){toast('Ahır dolu!');return}S.sh++}
-  S.money-=a.price;toast(`${a.name} alındı!`);updateHUD();draw();renderM('animal')
+    if(!S.built.ahır){window.toast('Önce ahır inşa et!');return}
+    let cap=3+(S.buildingLevel.ahır||1);if(S.sh>=cap){window.toast('Ahır dolu!');return}S.sh++}
+  S.money-=a.price;window.toast(`${a.name} alındı!`);window.updateHUD();window.draw();window.renderM('animal')
 },
 
 buySeed(k,cr){
-  this.S.plantMode=k;closeM('shop');window.lastPlantClick=-1;toast(`${cr.name} ekim modu! Tarlalara tıkla. Çıkmak için boş yere tıkla.`);draw()
+  window.plantMode=k;window.closeM('shop');window.lastPlantClick=-1;window.toast(`${cr.name} ekim modu! Tarlalara tıkla. Çıkmak için boş yere tıkla.`);window.draw()
 },
 
 buyBuilding(k,price,name){
   const S=this.S;
   const{ROWS,COLS,CROPS}=this;
-  if(S.built[k]){toast('Zaten inşa edildi!');return}
-  if(S.money<price){toast('Yeterli paran yok! ('+price+' TL)');return}
+  if(S.built[k]){window.toast('Zaten inşa edildi!');return}
+  if(S.money<price){window.toast('Yeterli paran yok! ('+price+' TL)');return}
   S.money-=price;S.built[k]=true;
   if(k==='grid'){
     for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){
@@ -412,14 +413,14 @@ buyBuilding(k,price,name){
     }
   }
   S.animateBuilding={key:k,t:Date.now()};
-  closeM('tesisler');
-  updateHUD();draw();
+  window.closeM('tesisler');
+  window.updateHUD();window.draw();
   if(k==='grid'){
     this.checkTutorialAction('build_grid');
   }else{
-    startDrag(k);
-    S.dragX=W/2;S.dragY=H/2;
-    draw();
+    window.startDrag(k);
+    S.dragX=window.W/2;S.dragY=window.H/2;
+    window.draw();
   }
   if(k==='kuyu')this.checkTutorialAction('build_kuyu');
   if(k==='degirmen')this.checkTutorialAction('build_degirmen');
@@ -434,21 +435,21 @@ buyBuilding(k,price,name){
 upgradeBuilding(k){
   const S=this.S;
   const{BUILDING_MAX_LEVEL,UPGRADE_DESC}=this;
-  if(!S.built[k]){toast('Önce inşa et!');return}
+  if(!S.built[k]){window.toast('Önce inşa et!');return}
   let lv=S.buildingLevel[k]||1;
-  if(lv>=BUILDING_MAX_LEVEL){toast('Maks seviyeye ulaşıldı!');return}
+  if(lv>=BUILDING_MAX_LEVEL){window.toast('Maks seviyeye ulaşıldı!');return}
   let cost=this.getUpgradeCost(k);
-  if(S.money<cost){toast('Yeterli paran yok! ('+cost.toLocaleString()+' TL)');return}
+  if(S.money<cost){window.toast('Yeterli paran yok! ('+cost.toLocaleString()+' TL)');return}
   S.money-=cost;S.buildingLevel[k]=lv+1;
-  toast(UPGRADE_DESC[k].name+' seviye '+(lv+1)+' oldu!');
-  updateHUD();draw();
+  window.toast(UPGRADE_DESC[k].name+' seviye '+(lv+1)+' oldu!');
+  window.updateHUD();window.draw();
 },
 
 harvestP(){
   const S=this.S;
   const{CROPS}=this;
-  let p=this.getP(selR,selC);if(!p||!p.crop)return;
-  if(p.nextHarvest>0){toast('Hasat için bekleyin!');return}let cr=CROPS[p.crop];if(!cr)return;
+  let p=this.getP(window.selR,window.selC);if(!p||!p.crop)return;
+  if(p.nextHarvest>0){window.toast('Hasat için bekleyin!');return}let cr=CROPS[p.crop];if(!cr)return;
   let ib=p.w?Math.min(.2,S.st.SULAMA*.04):0,pb=p.p?Math.min(.2,S.st.ICLAMA*.04):0;
   let g=Math.min(1,(p.age/365)/cr.my);let y=cr.mk*g*cr.sea[S.sea];
   if(!p.w)y=0;
@@ -458,25 +459,25 @@ harvestP(){
   let cap=500+S.st.DEPO*200,used=Object.values(S.inv).reduce((a,b)=>a+b,0);
   if(y>0&&(used+y)<=cap){S.inv[p.crop]=(S.inv[p.crop]||0)+y;S.dailyHarvest[p.crop]=(S.dailyHarvest[p.crop]||0)+y;
     p.harvestCount=(p.harvestCount||0)+1;let mh=cr.maxHarvest||1;
-    if(p.harvestCount>=mh){let cn=cr.name;p.crop=null;p.age=0;p.w=false;p.p=false;p.nextHarvest=0;p.harvestCount=0;toast(`${cn} bitkiniz tükendi! Yeni tohum ek.`)}
-    else{p.age+=5;p.w=false;p.p=false;p.nextHarvest=p.crop==='BUGDAY'?120:480;toast(`${cr.name} hasat edildi! +${y.toFixed(1)} kg (Kalan: ${mh-p.harvestCount})`)}
+    if(p.harvestCount>=mh){let cn=cr.name;p.crop=null;p.age=0;p.w=false;p.p=false;p.nextHarvest=0;p.harvestCount=0;window.toast(`${cn} bitkiniz tükendi! Yeni tohum ek.`)}
+    else{p.age+=5;p.w=false;p.p=false;p.nextHarvest=p.crop==='BUGDAY'?120:480;window.toast(`${cr.name} hasat edildi! +${y.toFixed(1)} kg (Kalan: ${mh-p.harvestCount})`)}
     if(p.crop&&p.crop==='BUGDAY')this.checkTutorialAction('harvest_bugday')}
-  else if(y>0){toast('Depo dolu!')}
-  window.harvestModeActive=true;closeM('plot');toast('Hasat modu! Diğer hazır tarlalara tıkla. Çıkmak için boş yere tıkla.');draw();this.checkMissions()
+  else if(y>0){window.toast('Depo dolu!')}
+  window.harvestModeActive=true;window.closeM('plot');window.toast('Hasat modu! Diğer hazır tarlalara tıkla. Çıkmak için boş yere tıkla.');window.draw();this.checkMissions()
 },
 
 waterP(){
   const S=this.S;
-  let p=this.getP(selR,selC);if(p&&!p.w){p.w=true;p.wetTimer=1080;S.waterCount++;this.advanceTime();closeM('plot');toast('Sulama yapıldı! 18 saat geçerli.');draw();this.checkMissions()}
+  let p=this.getP(window.selR,window.selC);if(p&&!p.w){p.w=true;p.wetTimer=1080;S.waterCount++;this.advanceTime();window.closeM('plot');window.toast('Sulama yapıldı! 18 saat geçerli.');window.draw();this.checkMissions()}
 },
 
 pestP(){
   const S=this.S;
-  let p=this.getP(selR,selC);if(p&&!p.p){if(S.money<50){toast('İlaçlama için 50 TL gerekli!');return}S.money-=50;p.p=true;this.advanceTime();closeM('plot');window.pesticideModeActive=true;S.tractorActive=false;window.harvestModeActive=false;S.plantMode=null;toast('İlaçlama yapıldı! Diğer ilaçlanmamış tarlalara tıkla.');draw();updateHUD()}
+  let p=this.getP(window.selR,window.selC);if(p&&!p.p){if(S.money<50){window.toast('İlaçlama için 50 TL gerekli!');return}S.money-=50;p.p=true;this.advanceTime();window.closeM('plot');window.pesticideModeActive=true;S.tractorActive=false;window.harvestModeActive=false;S.plantMode=null;window.toast('İlaçlama yapıldı! Diğer ilaçlanmamış tarlalara tıkla.');window.draw();window.updateHUD()}
 },
 
 removeC(){
-  let p=this.getP(selR,selC);if(p){if(this.S.money<50){toast('50 TL gerekli!');return}this.S.money-=50;p.crop=null;p.age=0;p.w=false;p.p=false;p.nextHarvest=0;closeM('plot');toast('Söküldü! -50 TL');draw()}
+  let p=this.getP(window.selR,window.selC);if(p){if(this.S.money<50){window.toast('50 TL gerekli!');return}this.S.money-=50;p.crop=null;p.age=0;p.w=false;p.p=false;p.nextHarvest=0;window.closeM('plot');window.toast('Söküldü! -50 TL');window.draw()}
 },
 
 checkTutorialAction(action){
@@ -487,11 +488,11 @@ checkTutorialAction(action){
   if(!steps)return;
   let current=steps[S.tutorial.step];
   if(!current||current.action!==action)return;
-  tutorialStepDone=true;
-  toast('✅ Tamamlandı! Devam et...');
+  window.tutorialStepDone=true;
+  window.toast('✅ Tamamlandı! Devam et...');
   let btn=document.getElementById('tutorialBtn');
   btn.textContent='Sonraki Adım';btn.style.display='inline-block';
-  speakTR('Tamamlandı!');
+  window.speakTR('Tamamlandı!');
 },
 
 isStepDone(action){
@@ -529,7 +530,7 @@ sellBuilding(key){
   const{BUILDING_PRICES,BUILDING_NAMES,SELL_RATIO,ROWS,COLS}=this;
   let price=BUILDING_PRICES[key]||0;
   let refund=Math.floor(price*SELL_RATIO);
-  if(!S.built[key]){toast('Bu bina inşa edilmemiş!');return}
+  if(!S.built[key]){window.toast('Bu bina inşa edilmemiş!');return}
   S.built[key]=false;
   S.money+=refund;
   S.buildingPos[key]=null;
@@ -540,98 +541,98 @@ sellBuilding(key){
     S.irrigating=false;S.sel=-1;
   }
   S.buildingMenu=null;S.dragging=null;
-  toast(BUILDING_NAMES[key]+' satıldı! +'+refund+' TL');
-  updateHUD();draw();
+  window.toast(BUILDING_NAMES[key]+' satıldı! +'+refund+' TL');
+  window.updateHUD();window.draw();
 },
 
 upgradeRoad(){
   const S=this.S;
   const{ROAD_LEVEL_NAMES,ROAD_UPGRADE_COST}=this;
   let lv=S.roadLevel||0;
-  if(lv>=2){toast('Yollar zaten maksimum seviyede!');return}
+  if(lv>=2){window.toast('Yollar zaten maksimum seviyede!');return}
   let cost=ROAD_UPGRADE_COST[lv+1];
-  if(!cost){toast('Daha fazla geliştirilemez!');return}
-  if(S.money<cost){toast('Yeterli paran yok! ('+cost+' TL)');return}
+  if(!cost){window.toast('Daha fazla geliştirilemez!');return}
+  if(S.money<cost){window.toast('Yeterli paran yok! ('+cost+' TL)');return}
   S.money-=cost;
   S.roadLevel=lv+1;
-  toast(ROAD_LEVEL_NAMES[S.roadLevel]+' yapıldı! Yollar iyileştirildi. ('+ROAD_LEVEL_NAMES[S.roadLevel]+')');
-  updateHUD();draw();
+  window.toast(ROAD_LEVEL_NAMES[S.roadLevel]+' yapıldı! Yollar iyileştirildi. ('+ROAD_LEVEL_NAMES[S.roadLevel]+')');
+  window.updateHUD();window.draw();
 },
 
 isValidPlacement(key,x,y){
   const{ROWS,COLS}=this;
-  let pad=CL*0.5;
-  if(x<pad||x>W-pad||y<pad||y>H-48-pad)return false;
+  let pad=window.CL*0.5;
+  if(x<pad||x>window.W-pad||y<pad||y>window.H-48-pad)return false;
   let hx=(function(){
-    let hs=CL*(ISLANDSCAPE?2.8:2.0);
-    let hg=CL*1.2;
-    let hvx=Math.min(GX-hg,W*0.16+hs);
-    hvx=Math.max(hs+CL*0.3,hvx);
+    let hs=window.CL*(window.ISLANDSCAPE?2.8:2.0);
+    let hg=window.CL*1.2;
+    let hvx=Math.min(window.GX-hg,window.W*0.16+hs);
+    hvx=Math.max(hs+window.CL*0.3,hvx);
     return hvx;
   })();
-  let hy=sceneTop;
-  if(key!=='grid'&&Math.abs(x-hx)<CL*3&&Math.abs(y-hy)<CL*3)return false;
+  let hy=window.sceneTop;
+  if(key!=='grid'&&Math.abs(x-hx)<window.CL*3&&Math.abs(y-hy)<window.CL*3)return false;
   if(key!=='grid'){
-    if(S.built.grid&&x>GX-CL*2&&x<GX+COLS*CL+CL*2&&y>GY-CL*2&&y<GY+ROWS*CL+CL*2)return false;
+    if(S.built.grid&&x>window.GX-window.CL*2&&x<window.GX+COLS*window.CL+window.CL*2&&y>window.GY-window.CL*2&&y<window.GY+ROWS*window.CL+window.CL*2)return false;
   }
   if(key==='grid'){
-    if(x<CL*2||x+COLS*CL>W-CL*2)return false;
-    if(y<sceneTop+CL||y+ROWS*CL>H-48-CL*2)return false;
+    if(x<window.CL*2||x+COLS*window.CL>window.W-window.CL*2)return false;
+    if(y<window.sceneTop+window.CL||y+ROWS*window.CL>window.H-48-window.CL*2)return false;
   }
   return true;
 },
 
 getDefaultKuyuPos(){
   const{COLS,ROWS}=this;
-  let gcx=GX+COLS*CL/2;
-  let gbottom=GY+ROWS*CL;
-  let mwy=H-48-CL*1.2;
-  let ky=Math.min(gbottom+CL*1.5,mwy);
-  return{x:gcx,y:ky,dx:0,dy:Math.min(gbottom+CL*1.5,mwy)-GY};
+  let gcx=window.GX+COLS*window.CL/2;
+  let gbottom=window.GY+ROWS*window.CL;
+  let mwy=window.H-48-window.CL*1.2;
+  let ky=Math.min(gbottom+window.CL*1.5,mwy);
+  return{x:gcx,y:ky,dx:0,dy:Math.min(gbottom+window.CL*1.5,mwy)-window.GY};
 },
 
 getBuildingAt(mx,my){
   const S=this.S;
   const{ROWS,COLS,BUILDING_NAMES}=this;
-  let sc=screenToScene(mx,my);let sx=sc.x,sy=sc.y;
+  let sc=window.screenToScene(mx,my);let sx=sc.x,sy=sc.y;
   let keys=Object.keys(BUILDING_NAMES);
   for(let i=keys.length-1;i>=0;i--){
     let k=keys[i];
     if(k==='grid'){
       if(!S.built.grid)continue;
-      if(sx>=GX&&sx<=GX+COLS*CL&&sy>=GY&&sy<=GY+ROWS*CL)return k;
+      if(sx>=window.GX&&sx<=window.GX+COLS*window.CL&&sy>=window.GY&&sy<=window.GY+ROWS*window.CL)return k;
     }else if(k==='kuyu'){
       if(!S.built.kuyu)continue;
-      if(typeof wellS==='undefined')continue;
-      if(Math.abs(sx-wellX)<wellS*0.7&&Math.abs(sy-wellY)<wellS*0.7)return k;
+      if(typeof window.wellS==='undefined')continue;
+      if(Math.abs(sx-window.wellX)<window.wellS*0.7&&Math.abs(sy-window.wellY)<window.wellS*0.7)return k;
     }else if(k==='ahır'){
       if(!S.built.ahır)continue;
-      if(typeof barnS==='undefined')continue;
-      if(Math.abs(sx-barnX)<barnS*0.7&&Math.abs(sy-barnY)<barnS*0.7)return k;
+      if(typeof window.barnS==='undefined')continue;
+      if(Math.abs(sx-window.barnX)<window.barnS*0.7&&Math.abs(sy-window.barnY)<window.barnS*0.7)return k;
     }else if(k==='kümes'){
       if(!S.built.kümes)continue;
-      if(typeof kümesS==='undefined')continue;
-      if(Math.abs(sx-kümesX)<kümesS*0.7&&Math.abs(sy-kümesY)<kümesS*0.7)return k;
+      if(typeof window.kümesS==='undefined')continue;
+      if(Math.abs(sx-window.kümesX)<window.kümesS*0.7&&Math.abs(sy-window.kümesY)<window.kümesS*0.7)return k;
     }else if(k==='degirmen'){
       if(!S.built.degirmen)continue;
-      if(typeof wmS==='undefined')continue;
-      if(Math.abs(sx-wmX)<wmS*0.7&&Math.abs(sy-wmY)<wmS*0.7)return k;
+      if(typeof window.wmS==='undefined')continue;
+      if(Math.abs(sx-window.wmX)<window.wmS*0.7&&Math.abs(sy-window.wmY)<window.wmS*0.7)return k;
     }else if(k==='fırın'){
       if(!S.built.fırın)continue;
-      if(typeof firinS==='undefined')continue;
-      if(Math.abs(sx-firinX)<firinS*0.7&&Math.abs(sy-firinY)<firinS*0.7)return k;
+      if(typeof window.firinS==='undefined')continue;
+      if(Math.abs(sx-window.firinX)<window.firinS*0.7&&Math.abs(sy-window.firinY)<window.firinS*0.7)return k;
     }else if(k==='sutislem'){
       if(!S.built.sutislem)continue;
-      if(typeof sutIslemS==='undefined')continue;
-      if(Math.abs(sx-sutIslemX)<sutIslemS*0.7&&Math.abs(sy-sutIslemY)<sutIslemS*0.7)return k;
+      if(typeof window.sutIslemS==='undefined')continue;
+      if(Math.abs(sx-window.sutIslemX)<window.sutIslemS*0.7&&Math.abs(sy-window.sutIslemY)<window.sutIslemS*0.7)return k;
     }else if(k==='peynirfab'){
       if(!S.built.peynirfab)continue;
-      if(typeof peynirS==='undefined')continue;
-      if(Math.abs(sx-peynirX)<peynirS*0.7&&Math.abs(sy-peynirY)<peynirS*0.7)return k;
+      if(typeof window.peynirS==='undefined')continue;
+      if(Math.abs(sx-window.peynirX)<window.peynirS*0.7&&Math.abs(sy-window.peynirY)<window.peynirS*0.7)return k;
     }else if(k==='salçafab'){
       if(!S.built.salçafab)continue;
-      if(typeof salcaS==='undefined')continue;
-      if(Math.abs(sx-salcaX)<salcaS*0.7&&Math.abs(sy-salcaY)<salcaS*0.7)return k;
+      if(typeof window.salcaS==='undefined')continue;
+      if(Math.abs(sx-window.salcaX)<window.salcaS*0.7&&Math.abs(sy-window.salcaY)<window.salcaS*0.7)return k;
     }
   }
   return null;
@@ -639,15 +640,15 @@ getBuildingAt(mx,my){
 
 startDrag(key){
   this.S.dragging=key;
-  toast('Binayı sürükle bırakın. ESC ile iptal.');
+  window.toast('Binayı sürükle bırakın. ESC ile iptal.');
 },
 
 cancelDrag(){
   if(!this.S.dragging)return;
   this.S.dragging=null;
   this.S.buildingMenu=null;
-  toast('Taşıma iptal edildi.');
-  draw();
+  window.toast('Taşıma iptal edildi.');
+  window.draw();
 },
 
 finishDrag(){
@@ -658,7 +659,7 @@ finishDrag(){
   let pos=this.getBuildingCenter(key);
   if(!pos){this.cancelDrag();return}
   if(!this.isValidPlacement(key,pos.x,pos.y)){
-    toast('Geçersiz konum! Başka bir yere bırakın.');
+    window.toast('Geçersiz konum! Başka bir yere bırakın.');
     return;
   }
   S.buildingPos[key]={x:pos.x,y:pos.y};
@@ -671,9 +672,9 @@ finishDrag(){
     S.buildingPos.kuyu.y=pos.y+defKuyu.dy;
   }
   S.dragging=null;
-  wasPanning=true;
-  toast(BUILDING_NAMES[key]+' yerleştirildi!');
-  draw();
+  window.wasPanning=true;
+  window.toast(BUILDING_NAMES[key]+' yerleştirildi!');
+  window.draw();
 },
 
 getBuildingCenter(key){
@@ -683,7 +684,7 @@ getBuildingCenter(key){
 
 showBuildingMenu(key,mx,my){
   this.S.buildingMenu={key:key,x:mx,y:my};
-  draw();
+  window.draw();
 },
 
 async save(){

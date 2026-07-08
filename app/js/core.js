@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.016';
-import UIManager from './uiManager.js?v=1.016';
-import GameManager from './gameManager.js?v=1.016';
-import Drawing from './drawing.js?v=1.016';
+import StorageManager from './storageManager.js?v=1.017';
+import UIManager from './uiManager.js?v=1.017';
+import GameManager from './gameManager.js?v=1.017';
+import Drawing from './drawing.js?v=1.017';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
@@ -613,6 +613,7 @@ if(S.built.grid){
   }
 }
 
+let _saveFrameCounter=0;
 function loop(){
   let now=Date.now();
   let dt=(now-lastFrameTime)/1000;
@@ -624,7 +625,8 @@ function loop(){
     if(windmillAngle>Math.PI*2)windmillAngle-=Math.PI*2;
   }
   draw();
-  GameManager.save();
+  _saveFrameCounter++;
+  if(_saveFrameCounter>=30){_saveFrameCounter=0;GameManager.save();}
   requestAnimationFrame(loop);
 }
 
@@ -713,32 +715,38 @@ function startGame(){
   calcLayout();
   zoomCX=W/2;zoomCY=H/2;window.zoomCX=zoomCX;window.zoomCY=zoomCY;
 
-  CV.addEventListener('click',UIManager.handleCanvasClick);
-  CV.addEventListener('mousedown',UIManager.handleMouseDown);
-  CV.addEventListener('mousemove',UIManager.handleMouseMove);
-  CV.addEventListener('mouseup',UIManager.handleMouseUp);
-  CV.addEventListener('touchstart',UIManager.handleTouchStart,{passive:true});
-  CV.addEventListener('touchmove',UIManager.handleTouchMove,{passive:false});
-  CV.addEventListener('touchend',UIManager.handleTouchEnd);
-  CV.addEventListener('wheel',UIManager.handleWheel,{passive:false});
-  document.addEventListener('keydown',UIManager.handleKeyDown);
-  window.addEventListener('resize',function(){resize();calcLayout();window.W=W;window.H=H;window.GX=GX;window.GY=GY;window.CL=CL;window.sceneTop=sceneTop;window.ISLANDSCAPE=ISLANDSCAPE;window.DPR=DPR;window.isMobile=isMobile});
+  if(!window._listenersAttached){
+    window._listenersAttached=true;
+    CV.addEventListener('click',UIManager.handleCanvasClick);
+    CV.addEventListener('mousedown',UIManager.handleMouseDown);
+    CV.addEventListener('mousemove',UIManager.handleMouseMove);
+    CV.addEventListener('mouseup',UIManager.handleMouseUp);
+    CV.addEventListener('touchstart',UIManager.handleTouchStart,{passive:true});
+    CV.addEventListener('touchmove',UIManager.handleTouchMove,{passive:false});
+    CV.addEventListener('touchend',UIManager.handleTouchEnd);
+    CV.addEventListener('wheel',UIManager.handleWheel,{passive:false});
+    document.addEventListener('keydown',UIManager.handleKeyDown);
+    window.addEventListener('resize',function(){resize();calcLayout();window.W=W;window.H=H;window.GX=GX;window.GY=GY;window.CL=CL;window.sceneTop=sceneTop;window.ISLANDSCAPE=ISLANDSCAPE;window.DPR=DPR;window.isMobile=isMobile});
+  }
 
   UIManager.updateHUD();
   UIManager.generateMissions();
   UIManager.renderMissions();
   setTimeout(()=>{document.getElementById('infoPanel').style.opacity='0'},20000);
 
-  setInterval(function(){
-    let Sv=GameManager.S;
-    Sv.m++;
-    while(Sv.m>=60){Sv.m-=60;Sv.h++}
-    if(Sv.h>=22){GameManager.newDay();return}
-    Object.keys(Sv.lastHarvestTime).forEach(k=>{if(Sv.lastHarvestTime[k]>0)Sv.lastHarvestTime[k]--});
-    Sv.plots.forEach(p=>{if(p.crop&&p.nextHarvest>0)p.nextHarvest--});
-    GameManager.checkWhole();
-    UIManager.updateHUD();
-  },2000);
+  if(!window._intervalStarted){
+    window._intervalStarted=true;
+    setInterval(function(){
+      let Sv=GameManager.S;
+      Sv.m++;
+      while(Sv.m>=60){Sv.m-=60;Sv.h++}
+      if(Sv.h>=22){GameManager.newDay();return}
+      Object.keys(Sv.lastHarvestTime).forEach(k=>{if(Sv.lastHarvestTime[k]>0)Sv.lastHarvestTime[k]--});
+      Sv.plots.forEach(p=>{if(p.crop&&p.nextHarvest>0)p.nextHarvest--});
+      GameManager.checkWhole();
+      UIManager.updateHUD();
+    },2000);
+  }
 
   loop();
 }
