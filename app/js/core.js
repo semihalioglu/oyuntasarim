@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.019';
-import UIManager from './uiManager.js?v=1.019';
-import GameManager from './gameManager.js?v=1.019';
-import Drawing from './drawing.js?v=1.019';
+import StorageManager from './storageManager.js?v=1.020';
+import UIManager from './uiManager.js?v=1.020';
+import GameManager from './gameManager.js?v=1.020';
+import Drawing from './drawing.js?v=1.020';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
@@ -100,10 +100,13 @@ function syncFromWindow(){
   if(window.W)W=window.W;if(window.H)H=window.H;
 }
 function draw(){
+  try{
   syncFromWindow();
+  if(!X){console.error('[draw] X is null!');return;}
   X.clearRect(0,0,W,H);
   calcLayout();
-  console.log('[draw] called, S.built.grid=', GameManager.S.built.grid, 'GX=', GX, 'GY=', GY, 'CL=', CL, 'W=', W, 'H=', H);
+  }catch(e){console.error('[draw] early error:',e.message);return;}
+  console.log('[draw] called, S.built.grid=', GameManager.S.built.grid, 'GX=', GX, 'GY=', GY, 'CL=', CL, 'W=', W, 'H=', H, 'loopRunning=', window._loopStarted);
   zoomLevel+=(zoomTarget-zoomLevel)*0.15;
   if(Math.abs(zoomLevel-zoomTarget)<0.005)zoomLevel=zoomTarget;
   if(S.buildingPos.grid){
@@ -618,18 +621,22 @@ if(S.built.grid){
 
 let _saveFrameCounter=0;
 function loop(){
-  let now=Date.now();
-  let dt=(now-lastFrameTime)/1000;
-  lastFrameTime=now;
-  if(GameManager.S.built.degirmen){
-    let windSpeed=GameManager.S.windSpeed||5;
-    let rotSpeed=windSpeed*0.0015;
-    windmillAngle+=rotSpeed*dt*60;
-    if(windmillAngle>Math.PI*2)windmillAngle-=Math.PI*2;
+  try{
+    let now=Date.now();
+    let dt=(now-lastFrameTime)/1000;
+    lastFrameTime=now;
+    if(GameManager.S.built.degirmen){
+      let windSpeed=GameManager.S.windSpeed||5;
+      let rotSpeed=windSpeed*0.0015;
+      windmillAngle+=rotSpeed*dt*60;
+      if(windmillAngle>Math.PI*2)windmillAngle-=Math.PI*2;
+    }
+    draw();
+    _saveFrameCounter++;
+    if(_saveFrameCounter>=30){_saveFrameCounter=0;GameManager.save();}
+  }catch(e){
+    console.error('[loop] ERROR:',e.message,e.stack);
   }
-  draw();
-  _saveFrameCounter++;
-  if(_saveFrameCounter>=30){_saveFrameCounter=0;GameManager.save();}
   requestAnimationFrame(loop);
 }
 
@@ -751,6 +758,7 @@ function startGame(){
     },2000);
   }
 
+  console.log('[core] startGame loop() starting, window.draw=', typeof window.draw);
   loop();
 }
 
