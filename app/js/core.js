@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.014';
-import UIManager from './uiManager.js?v=1.014';
-import GameManager from './gameManager.js?v=1.014';
-import Drawing from './drawing.js?v=1.014';
+import StorageManager from './storageManager.js?v=1.015';
+import UIManager from './uiManager.js?v=1.015';
+import GameManager from './gameManager.js?v=1.015';
+import Drawing from './drawing.js?v=1.015';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
@@ -631,40 +631,32 @@ function loop(){
 window.startGame=startGame;
 window.showLoginTab=UIManager.showLoginTab;
 window.showErr=UIManager.showErr;
-window.doLogin=function(){
+window.doLogin=async function(){
   let u=document.getElementById('loginUser').value.trim();
   let p=document.getElementById('loginPass').value;
   if(!u||!p){UIManager.showErr('loginErr','Kullanıcı adı ve şifre gerekli');return}
-  let users=StorageManager.getUsers();
-  if(!users[u]){UIManager.showErr('loginErr','Böyle bir kullanıcı yok');return}
-  if(users[u]!==p){UIManager.showErr('loginErr','Şifre hatalı');return}
-  sessionStorage.setItem('farm_user',u);
+  let r=await StorageManager.Auth.login(u,p);
+  if(!r.success){UIManager.showErr('loginErr',r.error);return}
   startGame();
 };
-window.doRegister=function(){
+window.doRegister=async function(){
   let u=document.getElementById('regUser').value.trim();
   let p=document.getElementById('regPass').value;
   let p2=document.getElementById('regPass2').value;
-  if(!u||u.length<3){UIManager.showErr('regErr','Kullanıcı adı en az 3 karakter');return}
-  if(!p||p.length<4){UIManager.showErr('regErr','Şifre en az 4 karakter');return}
   if(p!==p2){UIManager.showErr('regErr','Şifreler eşleşmiyor');return}
-  let users=StorageManager.getUsers();
-  if(users[u]){UIManager.showErr('regErr','Bu kullanıcı adı zaten var');return}
-  users[u]=p;StorageManager.saveUsers(users);
-  sessionStorage.setItem('farm_user',u);
+  let r=await StorageManager.Auth.register(u,p);
+  if(!r.success){UIManager.showErr('regErr',r.error);return}
   startGame();
 };
-window.doGuestLogin=function(){
-  let user=sessionStorage.getItem('farm_user')||'default';
-  localStorage.removeItem('farm5_'+user);
-  sessionStorage.setItem('farm_user','Misafir');
+window.doGuestLogin=async function(){
+  await StorageManager.Auth.guest();
   if(typeof startGame==='function'){
     GameManager.resetState();
     startGame();
   }else{location.reload()}
 };
-window.doLogout=function(){
-  sessionStorage.removeItem('farm_user');
+window.doLogout=async function(){
+  await StorageManager.Auth.logout();
   location.reload();
 };
 
@@ -751,7 +743,7 @@ function startGame(){
   loop();
 }
 
-window.addEventListener('load',function(){
+window.addEventListener('load',async function(){
   CV=document.getElementById('c');
   X=CV.getContext('2d');
 
@@ -763,10 +755,10 @@ window.addEventListener('load',function(){
   zoomCX=W/2;zoomCY=H/2;
 
   GameManager.init();
-  GameManager.load();
+  await GameManager.load();
   GameManager.changeWeather();
 
-  let u=sessionStorage.getItem('farm_user');
+  let u=StorageManager.Auth.getUser();
   if(u){
     startGame();
   }else{
