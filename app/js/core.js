@@ -304,6 +304,7 @@ function draw(){
   Drawing.drawFenceSegment(W*0.7,fenceY2,W,fenceY2);
 
 if(S.built.grid){
+  console.log('[draw] GRID RENDER START, GX=', GX, 'GY=', GY, 'CL=', CL, 'ROWS=', ROWS, 'COLS=', COLS);
   X.fillStyle='#5d4037';
   X.fillRect(GX-5,GY-5,COLS*CL+10,ROWS*CL+10);
   X.fillStyle='#6d4c41';
