@@ -1,5 +1,5 @@
-import GameManager from './gameManager.js?v=1.029';
-import Drawing from './drawing.js?v=1.029';
+import GameManager from './gameManager.js?v=1.030';
+import Drawing from './drawing.js?v=1.030';
 
 const S = GameManager.S;
 const CROPS = GameManager.CROPS;
