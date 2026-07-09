@@ -699,7 +699,6 @@ const UIManager = {
       if (k === 'peynirfab') UIManager.checkTutorialAction('build_peynirfab');
       if (k === 'salçafab') UIManager.checkTutorialAction('build_salçafab');
     } catch (e) {
-      console.error('[BUY ERROR]', e);
       UIManager.toast('Hata oluştu: ' + e.message);
     }
   },
