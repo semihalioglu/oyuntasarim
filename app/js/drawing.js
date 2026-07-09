@@ -170,8 +170,8 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
   let use2C=rightW2>CL*5.5;
   let rCol1X2,rCol2X2,rRow1Y2,rRow2Y2,rRow3Y2;
   if(use2C){
-    rCol1X2=gridRight+CL*2.5;rCol2X2=W-CL*2.0;
-    let rRowH2=rAvailH2/2.8;rRow1Y2=sceneTop+CL*1.0;rRow2Y2=rRow1Y2+rRowH2;rRow3Y2=rRow2Y2+rRowH2;
+    rCol1X2=gridRight+CL*3.5;rCol2X2=W-CL*2.5;
+    let rRowH2=rAvailH2/2.5;rRow1Y2=sceneTop+CL*0.5;rRow2Y2=rRow1Y2+rRowH2;rRow3Y2=rRow2Y2+rRowH2;
   }else{
     rCol1X2=gridRight+CL*0.5;rCol2X2=rCol1X2;
     let rRowH2=rAvailH2/3.2;rRow1Y2=sceneTop+CL*0.2;rRow2Y2=rRow1Y2+rRowH2;rRow3Y2=rRow2Y2+rRowH2;
