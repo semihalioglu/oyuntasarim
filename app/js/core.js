@@ -146,6 +146,7 @@ function draw(){
   let houseX=Math.min(GX-houseGap, W*0.16+houseS);
   houseX=Math.max(houseS+CL*0.3, houseX);
   let houseY=sceneTop+Math.floor((GY-sceneTop)*0.05);
+  window.houseX=houseX;window.houseY=houseY;window.houseS=houseS;
 
   Drawing.drawRoads(houseX,houseY,gridCX,gridCY,gridRight,gridBottom,houseS);
   Drawing.drawHouse(houseX,houseY,houseS);
@@ -627,7 +628,37 @@ function loop(){
     windmillAngle+=rotSpeed*dt*60;
     if(windmillAngle>Math.PI*2)windmillAngle-=Math.PI*2;
   }
+  if(S.pickup){
+    S.pickup.progress+=S.pickup.speed;
+    if(S.pickup.progress>=1&&!S.pickup.returning){
+      S.pickup.returning=true;
+      S.pickup.progress=0;
+      let tmpX=S.pickup.startX,tmpY=S.pickup.startY;
+      S.pickup.startX=S.pickup.targetX;S.pickup.startY=S.pickup.targetY;
+      S.pickup.targetX=tmpX;S.pickup.targetY=tmpY;
+      if(S.pickup.type==='milk'){
+        let sut=S.pickup.amount;
+        S.inv.SUT=(S.inv.SUT||0)+sut;
+        window.sutCount=(window.sutCount||0)+1;
+        UIManager.toast(`${sut} lt Süt toplandı! Toplam: ${(S.inv.SUT||0)} lt`);
+      }else if(S.pickup.type==='egg'){
+        let yumurta=S.pickup.amount;
+        S.inv.YUMURTA=(S.inv.YUMURTA||0)+yumurta;
+        window.yumurtaCount=(window.yumurtaCount||0)+1;
+        UIManager.toast(`${yumurta} Yumurta toplandı! Toplam: ${(S.inv.YUMURTA||0)} adet`);
+      }
+    }
+    if(S.pickup.progress>=1&&S.pickup.returning){
+      S.pickup=null;
+    }
+  }
   draw();
+  if(S.pickup){
+    let t=S.pickup.progress;
+    let px=S.pickup.startX+(S.pickup.targetX-S.pickup.startX)*t;
+    let py=S.pickup.startY+(S.pickup.targetY-S.pickup.startY)*t;
+    Drawing.drawPickup(px,py,S.pickup.type,t);
+  }
   _saveFrameCounter++;
   if(_saveFrameCounter>=30){_saveFrameCounter=0;GameManager.save();}
   requestAnimationFrame(loop);

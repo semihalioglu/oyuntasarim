@@ -858,21 +858,17 @@ const UIManager = {
   },
 
   finishDrag: function() {
-    console.log('[finishDrag] called, S.dragging=', S.dragging, 'S.dragX=', S.dragX, 'S.dragY=', S.dragY);
     try {
-      if (!S.dragging) { console.log('[finishDrag] no dragging, abort'); return; }
+      if (!S.dragging) { return; }
       let key = S.dragging;
       let pos = UIManager.getBuildingCenter(key);
-      console.log('[finishDrag] pos=', pos);
       if (!pos) { UIManager.cancelDrag(); return }
       let valid = UIManager.isValidPlacement(key, pos.x, pos.y);
-      console.log('[finishDrag] valid=', valid, 'key=', key, 'x=', pos.x, 'y=', pos.y);
       if (!valid) {
         UIManager.toast('Geçersiz konum! Başka bir yere bırakın.');
         return;
       }
       S.buildingPos[key] = { x: pos.x, y: pos.y };
-      console.log('[finishDrag] saved buildingPos[key]=', S.buildingPos[key]);
       if (key === 'grid' && GRID_LINKED_KUYU && S.built.kuyu) {
         let defKuyu = UIManager.getDefaultKuyuPos();
         if (!S.buildingPos.kuyu) {
@@ -885,9 +881,7 @@ const UIManager = {
       window.wasPanning = true;
       UIManager.toast(BUILDING_NAMES[key] + ' yerleştirildi!');
       window.draw();
-      console.log('[finishDrag] completed successfully');
     } catch (e) {
-      console.error('[finishDrag] ERROR:', e.message, e.stack);
       UIManager.toast('Hata oluştu: ' + e.message);
     }
   },
@@ -988,11 +982,18 @@ const UIManager = {
         if (!S.built.ahır) { UIManager.toast('Önce ahır inşa et!'); return }
         if (S.co > 0) {
           if (window.sutCount >= 2) { UIManager.toast('Bugün zaten 2 kez süt sağıldı! Yarın tekrar dene.'); return }
+          if (S.pickup) { UIManager.toast('Başka bir pickup yolda!'); return }
           let sut = Math.min(S.co, 3) * 2;
-          S.inv.SUT = (S.inv.SUT || 0) + sut;
-          window.sutCount++;
-          UIManager.toast(`${sut} lt Süt sağıldı! (${window.sutCount}/2) Toplam: ${(S.inv.SUT || 0)} lt`);
-          UIManager.advanceTime(); window.draw(); return
+          S.pickup = {
+            type: 'milk',
+            startX: window.houseX, startY: window.houseY,
+            targetX: window.barnX, targetY: window.barnY,
+            progress: 0, speed: 0.015,
+            returning: false,
+            amount: sut
+          };
+          UIManager.toast(`${sut} lt süt toplanıyor...`);
+          return
         } else { UIManager.toast('Ahırda inek yok!'); return }
       }
     }
@@ -1002,11 +1003,18 @@ const UIManager = {
         if (!S.built.kümes) { UIManager.toast('Önce kümes inşa et!'); return }
         if (S.ch > 0) {
           if (window.yumurtaCount >= 1) { UIManager.toast('Bugün zaten yumurta toplandı! Yarın tekrar dene.'); return }
+          if (S.pickup) { UIManager.toast('Başka bir pickup yolda!'); return }
           let yumurta = Math.min(S.ch, 6);
-          S.inv.YUMURTA = (S.inv.YUMURTA || 0) + yumurta;
-          window.yumurtaCount++;
-          UIManager.toast(`${yumurta} Yumurta toplandı! (${window.yumurtaCount}/1) Toplam: ${(S.inv.YUMURTA || 0)} adet`);
-          UIManager.advanceTime(); window.draw(); return
+          S.pickup = {
+            type: 'egg',
+            startX: window.houseX, startY: window.houseY,
+            targetX: window.kümesX, targetY: window.kümesY,
+            progress: 0, speed: 0.015,
+            returning: false,
+            amount: yumurta
+          };
+          UIManager.toast(`${yumurta} yumurta toplanıyor...`);
+          return
         } else { UIManager.toast('Kümeste tavuk yok!'); return }
       }
     }
@@ -1184,7 +1192,6 @@ const UIManager = {
 
   handleMouseDown: function(e) {
     let mx = e.clientX, my = e.clientY;
-    console.log('[handleMouseDown] mx=', mx, 'my=', my, 'S.dragging=', S.dragging, 'S.buildingMenu=', !!S.buildingMenu);
     mouseDownTime = Date.now();
     mouseDownPos = { x: mx, y: my };
     window.isPanning = false; window.panStartX = mx; window.panStartY = my; window.panStartPX = window.panX; window.panStartPY = window.panY;
@@ -1214,7 +1221,6 @@ const UIManager = {
     if (S.dragging) {
       e.preventDefault();
       let sc = window.screenToScene(mx, my); S.dragX = sc.x; S.dragY = sc.y;
-      console.log('[handleMouseMove] drag mode: sc=', sc.x, sc.y);
       window.draw();
       return;
     }
@@ -1239,11 +1245,10 @@ const UIManager = {
   },
 
   handleMouseUp: function(e) {
-    console.log('[handleMouseUp] S.dragging=', S.dragging, 'dragStartedThisClick=', dragStartedThisClick, 'isPanning=', window.isPanning);
     window.wasPanning = window.isPanning;
     mouseDownTime = 0; window.isPanning = false;
     clearTimeout(longPressTimer); longPressTimer = null;
-    if (S.dragging && !dragStartedThisClick) { console.log('[handleMouseUp] calling finishDrag'); UIManager.finishDrag() }
+    if (S.dragging && !dragStartedThisClick) { UIManager.finishDrag() }
     dragStartedThisClick = false;
   },
 

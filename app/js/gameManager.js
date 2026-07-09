@@ -159,6 +159,7 @@ S:{
   roadLevel:0,
   dragging:null,dragOffset:{x:0,y:0},
   longPressTimer:null,buildingMenu:null,animateBuilding:null,
+  pickup:null,
   tutorial:{active:false,step:0,type:'bread',completed:false},invUN:0,invEKMEK:0
 },
 
@@ -181,6 +182,7 @@ resetState(){
   S.dailyHarvest={};S.dailyAnimal={};S.dailySold=0;
   S.weather='güneşli';S.weatherTimer=0;S.windSpeed=5;
   S.irrigating=false;S.irrigStartH=0;S.irrigStartM=0;S.irrigEndH=0;S.irrigEndM=0;S.irrigDrops=[];
+  S.pickup=null;
   S.built={degirmen:false,kuyu:false,ahır:false,kümes:false,grid:false,fırın:false,sutislem:false,peynirfab:false,salçafab:false};
   S.buildingLevel={ahır:1,kümes:1,kuyu:1,degirmen:1,fırın:1,sutislem:1,peynirfab:1,salçafab:1};
   S.buildingPos={grid:null,kuyu:null,ahır:null,kümes:null,degirmen:null,fırın:null,sutislem:null,peynirfab:null,salçafab:null};

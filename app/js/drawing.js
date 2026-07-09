@@ -163,20 +163,19 @@ drawFenceSegment(x1,y1,x2,y2){
 },
 
 drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
-  let buf=CL*0.5;
   let targets=[];
   if(S.built.kuyu){
     let kx,ky;
     if(S.buildingPos.kuyu){kx=S.buildingPos.kuyu.x;ky=S.buildingPos.kuyu.y}
     else if(S.built.grid){kx=gridCX;ky=gridBottom+CL*1.5}
     else{kx=W*0.5;ky=GY+CL*3}
-    let s=CL*2.1;targets.push({k:'kuyu',cx:kx,cy:ky,hw:s/2+buf,hh:s/2+buf});
+    targets.push({x:kx,y:ky,k:'kuyu'});
   }
   if(S.built.ahır){
     let ax,ay;
     if(S.buildingPos.ahır){ax=S.buildingPos.ahır.x;ay=S.buildingPos.ahır.y}
     else{ax=S.built.grid?Math.max(gridRight+CL*1.0,Math.min(W*0.88,gridRight+CL*2.5+CL*0.5)):W*0.88;ay=sceneTop+Math.floor((H-86)*0.02)}
-    let s=CL*2.5;targets.push({k:'ahır',cx:ax,cy:ay,hw:s/2+buf,hh:s/2+buf});
+    targets.push({x:ax,y:ay,k:'ahır'});
   }
   if(S.built.kümes){
     let kx,ky;
@@ -186,127 +185,42 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
       let ay2;if(S.buildingPos.ahır)ay2=S.buildingPos.ahır.y;else ay2=sceneTop+2;
       kx=ax2;ky=ay2+CL*5;
     }
-    let s=CL*2.0;targets.push({k:'kümes',cx:kx,cy:ky,hw:s/2+buf,hh:s/2+buf});
+    targets.push({x:kx,y:ky,k:'kümes'});
   }
   if(S.built.degirmen){
     let dx,dy;
     if(S.buildingPos.degirmen){dx=S.buildingPos.degirmen.x;dy=S.buildingPos.degirmen.y}
     else{dx=hx;dy=hy+houseS*1.5}
-    let s=houseS*0.8;targets.push({k:'degirmen',cx:dx,cy:dy,hw:s/2+buf,hh:s/2+buf});
+    targets.push({x:dx,y:dy,k:'degirmen'});
   }
   if(S.built.fırın){
     let fx,fy;
     if(S.buildingPos.fırın){fx=S.buildingPos.fırın.x;fy=S.buildingPos.fırın.y}
     else{let fs=CL*(ISLANDSCAPE?2.0:1.6);fx=gridRight+fs*1.2;fy=sceneTop+fs*1.8;if(fx+fs>W-fs){fx=hx+houseS*1.5;fy=hy+houseS*1.8}}
-    let s=CL*(ISLANDSCAPE?2.0:1.6);targets.push({k:'fırın',cx:fx,cy:fy,hw:s/2+buf,hh:s/2+buf});
+    targets.push({x:fx,y:fy,k:'fırın'});
   }
   if(S.built.sutislem){
     let sx,sy;
     if(S.buildingPos.sutislem){sx=S.buildingPos.sutislem.x;sy=S.buildingPos.sutislem.y}
     else{sx=gridRight+CL*2;sy=sceneTop+CL*2}
-    let s=CL*(ISLANDSCAPE?1.8:1.4);targets.push({k:'sutislem',cx:sx,cy:sy,hw:s/2+buf,hh:s/2+buf});
+    targets.push({x:sx,y:sy,k:'sutislem'});
   }
   if(S.built.peynirfab){
     let px,py;
     if(S.buildingPos.peynirfab){px=S.buildingPos.peynirfab.x;py=S.buildingPos.peynirfab.y}
     else{px=gridRight+CL*2;py=sceneTop+CL*5}
-    let s=CL*(ISLANDSCAPE?1.8:1.4);targets.push({k:'peynirfab',cx:px,cy:py,hw:s/2+buf,hh:s/2+buf});
+    targets.push({x:px,y:py,k:'peynirfab'});
   }
   if(S.built.salçafab){
     let sx,sy;
     if(S.buildingPos.salçafab){sx=S.buildingPos.salçafab.x;sy=S.buildingPos.salçafab.y}
     else{sx=gridRight+CL*2;sy=sceneTop+CL*8}
-    let s=CL*(ISLANDSCAPE?1.8:1.4);targets.push({k:'salçafab',cx:sx,cy:sy,hw:s/2+buf,hh:s/2+buf});
+    targets.push({x:sx,y:sy,k:'salçafab'});
   }
   if(targets.length===0)return;
-  let gx1=GX-buf,gy1=GY-buf,gx2=gridRight+buf,gy2=gridBottom+buf;
   let roadW=CL*0.45;
   let stoneS=CL*0.22;
   let rl=S.roadLevel||0;
-  let obstacles=[{x1:gx1,y1:gy1,x2:gx2,y2:gy2,k:'grid'}];
-  let rb=CL*0.3;
-  targets.forEach(t=>{
-    if(t.k!=='grid'){
-      obstacles.push({x1:t.cx-t.hw-rb,y1:t.cy-t.hh-rb,x2:t.cx+t.hw+rb,y2:t.cy+t.hh+rb,k:t.k});
-    }
-  });
-  function segHitsRect(x1,y1,x2,y2,r,skip){
-    if(skip&&(skip===r.k))return false;
-    let minX=Math.min(x1,x2),maxX=Math.max(x1,x2);
-    let minY=Math.min(y1,y2),maxY=Math.max(y1,y2);
-    if(maxX<r.x1||minX>r.x2||maxY<r.y1||minY>r.y2)return false;
-    let dx=x2-x1,dy=y2-y1;
-    if(Math.abs(dx)<0.01&&Math.abs(dy)<0.01)return(x1>=r.x1&&x1<=r.x2&&y1>=r.y1&&y1<=r.y2);
-    let tmin=-Infinity,tmax=Infinity;
-    if(Math.abs(dx)>0.01){
-      let t1=(r.x1-x1)/dx,t2=(r.x2-x1)/dx;
-      if(t1>t2){let tmp=t1;t1=t2;t2=tmp}
-      tmin=Math.max(tmin,t1);tmax=Math.min(tmax,t2);
-    }else{
-      if(x1<r.x1||x1>r.x2)return false;
-    }
-    if(Math.abs(dy)>0.01){
-      let t1=(r.y1-y1)/dy,t2=(r.y2-y1)/dy;
-      if(t1>t2){let tmp=t1;t1=t2;t2=tmp}
-      tmin=Math.max(tmin,t1);tmax=Math.min(tmax,t2);
-    }else{
-      if(y1<r.y1||y1>r.y2)return false;
-    }
-    return tmin<=tmax&&tmax>=0&&tmin<=1;
-  }
-  function getEdge(sx,sy,t){
-    let l=t.cx-t.hw,r=t.cx+t.hw,tp=t.cy-t.hh,b=t.cy+t.hh;
-    return{x:Math.max(l,Math.min(r,sx)),y:Math.max(tp,Math.min(b,sy))};
-  }
-  function routeTo(sx,sy,t,skipK){
-    let e=getEdge(sx,sy,t);
-    let path=[{x:sx,y:sy}];
-    let obstacles2=obstacles.filter(o=>o.k!==skipK&&o.k!==t.k);
-    let segHits=obstacles2.filter(r=>segHitsRect(sx,sy,e.x,e.y,r,skipK));
-    if(segHits.length>0){
-      let r=segHits[0];
-      let rcx=(r.x1+r.x2)/2,rcy=(r.y1+r.y2)/2;
-      let goAbove=sy<rcy;
-      let goLeft=sx<rcx;
-      let bypassX=goLeft?r.x1-CL*0.6:r.x2+CL*0.6;
-      let bypassY=goAbove?r.y1-CL*0.6:r.y2+CL*0.6;
-      path.push({x:sx,y:bypassY});
-      path.push({x:bypassX,y:bypassY});
-      path.push({x:bypassX,y:e.y});
-    }else{
-      path.push({x:e.x,y:sy});
-    }
-    path.push(e);
-    return refinePath(path,obstacles2);
-  }
-  function refinePath(path,obs){
-    let changed=true;
-    let maxIter=5;
-    while(changed&&maxIter-->0){
-      changed=false;
-      let newPath=[path[0]];
-      for(let i=0;i<path.length-1;i++){
-        let hits=obs.filter(r=>segHitsRect(path[i].x,path[i].y,path[i+1].x,path[i+1].y,r,null));
-        if(hits.length>0){
-          changed=true;
-          let r=hits[0];
-          let mx=(path[i].x+path[i+1].x)/2,my=(path[i].y+path[i+1].y)/2;
-          let rcx=(r.x1+r.x2)/2,rcy=(r.y1+r.y2)/2;
-          let goAbove=my<rcy;
-          let goLeft=mx<rcx;
-          let bx=goLeft?r.x1-CL*0.6:r.x2+CL*0.6;
-          let by=goAbove?r.y1-CL*0.6:r.y2+CL*0.6;
-          newPath.push({x:path[i].x,y:by});
-          newPath.push({x:bx,y:by});
-          newPath.push({x:bx,y:path[i+1].y});
-        }else{
-          newPath.push(path[i+1]);
-        }
-      }
-      path=newPath;
-    }
-    return path;
-  }
   function drawRoadSegment(x1,y1,x2,y2){
     let dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy);
     if(len<1)return;
@@ -377,13 +291,13 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
       }
     }
   }
-  let connected=[{x:hx,y:hy,k:'house'}];
+  let connected=[{x:hx,y:hy}];
   let remaining=[...targets];
   while(remaining.length>0){
     let bestDist=Infinity,bestC=-1,bestR=-1;
     for(let c=0;c<connected.length;c++){
       for(let r=0;r<remaining.length;r++){
-        let dx=remaining[r].cx-connected[c].x,dy=remaining[r].cy-connected[c].y;
+        let dx=remaining[r].x-connected[c].x,dy=remaining[r].y-connected[c].y;
         let d=Math.sqrt(dx*dx+dy*dy);
         if(d<bestDist){bestDist=d;bestC=c;bestR=r}
       }
@@ -391,13 +305,34 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
     if(bestR<0)break;
     let from=connected[bestC];
     let to=remaining[bestR];
-    let path=routeTo(from.x,from.y,to,from.k);
-    for(let i=1;i<path.length;i++){
-      drawRoadSegment(path[i-1].x,path[i-1].y,path[i].x,path[i].y);
-    }
-    connected.push({x:path[path.length-1].x,y:path[path.length-1].y,k:to.k});
+    let midX=to.x,midY=from.y;
+    drawRoadSegment(from.x,from.y,midX,midY);
+    drawRoadSegment(midX,midY,to.x,to.y);
+    connected.push(to);
     remaining.splice(bestR,1);
   }
+},
+
+drawPickup(x,y,type,progress){
+  X.save();X.translate(x,y);
+  let s=CL*0.4;
+  X.fillStyle='rgba(0,0,0,0.15)';X.beginPath();X.ellipse(0,s*0.5,s*0.6,s*0.06,0,0,Math.PI*2);X.fill();
+  X.fillStyle='#f5f5f5';X.fillRect(-s*0.4,-s*0.25,s*0.8,s*0.35);
+  X.fillStyle='#e0e0e0';X.fillRect(-s*0.38,-s*0.22,s*0.76,s*0.02);
+  X.fillStyle='#42a5f5';X.fillRect(-s*0.35,-s*0.2,s*0.3,s*0.15);
+  X.fillStyle='#90a4ae';X.fillRect(s*0.1,-s*0.2,s*0.25,s*0.25);
+  X.fillStyle='#333';X.beginPath();X.arc(-s*0.25,s*0.12,s*0.06,0,Math.PI*2);X.fill();
+  X.beginPath();X.arc(s*0.25,s*0.12,s*0.06,0,Math.PI*2);X.fill();
+  X.fillStyle='#555';X.beginPath();X.arc(-s*0.25,s*0.12,s*0.03,0,Math.PI*2);X.fill();
+  X.beginPath();X.arc(s*0.25,s*0.12,s*0.03,0,Math.PI*2);X.fill();
+  if(type==='milk'){
+    X.fillStyle='#fff';X.font=`bold ${s*0.3}px "Nunito",Arial,sans-serif`;X.textAlign='center';X.textBaseline='middle';
+    X.fillText('🥛',0,-s*0.35);
+  }else if(type==='egg'){
+    X.fillStyle='#fff';X.font=`bold ${s*0.3}px "Nunito",Arial,sans-serif`;X.textAlign='center';X.textBaseline='middle';
+    X.fillText('🥚',0,-s*0.35);
+  }
+  X.restore();
 },
 
 drawHouse(x,y,s){
