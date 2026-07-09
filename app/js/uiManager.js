@@ -1,5 +1,5 @@
-import GameManager from './gameManager.js?v=1.040';
-import Drawing from './drawing.js?v=1.040';
+import GameManager from './gameManager.js?v=1.041';
+import Drawing from './drawing.js?v=1.041';
 
 const S = GameManager.S;
 const CROPS = GameManager.CROPS;
@@ -324,7 +324,7 @@ const UIManager = {
     document.getElementById('hWeather').textContent = WEATHER_ICONS[S.weather] + ' ' + wNames[S.weather];
     let windIcon = S.windSpeed < 5 ? '&#127794;' : S.windSpeed < 10 ? '&#127796;' : '&#127744;';
     document.getElementById('hWind').innerHTML = windIcon + ' Rüzgar: ' + S.windSpeed + ' km/h';
-    let ver=document.getElementById('hVersion');if(ver)ver.textContent='v1.040';
+    let ver=document.getElementById('hVersion');if(ver)ver.textContent='v1.041';
   },
 
   toast: function(m) { let t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); },
