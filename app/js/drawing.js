@@ -1,6 +1,6 @@
 const Drawing = {
 _spriteCache:{},
-_spritePaths:{barn:'app/img/buildings/barn.png',kümes:'app/img/buildings/kümes.png',degirmen:'app/img/buildings/degirmen.png',kuyu:'app/img/buildings/kuyu.png',smallbarn:'app/img/buildings/smallbarn.png',bigbarn:'app/img/buildings/bigbarn.png',openbarn:'app/img/buildings/openbarn.png'},
+_spritePaths:{barn:'app/img/buildings/barn.png',kümes:'app/img/buildings/kumes_fs25.png',degirmen:'app/img/buildings/degirmen.png',kuyu:'app/img/buildings/kuyu.png',ev:'app/img/buildings/ev_fs25.png',ahir:'app/img/buildings/ahir_fs25.png',firin:'app/img/buildings/firin_fs25.png',sutislem:'app/img/buildings/sutislem_fs25.png',peynirfab:'app/img/buildings/peynirfab_fs25.png',salcafab:'app/img/buildings/salcafab_fs25.png'},
 _loadSprite(key){
   if(this._spriteCache[key])return this._spriteCache[key];
   if(this._spriteCache[key]===false)return null;
@@ -389,7 +389,7 @@ drawPickup(x,y,type,angle){
 },
 
 drawHouse(x,y,s){
-  if(this.drawSpriteLabel('smallbarn',x,y,s,'EV'))return;
+  if(this.drawSpriteLabel('ev',x,y,s,'EV'))return;
   X.save();X.translate(x,y);
 
   // Gölge
@@ -534,7 +534,7 @@ drawHouse(x,y,s){
 },
 
 drawBarn(x,y,s){
-  if(this.drawSprite('barn',x,y,s))return;
+  if(this.drawSpriteLabel('ahir',x,y,s,'AHİR'))return;
   X.save();X.translate(x,y);
 
   // Gölge
@@ -663,7 +663,7 @@ drawBarn(x,y,s){
 },
 
 drawKümes(x,y,s){
-  if(this.drawSprite('kümes',x,y,s))return;
+  if(this.drawSpriteLabel('kümes',x,y,s,'KÜMES'))return;
   X.save();X.translate(x,y);
 
   // Gölge
@@ -1274,7 +1274,7 @@ drawTractorShed(x,y,s){
 },
 
 drawFırın(x,y,s){
-  if(this.drawSpriteLabel('smallbarn',x,y,s*0.85,'FIRIN'))return;
+  if(this.drawSpriteLabel('firin',x,y,s,'FIRIN'))return;
   X.save();X.translate(x,y);
   X.fillStyle='rgba(0,0,0,0.12)';X.beginPath();X.ellipse(0,s*0.55,s*0.4,s*0.07,0,0,Math.PI*2);X.fill();
   X.fillStyle='#d84315';X.fillRect(-s*0.35,s*0.05,s*0.7,s*0.5);
@@ -1293,7 +1293,7 @@ drawFırın(x,y,s){
 },
 
 drawSutIslem(x,y,s){
-  if(this.drawSpriteLabel('bigbarn',x,y,s*0.8,'SÜT İŞL'))return;
+  if(this.drawSpriteLabel('sutislem',x,y,s,'SÜT İŞL'))return;
   X.save();X.translate(x,y);
   // Gölge
   X.fillStyle='rgba(0,0,0,0.15)';X.beginPath();X.ellipse(0,s*0.58,s*0.48,s*0.08,0,0,Math.PI*2);X.fill();
@@ -1351,7 +1351,7 @@ drawSutIslem(x,y,s){
 },
 
 drawPeynirFab(x,y,s){
-  if(this.drawSpriteLabel('bigbarn',x,y,s*0.8,'PEYNİR'))return;
+  if(this.drawSpriteLabel('peynirfab',x,y,s,'PEYNİR'))return;
   X.save();X.translate(x,y);
   // Gölge
   X.fillStyle='rgba(0,0,0,0.15)';X.beginPath();X.ellipse(0,s*0.58,s*0.48,s*0.08,0,0,Math.PI*2);X.fill();
@@ -1417,7 +1417,7 @@ drawPeynirFab(x,y,s){
 },
 
 drawSalcaFab(x,y,s){
-  if(this.drawSpriteLabel('smallbarn',x,y,s*0.85,'SALÇA'))return;
+  if(this.drawSpriteLabel('salcafab',x,y,s,'SALÇA'))return;
   X.save();X.translate(x,y);
   // Gölge
   X.fillStyle='rgba(0,0,0,0.15)';X.beginPath();X.ellipse(0,s*0.58,s*0.48,s*0.08,0,0,Math.PI*2);X.fill();
