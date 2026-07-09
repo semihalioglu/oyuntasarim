@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.031';
-import UIManager from './uiManager.js?v=1.031';
-import GameManager from './gameManager.js?v=1.031';
-import Drawing from './drawing.js?v=1.031';
+import StorageManager from './storageManager.js?v=1.032';
+import UIManager from './uiManager.js?v=1.032';
+import GameManager from './gameManager.js?v=1.032';
+import Drawing from './drawing.js?v=1.032';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
@@ -172,7 +172,7 @@ function draw(){
   if(useTwoCols){
     rCol1X=gridRight+CL*1.0;
     rCol2X=W-CL*2.5;
-    rRowH=rAvailH/4.0;
+    rRowH=rAvailH/3.8;
     rRow1Y=sceneTop+CL*1.5;
     rRow2Y=rRow1Y+rRowH;
     rRow3Y=rRow2Y+rRowH;
@@ -217,8 +217,8 @@ function draw(){
     Drawing.drawFenceSegment(kFfX,kFfY+kFfH,kFfX,kFfY);
   }
 
-  let fYX=barnX+barnS*0.1,fYY=barnY+barnS*0.9;
-  let fYW=barnS*1.2,fYH=barnS*0.35;
+  let fYX=barnX-barnS*0.5,fYY=barnY+barnS*0.9;
+  let fYW=barnS*1.0,fYH=barnS*0.3;
   if(S.built.ahır){
     Drawing.drawFenceSegment(fYX,fYY,fYX+fYW,fYY);
     Drawing.drawFenceSegment(fYX+fYW,fYY,fYX+fYW,fYY+fYH);
