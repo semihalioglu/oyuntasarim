@@ -983,11 +983,11 @@ const UIManager = {
           if (window.sutCount >= 2) { UIManager.toast('Bugün zaten 2 kez süt sağıldı! Yarın tekrar dene.'); return }
           if (S.pickup) { UIManager.toast('Başka bir pickup yolda!'); return }
           let sut = Math.min(S.co, 3) * 2;
+          let hx=window.houseX,hy=window.houseY,bx=window.barnX,by=window.barnY;
           S.pickup = {
             type: 'milk',
-            startX: window.houseX, startY: window.houseY,
-            targetX: window.barnX, targetY: window.barnY,
-            progress: 0, speed: 0.015,
+            path:[{x:hx,y:hy},{x:bx,y:hy},{x:bx,y:by}],
+            progress: 0, speed: 0.003,
             returning: false,
             amount: sut
           };
@@ -1004,11 +1004,11 @@ const UIManager = {
           if (window.yumurtaCount >= 1) { UIManager.toast('Bugün zaten yumurta toplandı! Yarın tekrar dene.'); return }
           if (S.pickup) { UIManager.toast('Başka bir pickup yolda!'); return }
           let yumurta = Math.min(S.ch, 6);
+          let hx=window.houseX,hy=window.houseY,kx=window.kümesX,ky=window.kümesY;
           S.pickup = {
             type: 'egg',
-            startX: window.houseX, startY: window.houseY,
-            targetX: window.kümesX, targetY: window.kümesY,
-            progress: 0, speed: 0.015,
+            path:[{x:hx,y:hy},{x:kx,y:hy},{x:kx,y:ky}],
+            progress: 0, speed: 0.003,
             returning: false,
             amount: yumurta
           };

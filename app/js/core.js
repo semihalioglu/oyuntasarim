@@ -641,9 +641,7 @@ function loop(){
     if(S.pickup.progress>=1&&!S.pickup.returning){
       S.pickup.returning=true;
       S.pickup.progress=0;
-      let tmpX=S.pickup.startX,tmpY=S.pickup.startY;
-      S.pickup.startX=S.pickup.targetX;S.pickup.startY=S.pickup.targetY;
-      S.pickup.targetX=tmpX;S.pickup.targetY=tmpY;
+      S.pickup.path=S.pickup.path.slice().reverse();
       if(S.pickup.type==='milk'){
         let sut=S.pickup.amount;
         S.inv.SUT=(S.inv.SUT||0)+sut;
@@ -662,10 +660,16 @@ function loop(){
   }
   draw();
   if(S.pickup){
-    let t=S.pickup.progress;
-    let px=S.pickup.startX+(S.pickup.targetX-S.pickup.startX)*t;
-    let py=S.pickup.startY+(S.pickup.targetY-S.pickup.startY)*t;
-    Drawing.drawPickup(px,py,S.pickup.type,t);
+    let p=S.pickup.path;
+    let totalSegs=p.length-1;
+    let segProgress=S.pickup.progress*totalSegs;
+    let segIdx=Math.min(Math.floor(segProgress),totalSegs-1);
+    let segT=segProgress-segIdx;
+    let x1=p[segIdx].x,y1=p[segIdx].y,x2=p[segIdx+1].x,y2=p[segIdx+1].y;
+    let px=x1+(x2-x1)*segT;
+    let py=y1+(y2-y1)*segT;
+    let angle=Math.atan2(y2-y1,x2-x1);
+    Drawing.drawPickup(px,py,S.pickup.type,angle);
   }
   _saveFrameCounter++;
   if(_saveFrameCounter>=30){_saveFrameCounter=0;GameManager.save();}

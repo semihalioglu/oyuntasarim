@@ -313,10 +313,10 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
   }
 },
 
-drawPickup(x,y,type,progress){
-  X.save();X.translate(x,y);
-  let s=CL*0.4;
-  X.fillStyle='rgba(0,0,0,0.15)';X.beginPath();X.ellipse(0,s*0.5,s*0.6,s*0.06,0,0,Math.PI*2);X.fill();
+drawPickup(x,y,type,angle){
+  X.save();X.translate(x,y);X.rotate(angle);
+  let s=CL*0.8;
+  X.fillStyle='rgba(0,0,0,0.15)';X.beginPath();X.ellipse(0,s*0.5,s*0.55,s*0.06,0,0,Math.PI*2);X.fill();
   X.fillStyle='#f5f5f5';X.fillRect(-s*0.4,-s*0.25,s*0.8,s*0.35);
   X.fillStyle='#e0e0e0';X.fillRect(-s*0.38,-s*0.22,s*0.76,s*0.02);
   X.fillStyle='#42a5f5';X.fillRect(-s*0.35,-s*0.2,s*0.3,s*0.15);
@@ -326,10 +326,10 @@ drawPickup(x,y,type,progress){
   X.fillStyle='#555';X.beginPath();X.arc(-s*0.25,s*0.12,s*0.03,0,Math.PI*2);X.fill();
   X.beginPath();X.arc(s*0.25,s*0.12,s*0.03,0,Math.PI*2);X.fill();
   if(type==='milk'){
-    X.fillStyle='#fff';X.font=`bold ${s*0.3}px "Nunito",Arial,sans-serif`;X.textAlign='center';X.textBaseline='middle';
+    X.font=`bold ${s*0.3}px "Nunito",Arial,sans-serif`;X.textAlign='center';X.textBaseline='middle';
     X.fillText('🥛',0,-s*0.35);
   }else if(type==='egg'){
-    X.fillStyle='#fff';X.font=`bold ${s*0.3}px "Nunito",Arial,sans-serif`;X.textAlign='center';X.textBaseline='middle';
+    X.font=`bold ${s*0.3}px "Nunito",Arial,sans-serif`;X.textAlign='center';X.textBaseline='middle';
     X.fillText('🥚',0,-s*0.35);
   }
   X.restore();
