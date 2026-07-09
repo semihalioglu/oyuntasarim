@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.032';
-import UIManager from './uiManager.js?v=1.032';
-import GameManager from './gameManager.js?v=1.032';
-import Drawing from './drawing.js?v=1.032';
+import StorageManager from './storageManager.js?v=1.033';
+import UIManager from './uiManager.js?v=1.033';
+import GameManager from './gameManager.js?v=1.033';
+import Drawing from './drawing.js?v=1.033';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
@@ -172,14 +172,14 @@ function draw(){
   if(useTwoCols){
     rCol1X=gridRight+CL*1.0;
     rCol2X=W-CL*2.5;
-    rRowH=rAvailH/3.8;
-    rRow1Y=sceneTop+CL*1.5;
+    rRowH=rAvailH/3.2;
+    rRow1Y=sceneTop+CL*0.8;
     rRow2Y=rRow1Y+rRowH;
     rRow3Y=rRow2Y+rRowH;
   }else{
     rCol1X=gridRight+CL*0.5;
     rCol2X=rCol1X;
-    rRowH=rAvailH/4.0;
+    rRowH=rAvailH/3.5;
     rRow1Y=sceneTop+CL*0.2;
     rRow2Y=rRow1Y+rRowH;
     rRow3Y=rRow2Y+rRowH;
@@ -622,13 +622,13 @@ if(S.built.grid){
   X.restore();
   drawBuildingMenu();
 
-  if(plantMode){
-    let cr=GameManager.CROPS[plantMode];
+  if(window.plantMode){
+    let cr=GameManager.CROPS[window.plantMode];
     X.fillStyle='rgba(0,0,0,0.7)';X.fillRect(W/2-160,48,320,32);X.strokeStyle='#ff9800';X.lineWidth=2;X.strokeRect(W/2-160,48,320,32);
     X.fillStyle='#ff9800';X.font='bold 14px Nunito,sans-serif';X.textAlign='center';X.textBaseline='middle';
     X.fillText('🌱 Ekim Modu: '+cr.name+' — Tarlalara tıkla, çıkmak için boş yere tıkla',W/2,64);X.textAlign='left';
   }
-  if(harvestModeActive){
+  if(window.harvestModeActive){
     X.fillStyle='rgba(0,0,0,0.7)';X.fillRect(W/2-160,48,320,32);X.strokeStyle='#4caf50';X.lineWidth=2;X.strokeRect(W/2-160,48,320,32);
     X.fillStyle='#4caf50';X.font='bold 14px Nunito,sans-serif';X.textAlign='center';X.textBaseline='middle';
     X.fillText('🌾 Hasat Modu — Hazır tarlalara tıkla, çıkmak için boş yere tıkla',W/2,64);X.textAlign='left';
@@ -638,7 +638,7 @@ if(S.built.grid){
     X.fillStyle='#8d6e63';X.font='bold 14px Nunito,sans-serif';X.textAlign='center';X.textBaseline='middle';
     X.fillText('🚜 Sürme Modu — Sürülmemiş tarlalara tıkla, çıkmak için boş yere tıkla',W/2,64);X.textAlign='left';
   }
-  if(pesticideModeActive){
+  if(window.pesticideModeActive){
     X.fillStyle='rgba(0,0,0,0.7)';X.fillRect(W/2-160,48,320,32);X.strokeStyle='#7b5800';X.lineWidth=2;X.strokeRect(W/2-160,48,320,32);
     X.fillStyle='#fdd835';X.font='bold 14px Nunito,sans-serif';X.textAlign='center';X.textBaseline='middle';
     X.fillText('🐛 İlaçlama Modu — İlaçlanmamış tarlalara tıkla, çıkmak için boş yere tıkla',W/2,64);X.textAlign='left';

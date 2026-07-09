@@ -171,10 +171,10 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
   let rCol1X2,rCol2X2,rRow1Y2,rRow2Y2,rRow3Y2;
   if(use2C){
     rCol1X2=gridRight+CL*1.0;rCol2X2=W-CL*2.5;
-    let rRowH2=rAvailH2/3.8;rRow1Y2=sceneTop+CL*1.5;rRow2Y2=rRow1Y2+rRowH2;rRow3Y2=rRow2Y2+rRowH2;
+    let rRowH2=rAvailH2/3.2;rRow1Y2=sceneTop+CL*0.8;rRow2Y2=rRow1Y2+rRowH2;rRow3Y2=rRow2Y2+rRowH2;
   }else{
     rCol1X2=gridRight+CL*0.5;rCol2X2=rCol1X2;
-    let rRowH2=rAvailH2/4.0;rRow1Y2=sceneTop+CL*0.2;rRow2Y2=rRow1Y2+rRowH2;rRow3Y2=rRow2Y2+rRowH2;
+    let rRowH2=rAvailH2/3.5;rRow1Y2=sceneTop+CL*0.2;rRow2Y2=rRow1Y2+rRowH2;rRow3Y2=rRow2Y2+rRowH2;
   }
   if(S.built.kuyu){
     let kx,ky;
@@ -313,9 +313,9 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
     if(bestR<0)break;
     let from=connected[bestC];
     let to=remaining[bestR];
-    let midX=to.x,midY=from.y;
-    drawRoadSegment(from.x,from.y,midX,midY);
-    drawRoadSegment(midX,midY,to.x,to.y);
+    let adx=Math.abs(to.x-from.x),ady=Math.abs(to.y-from.y);
+    if(adx>ady){drawRoadSegment(from.x,from.y,to.x,from.y);drawRoadSegment(to.x,from.y,to.x,to.y)}
+    else{drawRoadSegment(from.x,from.y,from.x,to.y);drawRoadSegment(from.x,to.y,to.x,to.y)}
     connected.push(to);
     remaining.splice(bestR,1);
   }

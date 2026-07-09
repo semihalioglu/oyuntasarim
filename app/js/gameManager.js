@@ -1,4 +1,4 @@
-import StorageManager from './storageManager.js?v=1.032';
+import StorageManager from './storageManager.js?v=1.033';
 const GameManager={
 ROWS:5,COLS:10,
 SEASONS:['İlkbahar','Yaz','Sonbahar','Kış'],

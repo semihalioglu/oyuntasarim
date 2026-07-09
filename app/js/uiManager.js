@@ -1,5 +1,5 @@
-import GameManager from './gameManager.js?v=1.032';
-import Drawing from './drawing.js?v=1.032';
+import GameManager from './gameManager.js?v=1.033';
+import Drawing from './drawing.js?v=1.033';
 
 const S = GameManager.S;
 const CROPS = GameManager.CROPS;
@@ -324,6 +324,7 @@ const UIManager = {
     document.getElementById('hWeather').textContent = WEATHER_ICONS[S.weather] + ' ' + wNames[S.weather];
     let windIcon = S.windSpeed < 5 ? '&#127794;' : S.windSpeed < 10 ? '&#127796;' : '&#127744;';
     document.getElementById('hWind').innerHTML = windIcon + ' Rüzgar: ' + S.windSpeed + ' km/h';
+    let ver=document.getElementById('hVersion');if(ver)ver.textContent='v1.033';
   },
 
   toast: function(m) { let t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); },
@@ -963,7 +964,8 @@ const UIManager = {
     let mx = e.clientX, my = e.clientY;
     let sc = window.screenToScene(mx, my);
     let gx = sc.x - window.GX, gy = sc.y - window.GY;
-    let c = Math.floor(gx / window.CL), r = Math.floor(gy / window.CL);
+    let GCL = window.GRID_CL || window.CL;
+    let c = Math.floor(gx / GCL), r = Math.floor(gy / GCL);
 
     if (typeof window.barnX !== 'undefined') {
       let bDx = sc.x - window.barnX, bDy = sc.y - window.barnY;
