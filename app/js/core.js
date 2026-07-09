@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.030';
-import UIManager from './uiManager.js?v=1.030';
-import GameManager from './gameManager.js?v=1.030';
-import Drawing from './drawing.js?v=1.030';
+import StorageManager from './storageManager.js?v=1.031';
+import UIManager from './uiManager.js?v=1.031';
+import GameManager from './gameManager.js?v=1.031';
+import Drawing from './drawing.js?v=1.031';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
@@ -172,8 +172,8 @@ function draw(){
   if(useTwoCols){
     rCol1X=gridRight+CL*1.0;
     rCol2X=W-CL*2.5;
-    rRowH=rAvailH/4.5;
-    rRow1Y=sceneTop+CL*0.5;
+    rRowH=rAvailH/4.0;
+    rRow1Y=sceneTop+CL*1.5;
     rRow2Y=rRow1Y+rRowH;
     rRow3Y=rRow2Y+rRowH;
   }else{
