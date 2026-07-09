@@ -179,7 +179,7 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
   let rBottomLeftX2,rBottomRightX2,rBottomY2;
   if(use2C){
     let gridCX2=gridCX;let gridBottom2=gridBottom;
-    rBottomLeftX2=gridCX2-CL*3;rBottomRightX2=gridCX2+CL*3;
+    rBottomLeftX2=GX-CL*1.0;rBottomRightX2=GX+CL*3.0;
     rBottomY2=gridBottom2+CL*2.0;
     if(rBottomY2>H-48-CL*2.5)rBottomY2=H-48-CL*2.5;
   }
