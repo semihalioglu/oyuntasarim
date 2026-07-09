@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.035';
-import UIManager from './uiManager.js?v=1.035';
-import GameManager from './gameManager.js?v=1.035';
-import Drawing from './drawing.js?v=1.035';
+import StorageManager from './storageManager.js?v=1.036';
+import UIManager from './uiManager.js?v=1.036';
+import GameManager from './gameManager.js?v=1.036';
+import Drawing from './drawing.js?v=1.036';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
@@ -170,9 +170,9 @@ function draw(){
   let rCol1X,rCol2X,rRow1Y,rRow2Y,rRow3Y,rRowH;
 
   if(useTwoCols){
-    rCol1X=gridRight+CL*3.5;
-    rCol2X=W-CL*2.5;
-    rRowH=rAvailH/2.5;
+    rCol1X=gridRight+CL*3.0;
+    rCol2X=W-CL*2.0;
+    rRowH=rAvailH/3.0;
     rRow1Y=sceneTop+CL*0.5;
     rRow2Y=rRow1Y+rRowH;
     rRow3Y=rRow2Y+rRowH;
@@ -183,6 +183,14 @@ function draw(){
     rRow1Y=sceneTop+CL*0.2;
     rRow2Y=rRow1Y+rRowH;
     rRow3Y=rRow2Y+rRowH;
+  }
+
+  let rBottomLeftX,rBottomRightX,rBottomY;
+  if(useTwoCols){
+    rBottomLeftX=gridCX-CL*3;
+    rBottomRightX=gridCX+CL*3;
+    rBottomY=gridBottom+CL*2.0;
+    if(rBottomY>floorY-CL*2.5)rBottomY=floorY-CL*2.5;
   }
 
   let bScale=useTwoCols?1:0.75;
@@ -217,8 +225,8 @@ function draw(){
     Drawing.drawFenceSegment(kFfX,kFfY+kFfH,kFfX,kFfY);
   }
 
-  let fYX=barnX-barnS*0.6,fYY=barnY+barnS*0.8;
-  let fYW=barnS*1.5,fYH=barnS*0.8;
+  let fYX=barnX-barnS*0.8,fYY=barnY+barnS*0.85;
+  let fYW=barnS*1.8,fYH=barnS*1.0;
   if(S.built.ahır){
     Drawing.drawFenceSegment(fYX,fYY,fYX+fYW,fYY);
     Drawing.drawFenceSegment(fYX+fYW,fYY,fYX+fYW,fYY+fYH);
@@ -311,13 +319,13 @@ function draw(){
 
   peynirS=CL*(ISLANDSCAPE?1.8:1.4)*bScale;
   if(S.buildingPos.peynirfab){peynirX=S.buildingPos.peynirfab.x;peynirY=S.buildingPos.peynirfab.y}
-  else{peynirX=rCol2X;peynirY=rRow3Y}
+  else{peynirX=useTwoCols?rBottomRightX:rCol2X;peynirY=useTwoCols?rBottomY:rRow3Y}
   window.peynirX=peynirX;window.peynirY=peynirY;window.peynirS=peynirS;
   if(S.built.peynirfab){Drawing.drawPeynirFab(peynirX,peynirY,peynirS)}
 
   salcaS=CL*(ISLANDSCAPE?1.8:1.4)*bScale;
   if(S.buildingPos.salçafab){salcaX=S.buildingPos.salçafab.x;salcaY=S.buildingPos.salçafab.y}
-  else{salcaX=rCol1X;salcaY=rRow3Y}
+  else{salcaX=useTwoCols?rBottomLeftX:rCol1X;salcaY=useTwoCols?rBottomY:rRow3Y}
   window.salcaX=salcaX;window.salcaY=salcaY;window.salcaS=salcaS;
   if(S.built.salçafab){Drawing.drawSalcaFab(salcaX,salcaY,salcaS)}
 

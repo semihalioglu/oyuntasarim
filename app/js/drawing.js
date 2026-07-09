@@ -170,11 +170,18 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
   let use2C=rightW2>CL*5.5;
   let rCol1X2,rCol2X2,rRow1Y2,rRow2Y2,rRow3Y2;
   if(use2C){
-    rCol1X2=gridRight+CL*3.5;rCol2X2=W-CL*2.5;
-    let rRowH2=rAvailH2/2.5;rRow1Y2=sceneTop+CL*0.5;rRow2Y2=rRow1Y2+rRowH2;rRow3Y2=rRow2Y2+rRowH2;
+    rCol1X2=gridRight+CL*3.0;rCol2X2=W-CL*2.0;
+    let rRowH2=rAvailH2/3.0;rRow1Y2=sceneTop+CL*0.5;rRow2Y2=rRow1Y2+rRowH2;rRow3Y2=rRow2Y2+rRowH2;
   }else{
     rCol1X2=gridRight+CL*0.5;rCol2X2=rCol1X2;
     let rRowH2=rAvailH2/3.2;rRow1Y2=sceneTop+CL*0.2;rRow2Y2=rRow1Y2+rRowH2;rRow3Y2=rRow2Y2+rRowH2;
+  }
+  let rBottomLeftX2,rBottomRightX2,rBottomY2;
+  if(use2C){
+    let gridCX2=gridCX;let gridBottom2=gridBottom;
+    rBottomLeftX2=gridCX2-CL*3;rBottomRightX2=gridCX2+CL*3;
+    rBottomY2=gridBottom2+CL*2.0;
+    if(rBottomY2>H-48-CL*2.5)rBottomY2=H-48-CL*2.5;
   }
   if(S.built.kuyu){
     let kx,ky;
@@ -216,13 +223,13 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
   if(S.built.peynirfab){
     let px,py;
     if(S.buildingPos.peynirfab){px=S.buildingPos.peynirfab.x;py=S.buildingPos.peynirfab.y}
-    else{px=rCol2X2;py=rRow3Y2}
+    else{px=use2C?rBottomRightX2:rCol2X2;py=use2C?rBottomY2:rRow3Y2}
     targets.push({x:px,y:py,k:'peynirfab'});
   }
   if(S.built.salçafab){
     let sx,sy;
     if(S.buildingPos.salçafab){sx=S.buildingPos.salçafab.x;sy=S.buildingPos.salçafab.y}
-    else{sx=rCol1X2;sy=rRow3Y2}
+    else{sx=use2C?rBottomLeftX2:rCol1X2;sy=use2C?rBottomY2:rRow3Y2}
     targets.push({x:sx,y:sy,k:'salçafab'});
   }
   if(targets.length===0)return;
