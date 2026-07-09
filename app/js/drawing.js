@@ -1,4 +1,23 @@
 const Drawing = {
+_spriteCache:{},
+_spritePaths:{barn:'app/img/buildings/barn.png',kümes:'app/img/buildings/kümes.png',degirmen:'app/img/buildings/degirmen.png',kuyu:'app/img/buildings/kuyu.png'},
+_loadSprite(key){
+  if(this._spriteCache[key])return this._spriteCache[key];
+  if(this._spriteCache[key]===false)return null;
+  let img=new Image();
+  img.src=this._spritePaths[key];
+  img.onload=()=>{this._spriteCache[key]=img};
+  this._spriteCache[key]=false;
+  return null;
+},
+drawSprite(key,x,y,s){
+  let img=this._loadSprite(key);
+  if(!img)return false;
+  let aspect=img.naturalWidth/img.naturalHeight;
+  let w=s*1.6,h=w/aspect;
+  X.drawImage(img,x-w/2,y-h/2,w,h);
+  return true;
+},
 drawPixelRect(x,y,w,h,color){
   X.fillStyle=color;X.fillRect(Math.floor(x),Math.floor(y),Math.ceil(w),Math.ceil(h));
 },
@@ -495,6 +514,7 @@ drawHouse(x,y,s){
 },
 
 drawBarn(x,y,s){
+  if(this.drawSprite('barn',x,y,s))return;
   X.save();X.translate(x,y);
 
   // Gölge
@@ -623,6 +643,7 @@ drawBarn(x,y,s){
 },
 
 drawKümes(x,y,s){
+  if(this.drawSprite('kümes',x,y,s))return;
   X.save();X.translate(x,y);
 
   // Gölge
@@ -1122,6 +1143,7 @@ drawHayBale(x,y,s){
 },
 
 drawWindmill(x,y,s){
+  if(this.drawSprite('degirmen',x,y,s))return;
   X.save();X.translate(x,y);
   X.fillStyle='rgba(0,0,0,0.12)';X.beginPath();X.ellipse(0,s*0.6,s*0.45,s*0.08,0,0,Math.PI*2);X.fill();
   // Gövde - beyaz taş
@@ -1520,6 +1542,7 @@ drawMiniKümes(ctx,s){
 },
 
 drawWell(x,y,s){
+  if(this.drawSprite('kuyu',x,y,s))return;
   X.save();X.translate(x,y);
 
   // Gölge

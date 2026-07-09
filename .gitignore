@@ -1,2 +1,8 @@
 *.py
 *.png
+!app/img/buildings/*.png
+*.obj
+*.mtl
+*.fbx
+*.blend
+Farm Buildings - Sept 2018/
