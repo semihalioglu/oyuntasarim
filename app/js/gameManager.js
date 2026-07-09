@@ -1,4 +1,4 @@
-import StorageManager from './storageManager.js?v=1.027';
+import StorageManager from './storageManager.js?v=1.028';
 const GameManager={
 ROWS:5,COLS:10,
 SEASONS:['İlkbahar','Yaz','Sonbahar','Kış'],
@@ -576,20 +576,22 @@ isValidPlacement(key,x,y){
   })();
   let hy=window.sceneTop;
   if(key!=='grid'&&Math.abs(x-hx)<window.CL*3&&Math.abs(y-hy)<window.CL*3)return false;
+  let GCL=window.GRID_CL||window.CL;
   if(key!=='grid'){
-    if(S.built.grid&&x>window.GX-window.CL*2&&x<window.GX+COLS*window.CL+window.CL*2&&y>window.GY-window.CL*2&&y<window.GY+ROWS*window.CL+window.CL*2)return false;
+    if(S.built.grid&&x>window.GX-GCL*2&&x<window.GX+COLS*GCL+GCL*2&&y>window.GY-GCL*2&&y<window.GY+ROWS*GCL+GCL*2)return false;
   }
   if(key==='grid'){
-    if(x<window.CL*2||x+COLS*window.CL>window.W-window.CL*2)return false;
-    if(y<window.sceneTop+window.CL||y+ROWS*window.CL>window.H-48-window.CL*2)return false;
+    if(x<GCL*2||x+COLS*GCL>window.W-GCL*2)return false;
+    if(y<window.sceneTop+GCL||y+ROWS*GCL>window.H-48-GCL*2)return false;
   }
   return true;
 },
 
 getDefaultKuyuPos(){
   const{COLS,ROWS}=this;
-  let gcx=window.GX+COLS*window.CL/2;
-  let gbottom=window.GY+ROWS*window.CL;
+  let GCL=window.GRID_CL||window.CL;
+  let gcx=window.GX+COLS*GCL/2;
+  let gbottom=window.GY+ROWS*GCL;
   let mwy=window.H-48-window.CL*1.2;
   let ky=Math.min(gbottom+window.CL*1.5,mwy);
   return{x:gcx,y:ky,dx:0,dy:Math.min(gbottom+window.CL*1.5,mwy)-window.GY};
@@ -604,7 +606,8 @@ getBuildingAt(mx,my){
     let k=keys[i];
     if(k==='grid'){
       if(!S.built.grid)continue;
-      if(sx>=window.GX&&sx<=window.GX+COLS*window.CL&&sy>=window.GY&&sy<=window.GY+ROWS*window.CL)return k;
+      let GCL=window.GRID_CL||window.CL;
+      if(sx>=window.GX&&sx<=window.GX+COLS*GCL&&sy>=window.GY&&sy<=window.GY+ROWS*GCL)return k;
     }else if(k==='kuyu'){
       if(!S.built.kuyu)continue;
       if(typeof window.wellS==='undefined')continue;

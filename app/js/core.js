@@ -1,14 +1,14 @@
-import StorageManager from './storageManager.js?v=1.027';
-import UIManager from './uiManager.js?v=1.027';
-import GameManager from './gameManager.js?v=1.027';
-import Drawing from './drawing.js?v=1.027';
+import StorageManager from './storageManager.js?v=1.028';
+import UIManager from './uiManager.js?v=1.028';
+import GameManager from './gameManager.js?v=1.028';
+import Drawing from './drawing.js?v=1.028';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
 const GRID_LINKED_KUYU=true;
 
 let W,H,DPR,isMobile;
-let GX,GY,CL,sceneTop,ISLANDSCAPE;
+let GX,GY,CL,GRID_CL,sceneTop,ISLANDSCAPE;
 let barnX=0,barnY=0,barnS=0;
 let kümesX=0,kümesY=0,kümesS=0;
 let wellX=0,wellY=0,wellS=0;
@@ -61,13 +61,15 @@ function calcLayout(){
   let areaW=W-8;
   if(ISLANDSCAPE){
     CL=Math.min(Math.floor(areaW/17),Math.floor(areaH/9),40);
+    GRID_CL=W<800?Math.floor(CL*0.6):CL;
     sceneTop=hudH+Math.floor(areaH*0.16);
-    GX=(W-COLS*CL)/2;GY=hudH+Math.floor(areaH*0.28);
+    GX=(W-COLS*GRID_CL)/2;GY=hudH+Math.floor(areaH*0.28);
   }else{
     let pad=Math.floor(W*0.22);
     CL=Math.min(Math.floor((areaW-pad*2)/COLS),Math.floor(areaH/13),34);
+    GRID_CL=Math.floor(CL*0.6);
     sceneTop=hudH+Math.floor(areaH*0.06);
-    GX=pad+Math.floor((areaW-pad*2-COLS*CL)/2);GY=hudH+Math.floor(areaH*0.40);
+    GX=pad+Math.floor((areaW-pad*2-COLS*GRID_CL)/2);GY=hudH+Math.floor(areaH*0.40);
   }
 }
 
@@ -104,9 +106,9 @@ function draw(){
   if(!X){return;}
   X.clearRect(0,0,W,H);
   calcLayout();
-  window.W=W;window.H=H;window.CL=CL;window.GX=GX;window.GY=GY;window.sceneTop=sceneTop;window.ISLANDSCAPE=ISLANDSCAPE;
+  window.W=W;window.H=H;window.CL=CL;window.GRID_CL=GRID_CL;window.GX=GX;window.GY=GY;window.sceneTop=sceneTop;window.ISLANDSCAPE=ISLANDSCAPE;
   zoomLevel+=(zoomTarget-zoomLevel)*0.15;
-  if(Math.abs(zoomLevel-zoomTarget)<0.005)zoomLevel=zoomTarget;
+  if(Math.abs(zoomTarget-zoomLevel)<0.005)zoomLevel=zoomTarget;
   if(S.buildingPos.grid){
     let off=S.buildingPos.grid;
     GX=off.x;GY=off.y;
@@ -132,14 +134,15 @@ function draw(){
 
   X.save();
   X.translate(panX,panY);X.translate(zoomCX,zoomCY);X.scale(zoomLevel,zoomLevel);X.translate(-zoomCX,-zoomCY);
+
   Drawing.drawSky();
   Drawing.drawMountains();
   Drawing.drawGrassBackground();
 
-  let gridCX=GX+COLS*CL/2;
-  let gridCY=GY+ROWS*CL/2;
-  let gridBottom=GY+ROWS*CL;
-  let gridRight=GX+COLS*CL;
+  let gridCX=GX+COLS*GRID_CL/2;
+  let gridCY=GY+ROWS*GRID_CL/2;
+  let gridBottom=GY+ROWS*GRID_CL;
+  let gridRight=GX+COLS*GRID_CL;
 
   let houseScale=ISLANDSCAPE?2.8:2.0;
   let houseS=CL*houseScale;
@@ -153,7 +156,7 @@ function draw(){
   Drawing.drawHouse(houseX,houseY,houseS);
 
   if(S.built.grid){
-    let fPad=CL*0.3;
+    let fPad=GRID_CL*0.3;
     Drawing.drawFenceSegment(GX-fPad,GY-fPad,gridRight+fPad,GY-fPad);
     Drawing.drawFenceSegment(gridRight+fPad,GY-fPad,gridRight+fPad,gridBottom+fPad);
     Drawing.drawFenceSegment(gridRight+fPad,gridBottom+fPad,GX-fPad,gridBottom+fPad);
@@ -333,48 +336,48 @@ function draw(){
 
 if(S.built.grid){
   X.fillStyle='#5d4037';
-  X.fillRect(GX-5,GY-5,COLS*CL+10,ROWS*CL+10);
+  X.fillRect(GX-5,GY-5,COLS*GRID_CL+10,ROWS*GRID_CL+10);
   X.fillStyle='#6d4c41';
-  X.fillRect(GX-3,GY-3,COLS*CL+6,ROWS*CL+6);
-  X.fillStyle='#3e2723';X.fillRect(GX,GY,COLS*CL,ROWS*CL);
+  X.fillRect(GX-3,GY-3,COLS*GRID_CL+6,ROWS*GRID_CL+6);
+  X.fillStyle='#3e2723';X.fillRect(GX,GY,COLS*GRID_CL,ROWS*GRID_CL);
 
   let t=Date.now();
   for(let r=0;r<ROWS;r++){
     for(let c=0;c<COLS;c++){
-      let x=GX+c*CL,y=GY+r*CL;
+      let x=GX+c*GRID_CL,y=GY+r*GRID_CL;
       let p=GameManager.getP(r,c);
       let plowed=S.plowed.includes(r*COLS+c);
       if(!plowed){
-        X.fillStyle='#2e5a1e';X.fillRect(x,y,CL-1,CL-1);
-        if((r+c)%3===0){X.fillStyle='rgba(40,90,20,0.4)';X.fillRect(x+2,y+2,CL-5,CL-5)}
+        X.fillStyle='#2e5a1e';X.fillRect(x,y,GRID_CL-1,GRID_CL-1);
+        if((r+c)%3===0){X.fillStyle='rgba(40,90,20,0.4)';X.fillRect(x+2,y+2,GRID_CL-5,GRID_CL-5)}
       }else if(!p.crop){
         let wetSoil=p.w;
-        X.fillStyle=wetSoil?'#3e2723':'#6d4c41';X.fillRect(x,y,CL-1,CL-1);
-        X.fillStyle=wetSoil?'rgba(30,15,10,0.3)':'rgba(93,64,55,0.3)';X.fillRect(x+1,y+1,CL-3,CL-3);
-        for(let i=1;i<3;i++){X.strokeStyle=wetSoil?'rgba(50,30,20,0.3)':'rgba(80,60,40,0.3)';X.lineWidth=0.5;X.beginPath();X.moveTo(x+3,y+i*CL/3);X.lineTo(x+CL-4,y+i*CL/3);X.stroke()}
+        X.fillStyle=wetSoil?'#3e2723':'#6d4c41';X.fillRect(x,y,GRID_CL-1,GRID_CL-1);
+        X.fillStyle=wetSoil?'rgba(30,15,10,0.3)':'rgba(93,64,55,0.3)';X.fillRect(x+1,y+1,GRID_CL-3,GRID_CL-3);
+        for(let i=1;i<3;i++){X.strokeStyle=wetSoil?'rgba(50,30,20,0.3)':'rgba(80,60,40,0.3)';X.lineWidth=0.5;X.beginPath();X.moveTo(x+3,y+i*GRID_CL/3);X.lineTo(x+GRID_CL-4,y+i*GRID_CL/3);X.stroke()}
       }else{
-        X.fillStyle=p.w?'#351c15':'#4e342e';X.fillRect(x,y,CL-1,CL-1);
+        X.fillStyle=p.w?'#351c15':'#4e342e';X.fillRect(x,y,GRID_CL-1,GRID_CL-1);
         let cr=GameManager.CROPS[p.crop];
         if(cr){
           let age=p.age/365;let g=Math.min(1,age/cr.my);
           if(p.nextHarvest<=0){
-            Drawing.drawHarvestProduct(x+CL/2,y+CL/2,CL*0.85,p.crop,cr);
+            Drawing.drawHarvestProduct(x+GRID_CL/2,y+GRID_CL/2,GRID_CL*0.85,p.crop,cr);
           }else{
-            Drawing.drawCropSprite(x+CL/2,y+CL*0.75,CL*0.7,p.crop,g,cr);
+            Drawing.drawCropSprite(x+GRID_CL/2,y+GRID_CL*0.75,GRID_CL*0.7,p.crop,g,cr);
           }
         }
         if(p.nextHarvest<=0&&cr){
-          Drawing.drawCropSprite(x+CL/2,y+CL/2,CL*0.9,p.crop,1,cr);
+          Drawing.drawCropSprite(x+GRID_CL/2,y+GRID_CL/2,GRID_CL*0.9,p.crop,1,cr);
           X.save();
           X.shadowColor='#ffd700';X.shadowBlur=8;
           X.strokeStyle='#ffd700';X.lineWidth=2.5;
-          X.beginPath();X.roundRect(x+1,y+1,CL-2,CL-2,3);X.stroke();
+          X.beginPath();X.roundRect(x+1,y+1,GRID_CL-2,GRID_CL-2,3);X.stroke();
           X.restore();
           X.strokeStyle='rgba(255,215,0,0.2)';X.lineWidth=4;
-          X.beginPath();X.roundRect(x-0.5,y-0.5,CL,CL,4);X.stroke();
+          X.beginPath();X.roundRect(x-0.5,y-0.5,GRID_CL,GRID_CL,4);X.stroke();
         }
       }
-      if(S.sel===r*COLS+c){X.strokeStyle='#ffe082';X.lineWidth=2;X.strokeRect(x+1,y+1,CL-2,CL-2)}
+      if(S.sel===r*COLS+c){X.strokeStyle='#ffe082';X.lineWidth=2;X.strokeRect(x+1,y+1,GRID_CL-2,GRID_CL-2)}
       if(p.crop&&!p.p){
         let t=Date.now()/1000;
         let seed=p.r*17+p.c*31;
@@ -411,7 +414,7 @@ if(S.built.grid){
   let pipeColor=isIrrigating?'#42a5f5':'#78909c';
 
   let sprinklerX=gridCX;
-  let sprinklerY=GY+ROWS*CL*0.5;
+  let sprinklerY=GY+ROWS*GRID_CL*0.5;
   let pipeStartYW=wellY-wellS*0.35;
 
   X.strokeStyle='rgba(0,0,0,0.2)';X.lineWidth=6;
@@ -460,7 +463,7 @@ if(S.built.grid){
       let riseH=CL*1.2*risePhase*(1-fallPhase);
       let dropY=emitY-riseH+fallPhase*fallPhase*CL*1.5;
       let alpha=0.7*(1-Math.abs(cycleT-0.7));
-      if(alpha>0.05&&dropY>=GY&&dropY<=GY+ROWS*CL&&dx>=GX&&dx<=GX+COLS*CL){
+      if(alpha>0.05&&dropY>=GY&&dropY<=GY+ROWS*GRID_CL&&dx>=GX&&dx<=GX+COLS*GRID_CL){
         X.strokeStyle=`rgba(100,181,246,${alpha})`;
         X.lineWidth=1.2;
         X.beginPath();X.moveTo(dx,dropY-3);X.lineTo(dx-0.5,dropY+3);X.stroke();
@@ -471,10 +474,10 @@ if(S.built.grid){
     for(let i=0;i<20;i++){
       let seed=i*97.31+t*0.004;
       let angle=(seed%(Math.PI*2));
-      let ringDist=CL*0.8+((seed*3)%CL*2);
+      let ringDist=GRID_CL*0.8+((seed*3)%GRID_CL*2);
       let rdx=sprinklerX+Math.cos(angle)*ringDist;
-      let rdy=sprinklerY+CL*0.3+Math.sin(angle*0.5)*CL*0.3;
-      if(rdy>=GY&&rdy<=GY+ROWS*CL&&rdx>=GX&&rdx<=GX+COLS*CL){
+      let rdy=sprinklerY+GRID_CL*0.3+Math.sin(angle*0.5)*GRID_CL*0.3;
+      if(rdy>=GY&&rdy<=GY+ROWS*GRID_CL&&rdx>=GX&&rdx<=GX+COLS*GRID_CL){
         let ringPhase=(t*0.005+i*0.5)%1.5;
         if(ringPhase<1){
           let ringR=ringPhase*6;
@@ -497,8 +500,8 @@ if(S.built.grid){
 }
 
   if(S.tractorActive){
-    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){X.fillStyle='rgba(255,255,255,0.05)';X.fillRect(GX+c*CL,GY+r*CL,CL-1,CL-1)}
-    let tx=GX+COLS*CL/2,ty=GY+ROWS*CL/2;
+    for(let r=0;r<ROWS;r++)for(let c=0;c<COLS;c++){X.fillStyle='rgba(255,255,255,0.05)';X.fillRect(GX+c*GRID_CL,GY+r*GRID_CL,GRID_CL-1,GRID_CL-1)}
+    let tx=GX+COLS*GRID_CL/2,ty=GY+ROWS*GRID_CL/2;
     X.fillStyle='#1a1a1a';X.beginPath();X.arc(tx-12,ty+8,10,0,Math.PI*2);X.fill();
     X.fillStyle='#333';X.beginPath();X.arc(tx-12,ty+8,7,0,Math.PI*2);X.fill();
     X.fillStyle='#1a1a1a';X.beginPath();X.arc(tx+15,ty+10,6,0,Math.PI*2);X.fill();
@@ -511,18 +514,18 @@ if(S.built.grid){
 
   let dl=getDaylight();
   let isNight=dl<0.4;
-  let gridCY2=GY+ROWS*CL/2;
-  let gridBottom2=GY+ROWS*CL;
-  let gridCX2=GX+COLS*CL/2;
+  let gridCY2=GY+ROWS*GRID_CL/2;
+  let gridBottom2=GY+ROWS*GRID_CL;
+  let gridCX2=GX+COLS*GRID_CL/2;
   lampPositions=[
     {x:houseX-houseS*0.9,y:houseY+houseS*0.8,tip:'guzel'},
     {x:houseX+houseS*0.9,y:houseY+houseS*0.8,tip:'guzel'},
     {x:GX-CL*0.6,y:GY-CL*0.3,tip:'basit'},
-    {x:GX+COLS*CL+CL*0.6,y:GY-CL*0.3,tip:'basit'},
-    {x:GX-CL*0.6,y:GY+ROWS*CL*0.5,tip:'basit'},
-    {x:GX+COLS*CL+CL*0.6,y:GY+ROWS*CL*0.5,tip:'basit'},
+    {x:GX+COLS*GRID_CL+CL*0.6,y:GY-CL*0.3,tip:'basit'},
+    {x:GX-CL*0.6,y:GY+ROWS*GRID_CL*0.5,tip:'basit'},
+    {x:GX+COLS*GRID_CL+CL*0.6,y:GY+ROWS*GRID_CL*0.5,tip:'basit'},
     {x:GX-CL*0.6,y:gridBottom2+CL*0.3,tip:'basit'},
-    {x:GX+COLS*CL+CL*0.6,y:gridBottom2+CL*0.3,tip:'basit'},
+    {x:GX+COLS*GRID_CL+CL*0.6,y:gridBottom2+CL*0.3,tip:'basit'},
     {x:barnX-barnS*0.5,y:barnY+barnS*0.7,tip:'guzel'},
     {x:kümesX-kümesS*0.5,y:kümesY+kümesS*0.7,tip:'guzel'}
   ];
@@ -593,9 +596,9 @@ if(S.built.grid){
     X.globalAlpha=0.5;
     if(S.dragging==='grid'){
       X.fillStyle=valid?'rgba(100,200,100,0.3)':'rgba(200,100,100,0.3)';
-      X.fillRect(dx,dy,COLS*CL,ROWS*CL);
+      X.fillRect(dx,dy,COLS*GRID_CL,ROWS*GRID_CL);
       X.strokeStyle=valid?'#4caf50':'#e53935';X.lineWidth=3;
-      X.strokeRect(dx,dy,COLS*CL,ROWS*CL);
+      X.strokeRect(dx,dy,COLS*GRID_CL,ROWS*GRID_CL);
     }else if(S.dragging==='ahır'){
       Drawing.drawBarn(dx,dy,CL*2.5);
     }else if(S.dragging==='kümes'){
@@ -729,7 +732,7 @@ function startGame(){
   document.getElementById('loginBg').style.display='none';
 
   window.X=X;window.CV=CV;window.W=W;window.H=H;window.DPR=DPR;window.isMobile=isMobile;
-  window.S=S;window.CF=CF;window.GX=GX;window.GY=GY;window.CL=CL;window.sceneTop=sceneTop;
+  window.S=S;window.CF=CF;window.GX=GX;window.GY=GY;window.CL=CL;window.GRID_CL=GRID_CL;window.sceneTop=sceneTop;
   window.GameManager=GameManager;
   window.ISLANDSCAPE=ISLANDSCAPE;window.GRID_LINKED_KUYU=GRID_LINKED_KUYU;window.ROWS=ROWS;window.COLS=COLS;
   window.barnX=barnX;window.barnY=barnY;window.barnS=barnS;
@@ -789,7 +792,7 @@ function startGame(){
     CV.addEventListener('touchend',UIManager.handleTouchEnd);
     CV.addEventListener('wheel',UIManager.handleWheel,{passive:false});
     document.addEventListener('keydown',UIManager.handleKeyDown);
-    window.addEventListener('resize',function(){resize();calcLayout();window.W=W;window.H=H;window.GX=GX;window.GY=GY;window.CL=CL;window.sceneTop=sceneTop;window.ISLANDSCAPE=ISLANDSCAPE;window.DPR=DPR;window.isMobile=isMobile});
+    window.addEventListener('resize',function(){resize();calcLayout();window.W=W;window.H=H;window.GX=GX;window.GY=GY;window.CL=CL;window.GRID_CL=GRID_CL;window.sceneTop=sceneTop;window.ISLANDSCAPE=ISLANDSCAPE;window.DPR=DPR;window.isMobile=isMobile});
   }
 
   UIManager.updateHUD();

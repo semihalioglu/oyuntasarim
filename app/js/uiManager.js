@@ -1,5 +1,5 @@
-import GameManager from './gameManager.js?v=1.027';
-import Drawing from './drawing.js?v=1.027';
+import GameManager from './gameManager.js?v=1.028';
+import Drawing from './drawing.js?v=1.028';
 
 const S = GameManager.S;
 const CROPS = GameManager.CROPS;
@@ -796,7 +796,7 @@ const UIManager = {
       let k = keys[i];
       if (k === 'grid') {
         if (!S.built.grid) continue;
-        if (sx >= window.GX && sx <= window.GX + COLS * window.CL && sy >= window.GY && sy <= window.GY + ROWS * window.CL) return k;
+        if (sx >= window.GX && sx <= window.GX + COLS * (window.GRID_CL||window.CL) && sy >= window.GY && sy <= window.GY + ROWS * (window.GRID_CL||window.CL)) return k;
       } else if (k === 'kuyu') {
         if (!S.built.kuyu) continue;
         if (typeof window.wellS === 'undefined') continue;
@@ -882,8 +882,8 @@ const UIManager = {
   },
 
   getDefaultKuyuPos: function() {
-    let gcx = window.GX + COLS * window.CL / 2;
-    let gbottom = window.GY + ROWS * window.CL;
+    let gcx = window.GX + COLS * (window.GRID_CL||window.CL) / 2;
+    let gbottom = window.GY + ROWS * (window.GRID_CL||window.CL);
     let mwy = window.H - 48 - window.CL * 1.2;
     let ky = Math.min(gbottom + window.CL * 1.5, mwy);
     return { x: gcx, y: ky, dx: 0, dy: Math.min(gbottom + window.CL * 1.5, mwy) - window.GY };
@@ -902,11 +902,11 @@ const UIManager = {
     let hy = window.sceneTop;
     if (key !== 'grid' && Math.abs(x - hx) < window.CL * 3 && Math.abs(y - hy) < window.CL * 3) return false;
     if (key !== 'grid') {
-      if (S.built.grid && x > window.GX - window.CL * 2 && x < window.GX + COLS * window.CL + window.CL * 2 && y > window.GY - window.CL * 2 && y < window.GY + ROWS * window.CL + window.CL * 2) return false;
+      if (S.built.grid && x > window.GX - (window.GRID_CL||window.CL) * 2 && x < window.GX + COLS * (window.GRID_CL||window.CL) + (window.GRID_CL||window.CL) * 2 && y > window.GY - (window.GRID_CL||window.CL) * 2 && y < window.GY + ROWS * (window.GRID_CL||window.CL) + (window.GRID_CL||window.CL) * 2) return false;
     }
     if (key === 'grid') {
-      if (x < window.CL * 2 || x + COLS * window.CL > window.W - window.CL * 2) return false;
-      if (y < window.sceneTop + window.CL || y + ROWS * window.CL > window.H - 48 - window.CL * 2) return false;
+      if (x < (window.GRID_CL||window.CL) * 2 || x + COLS * (window.GRID_CL||window.CL) > window.W - (window.GRID_CL||window.CL) * 2) return false;
+      if (y < window.sceneTop + (window.GRID_CL||window.CL) || y + ROWS * (window.GRID_CL||window.CL) > window.H - 48 - (window.GRID_CL||window.CL) * 2) return false;
     }
     return true;
   },
