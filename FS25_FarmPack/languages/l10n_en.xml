@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <texts>
+<!--animal-->
+        <text name="storeItem_cowBarnOld"                text="Old Cow Barn"/>
+<!--barn-->
+        <text name="storeItem_barnOld01"                 text="Barn 1"/>
+        <text name="storeItem_barnOld02"                 text="Barn 2 with Loft"/>
+        <text name="function_objectStorageBarn"          text="Storage for bales in the attic"/>
+        <text name="storeItem_barnOld03"                 text="Barn 3"/>
+        <text name="storeItem_barnOld04"                 text="Barn 4"/>
+<!--drivingSilo-->
+        <text name="storeItem_bunkerSilo01"              text="Drive-through silo"/>
+        <text name="storeItem_bunkerSilo02"              text="Wedge silo"/>
+<!--manureHeap-->
+        <text name="storeItem_manureHeap01"              text="Small Manure Heap"/>
+        <text name="storeItem_manureHeap02"              text="Large Manure Heap"/>
+        <text name="storeItem_manureHeapExtension01"     text="Small Manure Heap Extension"/>
+        <text name="storeItem_manureHeapExtension02"     text="Large Manure Heap Extension"/>
+<!--manureStorage-->
+        <text name="storeItem_manurePit01"               text="Manure pit 1"/>
+        <text name="storeItem_manurePit02"               text="Manure pit 2"/>
+        <text name="storeItem_manureTank01"              text="Small Manure Tank"/>
+        <text name="storeItem_manureTank02"              text="Medium Manure Tank"/>
+        <text name="storeItem_manureTank03"              text="Large Manure Tank"/>
+        <text name="storeItem_manureTankExtension02"     text="Manure Tank Extension"/>
+<!--objectStorage-->
+        <text name="storeItem_barnOldBaleStorage01"      text="Barn 1 with Object Storage"/>
+        <text name="storeItem_barnOldBaleStorage02"      text="Barn 2 with Object Storage"/>
+<!--shelters-->
+        <text name="storeItem_shelter01"                 text="Shelter 1"/>
+        <text name="storeItem_shelter02"                 text="Shelter 2"/>
+        <text name="storeItem_shelter03"                 text="Shelter 3"/>
+        <text name="storeItem_shelter04"                 text="Shelter 4"/>
+        <text name="storeItem_shelter05"                 text="Shelter 5"/>
+<!--silo-->
+        <text name="storeItem_barnSilo01"                text="Barn 1 with Farm Silo"/>
+        <text name="storeItem_barnSilo02"                text="Barn 2 with Farm Silo"/>
+    </texts>
+</l10n>

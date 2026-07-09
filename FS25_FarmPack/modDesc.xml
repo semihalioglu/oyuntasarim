@@ -1,0 +1,536 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<modDesc descVersion="109">
+    <author>Kastor [D-S-Agrarservice]</author>
+    <version>1.0.0.6</version>
+
+    <title>
+        <en>Farm Building Pack</en>
+        <de>Hofgebäude Pack</de>
+        <fr>Pack De Construction De Ferme</fr>
+    </title>
+
+    <description>
+        <en><![CDATA[A versatile farm building pack with a total of 26 objects for small to medium-sized farms – from barns and halls to cowsheds and silos.
+Old Cow Barn
+Category: Animal Pens
+Price: $185,000
+Daily upkeep: $45
+Animals: 80 Cows
+
+Barn 1
+Category: Sheds
+Price: $45,000
+Daily upkeep: $10
+
+Barn 2 with Loft
+Category: Storages
+Price: $38,000
+Capacity: 1000 Bale
+Daily upkeep: $10
+
+Barn 3
+Category: Sheds
+Price: $75,000
+Daily upkeep: $15
+
+Barn 4
+Category: Sheds
+Price: $62,000
+Daily upkeep: $15
+
+Drive-through silo
+Category: Grain silos
+Price: $25,000
+Daily upkeep: $5
+
+Wedge silo
+Category: Grain silos
+Price: $28,000
+Daily upkeep: $5
+
+Small Manure Heap
+Category: Grain silos
+Price: $12,000
+Capacity: 600000L
+Daily upkeep: $5
+
+Large Manure Heap
+Category: Grain silos
+Price: $16,000
+Capacity: 1000000L
+Daily upkeep: $5
+
+Small Manure Tank
+Category: Grain silos
+Price: $25,000
+Capacity: 500000L
+Daily upkeep: $20
+
+Medium Manure Tank
+Category: Grain silos
+Price: $35,000
+Capacity: 800000L
+Daily upkeep: $20
+
+Large Manure Tank
+Category: Grain silos
+Price: $40,000
+Capacity: 1200000L
+Daily upkeep: $25
+
+Manure pit 1
+Category: Grain silos
+Price: $18,000
+Capacity: 500000L
+Daily upkeep: $10
+
+Manure pit 2
+Category: Grain silos
+Price: $18,000
+Capacity: 500000L
+Daily upkeep: $10
+
+Manure Tank Extension
+Category: Silo Extensions
+Price: $30,000
+Capacity: 1000000L
+Daily upkeep: $15
+
+Barn 1 with Object Storage
+Category: Storages
+Price: $45,000
+Capacity: 800 Bale/Pallet
+Daily upkeep: $10
+
+Barn 2 with Object Storage
+Category: Storages
+Price: $62,000
+Capacity: 1000 Bale/Pallet
+Daily upkeep: $15
+
+Shelter 1
+Category: Sheds
+Price: $146,500
+Daily upkeep: $40
+
+Shelter 2
+Category: Sheds
+Price: $176,000
+Daily upkeep: $45
+
+Shelter 3
+Category: Sheds
+Price: $89,500
+Daily upkeep: $30
+
+Shelter 4
+Category: Sheds
+Price: $22,500
+Daily upkeep: $2
+
+Shelter 5
+Category: Sheds
+Price: $11,500
+Daily upkeep: $2
+
+Barn 1 with Farm Silo
+Category: Grain silos
+Price: $89,000
+Capacity: 300000L
+Daily upkeep: $80
+
+Barn 2 with Farm Silo
+Category: Grain silos
+Price: $124,000
+Capacity: 500000L
+Daily upkeep: $85
+
+Change log:
+v1.0.0.6
+-Various adjustments
+-Added LOD for buildings
+
+v1.0.0.5
+-Adjusted medium-sized slurry tank
+-Adjusted slurry pits
+-Slurry and digestate can now be stored separately (You can now decide for yourself how you want to play)
+-Adjusted manure pile
+-Adjusted bale storage in the attic
+-Adjusted bale spawn area
+
+v1.0.0.3
+-Fixed an issue with the manure heap when connecting to the animal barn
+
+v1.0.0.2
+–Plan for slurry tank adjusted
+–Minor adjustments to gates
+–Bale trigger for cowshed adjusted
+–Snow on some buildings fixed
+]]>
+        </en>
+        <de><![CDATA[Ein vielseitiges Farm Gebäude Pack mit insgesamt 26 Objekten für kleine bis mittlere Höfe – von Scheunen und Hallen bis hin zu Kuhstall und Silos.
+Alter Kuhstall
+Shopkategorie: Tiergehege
+Preis: 185.000€
+Täglicher Unterhalt: 45€
+Tiere: 80 Kühe
+
+Scheune 1
+Shopkategorie: Hallen
+Preis: 45.000€
+Täglicher Unterhalt: 10€
+
+Scheune 2 mit Dachboden
+Shopkategorie: Lager
+Preis: 38.000€
+Kapazität: 1000 Ballen
+Täglicher Unterhalt: 10€
+
+Scheune 3
+Shopkategorie: Hallen
+Preis: 75.000€
+Täglicher Unterhalt: 15€
+
+Scheune 4
+Shopkategorie: Hallen
+Preis: 62.000€
+Täglicher Unterhalt: 15€
+
+Durchfahrsilo
+Shopkategorie: Getreidesilos
+Preis: 25.000€
+Täglicher Unterhalt: 5€
+
+KeilSilo
+Shopkategorie: Getreidesilos
+Preis: 28.000€
+Täglicher Unterhalt: 5€
+
+Kleiner Mistplatz
+Shopkategorie: Getreidesilos
+Preis: 12.000€
+Kapazität: 600000L
+Täglicher Unterhalt: 5€
+
+Großer Mistplatz
+Shopkategorie: Getreidesilos
+Preis: 16.000€
+Kapazität: 1000000L
+Täglicher Unterhalt: 5€
+
+Gülletank Klein
+Shopkategorie: Getreidesilos
+Preis: 25.000€
+Kapazität: 500000L
+Täglicher Unterhalt: 20€
+
+Gülletank Mittel
+Shopkategorie: Getreidesilos
+Preis: 35.000€
+Kapazität: 800000L
+Täglicher Unterhalt: 20€
+
+Gülletank Groß
+Shopkategorie: Getreidesilos
+Preis: 40.000€
+Kapazität: 1200000L
+Täglicher Unterhalt: 25€
+
+Güllegrube 1
+Shopkategorie: Getreidesilos
+Preis: 18.000€
+Kapazität: 500000L
+Täglicher Unterhalt: 10€
+
+Güllegrube 2
+Shopkategorie: Getreidesilos
+Preis: 18.000€
+Kapazität: 500000L
+Täglicher Unterhalt: 10€
+
+Gülletank Erweiterung
+Shopkategorie: Siloerweiterungen
+Preis: 30.000€
+Kapazität: 1000000L
+Täglicher Unterhalt: 15€
+
+Scheune 1 mit Objektelager
+Shopkategorie: Lager
+Preis: 45.000€
+Kapazität: 800 Ballen/Paletten
+Täglicher Unterhalt: 10€
+
+Scheune 2 mit Objektelager
+Shopkategorie: Lager
+Preis: 62.000€
+Kapazität: 1000 Ballen/Paletten
+Täglicher Unterhalt: 15€
+
+Unterstand 1
+Shopkategorie: Hallen
+Preis: 146.500€
+Täglicher Unterhalt: 40€
+
+Unterstand 2
+Shopkategorie: Hallen
+Preis: 176.000€
+Täglicher Unterhalt: 45€
+
+Unterstand 3
+Shopkategorie: Hallen
+Preis: 89.500€
+Täglicher Unterhalt: 30€
+
+Unterstand 4
+Shopkategorie: Hallen
+Preis: 22.500€
+Täglicher Unterhalt: 2€
+
+Unterstand 5
+Shopkategorie: Hallen
+Preis: 11.500€
+Täglicher Unterhalt: 2€
+
+Scheune 1 mit Hofsilo
+Shopkategorie: Getreidesilos
+Preis: 89.000€
+Kapazität: 300000L
+Täglicher Unterhalt: 80€
+
+Scheune 2 mit Hofsilo
+Shopkategorie: Getreidesilos
+Preis: 124.000€
+Kapazität: 500000L
+Täglicher Unterhalt: 85€
+
+Changelog:
+v1.0.0.6
+- Verschiedene Anpassungen
+- LOD für Gebäude hinzugefügt
+
+v1.0.0.5
+-Mittlerer Gülletank angepasst
+-Güllegruben angepasst
+-Gülle und Gärreste sind nun getrennt lagerfähig(Hier könnt ihr nun selber entscheiden, wie ihr spielen wollt)
+-Mistplatz angepasst
+-Ballen lager im dachboden angepasst
+-Ballenspawn bereich angepasst
+
+v1.0.0.3
+-Mistplatz Problem mit verbinden zum Tierstall behoben
+v1.0.0.2
+-Fillplane bei Gülletanks angepasst
+-Kleine anpassung bei Toren
+-Ballentrigger Kuhstall angepasst
+-Fix Schnee bei einigen Gebäuden
+]]>
+        </de>
+        <fr><![CDATA[Un pack polyvalent de bâtiments agricoles comprenant au total 26 objets pour les petites et moyennes exploitations, des granges et hangars aux étables et silos.
+Ancienne étable
+Catégorie: Enclos des animaux
+Prix: 185 000€
+Entretien quotidien: 45€
+Animales: 80 Vaches
+
+Grange 1
+Catégorie: Abris
+Prix: 45 000€
+Entretien quotidien: 10€
+
+Grange 2 avec grenier
+Catégorie: Lieux de stockage
+Prix: 38 000€
+Capacité: 1000 balles
+Entretien quotidien: 10€
+
+Grange 3
+Catégorie: Abris
+Prix: 75 000€
+Entretien quotidien: 15€
+
+Grange 4
+Catégorie: Abris
+Prix: 62 000€
+Entretien quotidien: 15€
+
+Silo traversant
+Catégorie: Silos à grains
+Prix: 25 000€
+Entretien quotidien: 5€
+
+Silo à coin
+Catégorie: Silos à grains
+Prix: 28 000€
+Entretien quotidien: 5€
+
+Petit tas de fumier
+Catégorie: Silos à grains
+Prix: 12 000€
+Capacité: 600000L
+Entretien quotidien: 5€
+
+Grand tas de fumier
+Catégorie: Silos à grains
+Prix: 16 000€
+Capacité: 1000000L
+Entretien quotidien: 5€
+
+Petit réservoir à fumier
+Catégorie: Silos à grains
+Prix: 25 000€
+Capacité: 500000L
+Entretien quotidien: 20€
+
+Réservoir à fumier moyen
+Catégorie: Silos à grains
+Prix: 35 000€
+Capacité: 800000L
+Entretien quotidien: 20€
+
+Grand réservoir à fumier
+Catégorie: Silos à grains
+Prix: 40 000€
+Capacité: 1200000L
+Entretien quotidien: 25€
+
+Fosse à fumier 1
+Catégorie: Silos à grains
+Prix: 18 000€
+Capacité: 500000L
+Entretien quotidien: 10€
+
+Fosse à fumier 2
+Catégorie: Silos à grains
+Prix: 18 000€
+Capacité: 500000L
+Entretien quotidien: 10€
+
+Extension pour réservoir à fumier
+Catégorie: Extensions de silo
+Prix: 30 000€
+Capacité: 1000000L
+Entretien quotidien: 15€
+
+Grange 1 avec stockage d'objets
+Catégorie: Lieux de stockage
+Prix: 45 000€
+Capacité: 800 balles/palettes
+Entretien quotidien: 10€
+
+Grange 2 avec stockage d'objets
+Catégorie: Lieux de stockage
+Prix: 62 000€
+Capacité: 1000 balles/palettes
+Entretien quotidien: 15€
+
+Abri 1
+Catégorie: Abris
+Prix: 146 500€
+Entretien quotidien: 40€
+
+Abri 2
+Catégorie: Abris
+Prix: 176 000€
+Entretien quotidien: 45€
+
+Abri 3
+Catégorie: Abris
+Prix: 89 500€
+Entretien quotidien: 30€
+
+Abri 4
+Catégorie: Abris
+Prix: 22 500€
+Entretien quotidien: 2€
+
+Abri 5
+Catégorie: Abris
+Prix: 11 500€
+Entretien quotidien: 2€
+
+Grange 1 avec silo agricole
+Catégorie: Silos à grains
+Prix: 89 000€
+Capacité: 300000L
+Entretien quotidien: 80€
+
+Grange 1 avec silo agricole
+Catégorie: Silos à grains
+Prix: 124 000€
+Capacité: 500000L
+Entretien quotidien: 85€
+
+Journal des modifications:
+v1.0.0.6
+- Divers ajustements
+- Ajout d'un niveau de détail (LOD) pour les bâtiments
+
+v1.0.0.5
+- Ajustement de la cuve à lisier de taille moyenne
+- Ajustement des fosses à lisier
+- Le lisier et le digestat peuvent désormais être stockés séparément (vous pouvez désormais choisir vous-même comment vous souhaitez jouer)
+- Ajustement du tas de fumier
+- Ajustement du stockage des balles dans le grenier
+- Ajustement de la zone d'apparition des balles
+
+v1.0.0.3
+-Correction d’un problème avec la fosse à fumier lors de la connexion à l’étable
+
+v1.0.0.2
+–Planification du réservoir à lisier ajustée.
+–Ajustements mineurs aux portes.
+–Déclencheur de balle pour l'étable ajusté.
+–Neige sur certains bâtiments corrigée.
+]]>
+        </fr>
+    </description>
+
+    <iconFilename>icon_FarmPack.dds</iconFilename>
+    <l10n filenamePrefix="languages/l10n"/>
+    <multiplayer supported="true"/> 
+
+    <storeItems>
+<!--farmhouse-->
+<!--animal-->
+        <storeItem rootNode="placeable" xmlFilename="xml/animals/cowBarn.xml"/> 
+
+<!--barn-->
+        <storeItem rootNode="placeable" xmlFilename="xml/barn/barnOld01.xml"/> 
+        <storeItem rootNode="placeable" xmlFilename="xml/barn/barnOld02.xml"/> 
+        <storeItem rootNode="placeable" xmlFilename="xml/barn/barnOld03.xml"/> 
+        <storeItem rootNode="placeable" xmlFilename="xml/barn/barnOld04.xml"/> 
+
+<!--drivingSilo-->
+        <storeItem rootNode="placeable" xmlFilename="xml/bunkerSilo/bunkerSilo01.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/bunkerSilo/bunkerSilo02.xml"/>
+
+<!--manureHeap-->
+        <storeItem rootNode="placeable" xmlFilename="xml/manureHeap/manureHeap01.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/manureHeap/manureHeap02.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/manureHeap/manureHeapExtension01.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/manureHeap/manureHeapExtension02.xml"/>
+
+<!--manureStorage-->
+        <storeItem rootNode="placeable" xmlFilename="xml/manureStorage/manureTank01.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/manureStorage/manureTank02.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/manureStorage/manureTank03.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/manureStorage/manurePit01.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/manureStorage/manurePit02.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/manureStorage/manureTank02_Extension.xml"/>
+
+<!--objectStorage-->
+        <storeItem rootNode="placeable" xmlFilename="xml/objectStorage/barnOldBaleStorage01.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/objectStorage/barnOldBaleStorage02.xml"/>
+
+<!--shelters-->
+        <storeItem rootNode="placeable" xmlFilename="xml/shelters/shelter01.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/shelters/shelter02.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/shelters/shelter03.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/shelters/shelter04.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/shelters/shelter05.xml"/>
+
+<!--silo-->
+        <storeItem rootNode="placeable" xmlFilename="xml/silo/barnSiloStorage01.xml"/>
+        <storeItem rootNode="placeable" xmlFilename="xml/silo/barnSiloStorage02.xml"/>
+    </storeItems>
+</modDesc>

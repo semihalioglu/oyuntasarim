@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<i3D name="manurePit01.i3d" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+  <Asset>
+    <Export program="GIANTS Editor 64bit" version="10.0.11"/>
+  </Asset>
+
+  <Files>
+    <File fileId="1" filename="$data/fillPlanes/liquidManure_diffuse.dds"/>
+    <File fileId="2" filename="$data/fillPlanes/liquidManure_normal.png"/>
+    <File fileId="3" filename="$data/fillPlanes/liquidManure_specular.png"/>
+    <File fileId="9" filename="$data/shaders/buildingShader.xml"/>
+    <File fileId="15" filename="../../textures/SBmanurePipe_mask.dds"/>
+    <File fileId="10" filename="../../textures/SBmanurePool_mask.dds"/>
+    <File fileId="6" filename="../../textures/SBmanure_diffuse.dds"/>
+    <File fileId="7" filename="../../textures/SBmanure_normal.dds"/>
+    <File fileId="8" filename="../../textures/SBmanure_specular.dds"/>
+  </Files>
+
+
+  <Materials>
+    <Material name="lambert1" materialId="5" diffuseColor="0.494118 0.494118 0.494118 1">
+    </Material>
+    <Material name="liquidManure_mat" materialId="6">
+      <Texture fileId="1"/>
+      <Normalmap fileId="2"/>
+      <Glossmap fileId="3"/>
+    </Material>
+    <Material name="manurePool_mat" materialId="7" customShaderId="9">
+      <Texture fileId="6"/>
+      <Normalmap fileId="7"/>
+      <Glossmap fileId="8"/>
+      <Custommap name="mMaskMap" fileId="10"/>
+    </Material>
+    <Material name="pipeMS_mat" materialId="8" customShaderId="9" customShaderVariation="colorScale">
+      <Texture fileId="6"/>
+      <Normalmap fileId="7"/>
+      <Glossmap fileId="8"/>
+      <Custommap name="mMaskMap" fileId="15"/>
+      <CustomParameter name="dirtMossSmoothness" value="0.15 0.15"/>
+      <CustomParameter name="dirtMossMix" value="0 1"/>
+      <CustomParameter name="colorScale0" value="0.7379 0.7379 0.7379 1"/>
+    </Material>
+    <Material name="UnnamedMaterial" materialId="9" diffuseColor="1 1 1 1">
+    </Material>
+  </Materials>
+
+
+  <Shapes externalShapesFile="manurePit01.i3d.shapes">
+  </Shapes>
+
+  <Scene>
+    <TransformGroup name="liquidManureTank" nodeId="21">
+      <TransformGroup name="silo" nodeId="22">
+        <TransformGroup name="mapPosition" translation="-0.178355 0 2.78512" nodeId="23"/>
+        <TransformGroup name="storage" nodeId="24">
+          <Shape name="plane" translation="0 0.1 0" shapeId="1" clipDistance="50" nodeId="25" castsShadows="false" receiveShadows="false" distanceBlending="false" materialIds="6"/>
+        </TransformGroup>
+        <TransformGroup name="loadingStation" translation="-0.01187 5.21914 2.5" nodeId="26">
+          <TransformGroup name="loadingTriggers" translation="-0 -0.215055 -0" nodeId="27">
+            <Shape name="loadingTrigger" translation="0 0 1.1657" shapeId="2" static="true" trigger="true" collisionFilterGroup="0x20000000" collisionFilterMask="0x40000000" nodeId="28" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="5"/>
+            <TransformGroup name="dischargeNode" nodeId="29"/>
+          </TransformGroup>
+          <TransformGroup name="aiLoadingNode" translation="-0.054136 -5.02156 1.1948" rotation="0 -90 0" nodeId="30"/>
+          <Shape name="aiSpline" translation="-0.043236 -4.90074 1.20133" shapeId="3" nodeId="31" castsShadows="false" receiveShadows="false"/>
+        </TransformGroup>
+        <TransformGroup name="unloadingStation" translation="0 -0.024887 2.5" nodeId="33">
+          <Shape name="exactFillRootNode" translation="0 0 1.17947" shapeId="4" static="true" trigger="true" collisionFilterGroup="0x40000000" collisionFilterMask="0x20000000" density="0.0001" nodeId="34" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="5"/>
+        </TransformGroup>
+        <Shape name="infoTrigger" translation="0 1.37552 1.42353" shapeId="5" static="true" trigger="true" collisionFilterGroup="0x20000000" collisionFilterMask="0x100000" nodeId="35" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="5"/>
+      </TransformGroup>
+      <TransformGroup name="clearAreas" nodeId="36">
+        <TransformGroup name="clearArea1Start" translation="-1.60998 0 -1.13506" nodeId="37">
+          <TransformGroup name="clearArea1Width" translation="0 0 5.15288" nodeId="38"/>
+          <TransformGroup name="clearArea1Height" translation="3.10193 0 4.54747e-15" nodeId="39"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="testAreas" rotation="0 90 0" visibility="false" nodeId="40">
+        <TransformGroup name="testArea1Start" translation="0.942268 0 -1.50192" rotation="0 -90 0" nodeId="41">
+          <TransformGroup name="testArea1End" translation="3 1 2" nodeId="42"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="tipOcclusionUpdateAreas" nodeId="43">
+        <TransformGroup name="tipOcclusionUpdateArea1Start" translation="-2 0 -1.14069" nodeId="44">
+          <TransformGroup name="tipOcclusionUpdateArea1End" translation="3.6269 0 2.24314" nodeId="45"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="markerUnloading" translation="1.24921 0 3.12792" rotation="0 -90 0" nodeId="46"/>
+      <TransformGroup name="markerLoading" translation="-1.14388 0 3.29844" rotation="0 -90 0" nodeId="47"/>
+      <TransformGroup name="collisions" nodeId="48">
+        <Shape name="coli" translation="0 -0.21135 0" shapeId="6" static="true" collisionFilterGroup="0x1034" collisionFilterMask="0xfffffbff" nodeId="49" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="9"/>
+        <Shape name="tipcoli" translation="0 -0.21135 0" shapeId="7" static="true" collisionFilterGroup="0x8" collisionFilterMask="0x1" nodeId="50" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="9"/>
+        <Shape name="coli" translation="0 0.72413 0.42255" shapeId="8" static="true" collisionFilterGroup="0x1034" collisionFilterMask="0xfffffbff" nodeId="51" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="9"/>
+      </TransformGroup>
+      <TransformGroup name="teleportNode" translation="-2.23503 0 1.95573" rotation="0 51.8097 0" nodeId="52"/>
+      <TransformGroup name="slurryPit" nodeId="53">
+        <Shape name="manure03" translation="-9.75288e-07 -5.40021e-18 0" rotation="3.44409e-15 90 3.17249e-10" shapeId="9" clipDistance="300" nodeId="54" castsShadows="true" receiveShadows="true" distanceBlending="false" materialIds="7"/>
+        <Shape name="manureAsset01" translation="8.90979e-08 0.0871993 0.27344" rotation="0 90 0" shapeId="10" clipDistance="150" nodeId="55" castsShadows="true" receiveShadows="true" distanceBlending="false" materialIds="8"/>
+      </TransformGroup>
+    </TransformGroup>
+  </Scene>
+
+</i3D>

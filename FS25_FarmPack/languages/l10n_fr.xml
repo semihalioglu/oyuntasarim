@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <texts>
+<!--animal-->
+        <text name="storeItem_cowBarnOld"                text="Ancienne étable"/>
+<!--barn-->
+        <text name="storeItem_barnOld01"                 text="Grange 1"/>
+        <text name="storeItem_barnOld02"                 text="Grange 2 avec grenier"/>
+        <text name="function_objectStorageBarn"          text="Stockage des balles dans le grenier"/>
+        <text name="storeItem_barnOld03"                 text="Grange 3"/>
+        <text name="storeItem_barnOld04"                 text="Grange 4"/>
+<!--drivingSilo-->
+        <text name="storeItem_bunkerSilo01"              text="Silo traversant"/>
+        <text name="storeItem_bunkerSilo02"              text="Silo à coin"/>
+<!--manureHeap-->
+        <text name="storeItem_manureHeap01"              text="Petit tas de fumier"/>
+        <text name="storeItem_manureHeap02"              text="Grand tas de fumier"/>
+        <text name="storeItem_manureHeapExtension01"     text="Extension pour petit tas de fumier"/>
+        <text name="storeItem_manureHeapExtension02"     text="Extension pour grand tas de fumier"/>
+<!--manureStorage-->
+        <text name="storeItem_manurePit01"               text="Fosse à fumier 1"/>
+        <text name="storeItem_manurePit02"               text="Fosse à fumier 2"/>
+        <text name="storeItem_manureTank01"              text="Petit réservoir à fumier"/>
+        <text name="storeItem_manureTank02"              text="Réservoir à fumier moyen"/>
+        <text name="storeItem_manureTank03"              text="Grand réservoir à fumier"/>
+        <text name="storeItem_manureTankExtension02"     text="Extension pour réservoir à fumier"/>
+<!--objectStorage-->
+        <text name="storeItem_barnOldBaleStorage01"      text="Grange 1 avec stockage d'objets"/>
+        <text name="storeItem_barnOldBaleStorage02"      text="Grange 2 avec stockage d'objets"/>
+<!--shelters-->
+        <text name="storeItem_shelter01"                 text="Abri 1"/>
+        <text name="storeItem_shelter02"                 text="Abri 2"/>
+        <text name="storeItem_shelter03"                 text="Abri 3"/>
+        <text name="storeItem_shelter04"                 text="Abri 4"/>
+        <text name="storeItem_shelter05"                 text="Abri 5"/>
+<!--silo-->
+        <text name="storeItem_barnSilo01"                text="Grange 1 avec silo agricole"/>
+        <text name="storeItem_barnSilo02"                text="Grange 2 avec silo agricole"/>
+    </texts>
+</l10n>

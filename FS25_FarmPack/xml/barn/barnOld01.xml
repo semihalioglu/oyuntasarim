@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<placeable type="garageSolarPanels" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../shared/xml/schema/placeable.xsd">
+    <storeData>
+        <name>$l10n_storeItem_barnOld01</name>
+        <functions>
+            <function>$l10n_function_garage</function>
+        </functions>
+        <image>storeIcon/store_barnOld01.dds</image>
+        <price>45000</price>
+        <dailyUpkeep>10</dailyUpkeep>
+        <lifetime>1000</lifetime>
+        <rotation>0</rotation>
+        <brand>NONE</brand>
+        <species>PLACEABLE</species>
+        <category>sheds</category>
+        <canBeSold>true</canBeSold>
+        <showInStore>true</showInStore>
+        <vertexBufferMemoryUsage>302592</vertexBufferMemoryUsage>
+        <indexBufferMemoryUsage>55296</indexBufferMemoryUsage>
+        <textureMemoryUsage>4456448</textureMemoryUsage>
+        <audioMemoryUsage>0</audioMemoryUsage>
+        <instanceVertexBufferMemoryUsage>0</instanceVertexBufferMemoryUsage>
+        <instanceIndexBufferMemoryUsage>0</instanceIndexBufferMemoryUsage>
+    </storeData>
+
+    <base>
+        <filename>i3d/barn/barnOld01.i3d</filename>
+        <boughtWithFarmland>true</boughtWithFarmland>
+        <canBeRenamed>true</canBeRenamed>
+    </base>
+
+    <placement useRandomYRotation="false" useManualYRotation="true">
+        <testAreas>
+            <testArea startNode="testAreaStart01" endNode="testAreaEnd01" />
+        </testAreas>
+        <sounds>
+            <place template="medImp" />
+        </sounds>
+    </placement>
+
+    <clearAreas>
+        <clearArea startNode="clearAreaStart01" widthNode="clearAreaWidth01" heightNode="clearAreaHeight01"/>
+    </clearAreas>
+
+    <leveling requireLeveling="true" maxSmoothDistance="5" maxSlope="75" maxEdgeAngle="30">
+        <levelAreas>
+            <levelArea startNode="levelAreaStart01" widthNode="levelAreaWidth01" heightNode="levelAreaHeight01" groundType="asphalt"/>
+        </levelAreas>
+    </leveling>
+
+    <indoorAreas>
+        <indoorArea startNode="indoorAreaStart01" widthNode="indoorAreaWidth01" heightNode="indoorAreaHeight01"/>
+    </indoorAreas>
+
+    <tipOcclusionUpdateAreas>
+        <tipOcclusionUpdateArea startNode="tipOcclusionUpdateAreaStart01" endNode="tipOcclusionUpdateAreaEnd01" />
+    </tipOcclusionUpdateAreas>
+
+    <ai>
+        <updateAreas>
+            <updateArea startNode="tipOcclusionUpdateAreaStart01" endNode="tipOcclusionUpdateAreaEnd01" />
+        </updateAreas>
+        <obstacles>
+            <obstacle node="slidingDoor1" size="1 4 7" >
+                <animatedObject index="1" startTime="0" endTime="0.95" />
+            </obstacle>
+            <obstacle node="slidingDoor2" size="1 4 7" >
+                <animatedObject index="2" startTime="0" endTime="0.95" />
+            </obstacle>
+        </obstacles>
+    </ai>
+
+    <dynamicallyLoadedParts>
+    </dynamicallyLoadedParts>
+
+    <lights>
+    </lights>
+
+    <animatedObjects>
+        <animatedObject saveId="slidingDoor1" >
+            <animation duration="3.5">
+                <part node="slidingDoor1">
+                    <keyFrame time="0.0" translation="0 0 0"/>
+                    <keyFrame time="1.0" translation="0 0 -4.4"/>
+                </part>
+            </animation>
+            <controls triggerNode="slidingDoor1Trigger" posAction="ACTIVATE_HANDTOOL" posText="action_openGate" negText="action_closeGate" />
+            <sounds>
+                <moving linkNode="slidingDoor1Sound" template="slidingGateWoodLoop" />
+                <posEnd linkNode="slidingDoor1Sound" template="woodDoorOpen" />
+                <negEnd linkNode="slidingDoor1Sound" template="woodDoorClose" />
+            </sounds>
+        </animatedObject>
+        <animatedObject saveId="slidingDoor2">
+            <animation duration="3.5">
+                <part node="slidingDoor2">
+                    <keyFrame time="0.0" translation="0 0 0"/>
+                    <keyFrame time="1.0" translation="0 0 -4.4"/>
+                </part>
+            </animation>
+            <controls triggerNode="slidingDoor2Trigger" posAction="ACTIVATE_HANDTOOL" posText="action_openGate" negText="action_closeGate" />
+            <sounds>
+                <moving linkNode="slidingDoor2Sound" template="slidingGateWoodLoop" />
+                <posEnd linkNode="slidingDoor2Sound" template="woodDoorOpen" />
+                <negEnd linkNode="slidingDoor2Sound" template="woodDoorClose" />
+            </sounds>
+        </animatedObject>
+    </animatedObjects>
+
+    <solarPanels>
+    </solarPanels>
+
+    <i3dMappings>
+        <i3dMapping id="clearAreaStart01" node="0>0|0" />
+        <i3dMapping id="clearAreaWidth01" node="0>0|0|0" />
+        <i3dMapping id="clearAreaHeight01" node="0>0|0|1" />
+        <i3dMapping id="levelAreaStart01" node="0>1|0" />
+        <i3dMapping id="levelAreaWidth01" node="0>1|0|0" />
+        <i3dMapping id="levelAreaHeight01" node="0>1|0|1" />
+        <i3dMapping id="indoorAreaStart01" node="0>2|0" />
+        <i3dMapping id="indoorAreaWidth01" node="0>2|0|0" />
+        <i3dMapping id="indoorAreaHeight01" node="0>2|0|1" />
+        <i3dMapping id="testAreaStart01" node="0>3|0" />
+        <i3dMapping id="testAreaEnd01" node="0>3|0|0" />
+        <i3dMapping id="tipOcclusionUpdateAreaStart01" node="0>4|0" />
+        <i3dMapping id="tipOcclusionUpdateAreaEnd01" node="0>4|0|0" />
+        <i3dMapping id="slidingDoor1" node="0>5|0|0" />
+        <i3dMapping id="slidingDoor1Trigger" node="0>5|0|1" />
+        <i3dMapping id="slidingDoor1Sound" node="0>5|0|2" />
+        <i3dMapping id="slidingDoor2" node="0>5|1|0" />
+        <i3dMapping id="slidingDoor2Trigger" node="0>5|1|1" />
+        <i3dMapping id="slidingDoor2Sound" node="0>5|1|2" />
+    </i3dMappings>
+</placeable>

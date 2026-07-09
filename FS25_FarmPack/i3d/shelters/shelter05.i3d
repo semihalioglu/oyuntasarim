@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<i3D name="shelter05.i3d" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+  <Asset>
+    <Export program="GIANTS Editor 64bit" version="10.0.12"/>
+  </Asset>
+
+  <Files>
+    <File fileId="4" filename="$data/maps/textures/shared/snow_diffuse.dds"/>
+    <File fileId="5" filename="$data/maps/textures/shared/snow_normal.dds"/>
+    <File fileId="6" filename="$data/maps/textures/shared/snow_specular.png"/>
+    <File fileId="7" filename="$data/shaders/snowHeapShader.xml"/>
+    <File fileId="1" filename="../../textures/SBshelter_diffuse.dds"/>
+    <File fileId="2" filename="../../textures/SBshelter_normal.dds"/>
+    <File fileId="3" filename="../../textures/SBshelter_specular.dds"/>
+  </Files>
+
+
+  <Materials>
+    <Material name="lambert1" materialId="5" diffuseColor="0.501961 0.501961 0.501961 1">
+    </Material>
+    <Material name="shelter_mat" materialId="6">
+      <Texture fileId="1"/>
+      <Normalmap fileId="2"/>
+      <Glossmap fileId="3"/>
+    </Material>
+    <Material name="snow_mat" materialId="7" customShaderId="7">
+      <Texture fileId="4"/>
+      <Normalmap fileId="5"/>
+      <Glossmap fileId="6"/>
+    </Material>
+  </Materials>
+
+
+  <Shapes externalShapesFile="shelter05.i3d.shapes">
+  </Shapes>
+
+  <Scene>
+    <TransformGroup name="shelter05" clipDistance="500" nodeId="13">
+      <TransformGroup name="clearAreas" nodeId="14">
+        <TransformGroup name="clearArea01Start" translation="-6.52597 -0.00358311 2.99621" nodeId="15">
+          <TransformGroup name="clearArea01Width" translation="2.27374e-15 0 -5.98363" nodeId="16"/>
+          <TransformGroup name="clearArea01Height" translation="13.0419 0 0" nodeId="17"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="leveling" translation="0 0.0212903 0" nodeId="18">
+        <TransformGroup name="levelingArea01Start" translation="-6.57294 -0.0248734 2.56209" nodeId="19">
+          <TransformGroup name="levelingArea01Width" translation="2.27374e-15 0 -5.57291" nodeId="20"/>
+          <TransformGroup name="levelingArea01Height" translation="13.1162 0 0" nodeId="21"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="indoorAreas" translation="0 0.0212903 0" nodeId="22">
+        <TransformGroup name="indoorArea01Start" translation="-6.31796 -0.0248734 2.42476" nodeId="23">
+          <TransformGroup name="indoorArea01Width" translation="9.09495e-15 0 -5.34944" nodeId="24"/>
+          <TransformGroup name="indoorArea01Height" translation="12.7259 0 5.68434e-16" nodeId="25"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="testAreas" nodeId="26">
+        <TransformGroup name="testArea1Start" translation="-6.70816 0 -3.3093" nodeId="27">
+          <TransformGroup name="testArea1End" translation="13.3749 4.99761 6.76757" nodeId="28"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="tipOcclusionUpdateAreas" nodeId="29">
+        <TransformGroup name="tipOcclusionUpdateArea1Start" translation="-7.06659 0 -3.59283" nodeId="30">
+          <TransformGroup name="tipOcclusionUpdateArea1End" translation="14.094 0 6.94947" nodeId="31"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="tipCols" nodeId="32"/>
+      <TransformGroup name="visual_lod" lodDistance="0 120" nodeId="41">
+        <TransformGroup name="LOD0" nodeId="42">
+          <Shape name="SB_shelter_vis" translation="2.85609e-08 0.119791 -6.17314e-14" rotation="-1.36604e-05 -90 0" shapeId="1" clipDistance="300" nodeId="34" castsShadows="true" receiveShadows="true" distanceBlending="false" materialIds="6"/>
+          <TransformGroup name="winter" translation="0 -0.02129 0" nodeId="43">
+            <Shape name="snow09" translation="2.85608e-08 0.141082 3.04178e-14" rotation="2.11698e-11 -90 0" shapeId="2" clipDistance="120" nodeId="35" castsShadows="true" receiveShadows="true" materialIds="7"/>
+          </TransformGroup>
+        </TransformGroup>
+        <TransformGroup name="LOD1" translation="-6e-06 -0.02129 0" nodeId="44">
+          <Shape name="LOD1" translation="6e-06 0.02129 0" rotation="1.73028e-05 -90 0" shapeId="3" clipDistance="500" nodeId="49" castsShadows="true" receiveShadows="true" distanceBlending="false" materialIds="6"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="collision" translation="0 -0.477688 0" nodeId="36">
+        <Shape name="coliUnterstand01" shapeId="4" visibility="false" static="true" collisionFilterGroup="0x1034" collisionFilterMask="0xfffffbff" nodeId="37" castsShadows="true" receiveShadows="true" distanceBlending="false" materialIds="5"/>
+        <Shape name="occluder" shapeId="5" nodeId="38" castsShadows="true" receiveShadows="true" nonRenderable="true" distanceBlending="false" occluder="true" materialIds="5"/>
+      </TransformGroup>
+    </TransformGroup>
+  </Scene>
+
+</i3D>

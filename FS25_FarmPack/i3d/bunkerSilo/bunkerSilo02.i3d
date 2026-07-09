@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<i3D name="bunkerSilo02.i3d" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+  <Asset>
+    <Export program="GIANTS Editor 64bit" version="10.0.7"/>
+  </Asset>
+
+  <Files>
+    <File fileId="5" filename="$data/shaders/buildingShader.xml"/>
+    <File fileId="6" filename="../../textures/SBbunkerSilo_mask.dds"/>
+    <File fileId="2" filename="../../textures/SBmanure_diffuse.dds"/>
+    <File fileId="3" filename="../../textures/SBmanure_normal.dds"/>
+    <File fileId="4" filename="../../textures/SBmanure_specular.dds"/>
+  </Files>
+
+
+  <Materials>
+    <Material name="bunkerSilo_mat" materialId="5" customShaderId="5" customShaderVariation="colorScale">
+      <Texture fileId="2"/>
+      <Normalmap fileId="3"/>
+      <Glossmap fileId="4"/>
+      <Custommap name="mMaskMap" fileId="6"/>
+      <CustomParameter name="colorScale0" value="0.369 0.448 0.4762 1"/>
+    </Material>
+    <Material name="lambert1" materialId="6" diffuseColor="0.498039 0.498039 0.498039 1">
+    </Material>
+  </Materials>
+
+
+  <Shapes externalShapesFile="bunkerSilo02.i3d.shapes">
+  </Shapes>
+
+  <Scene>
+    <TransformGroup name="bunkerSiloBGA" clipDistance="500" nodeId="15">
+      <TransformGroup name="bunkerSilo" nodeId="16">
+        <TransformGroup name="siloArea" nodeId="17">
+          <TransformGroup name="siloAreaStart" translation="5 0 8" nodeId="18"/>
+          <TransformGroup name="siloAreaWidth" translation="-5 0 8" nodeId="19"/>
+          <TransformGroup name="siloAreaHeight" translation="5 0 -8" nodeId="20"/>
+          <Shape name="siloAreaTrigger" translation="0 7 0.309765" shapeId="1" visibility="false" static="true" trigger="true" collisionFilterGroup="0x20000000" collisionFilterMask="0x110000" nodeId="21" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="6"/>
+        </TransformGroup>
+        <TransformGroup name="siloInnerArea" nodeId="22">
+          <TransformGroup name="siloInnerAreaStart" translation="4 0 7" nodeId="23"/>
+          <TransformGroup name="siloInnerAreaWidth" translation="-4 0 7" nodeId="24"/>
+          <TransformGroup name="siloInnerAreaHeight" translation="4 0 -7" nodeId="25"/>
+        </TransformGroup>
+        <Shape name="bunkerWallBack" translation="0 1 -7.5" rotation="0 -0 -0.1" shapeId="2" nodeId="26" castsShadows="true" receiveShadows="true" distanceBlending="false" materialIds="5">
+          <Shape name="coli" rotation="0 -0 0.1" shapeId="3" static="true" collisionFilterGroup="0x1034" collisionFilterMask="0xfffffbff" nodeId="27" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="6"/>
+        </Shape>
+        <Shape name="bunkerSiloWallRight" translation="-4.5 1 0" shapeId="4" nodeId="28" castsShadows="true" receiveShadows="true" distanceBlending="false" materialIds="5">
+          <Shape name="coli" shapeId="5" static="true" collisionFilterGroup="0x1034" collisionFilterMask="0xfffffbff" nodeId="29" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="6"/>
+        </Shape>
+        <Shape name="bunkerSiloWallLeft" translation="4.5 1 0" shapeId="6" nodeId="30" castsShadows="true" receiveShadows="true" distanceBlending="false" materialIds="5">
+          <Shape name="coli" shapeId="5" static="true" collisionFilterGroup="0x1034" collisionFilterMask="0xfffffbff" nodeId="31" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="6"/>
+        </Shape>
+      </TransformGroup>
+      <TransformGroup name="clearAreas" nodeId="32">
+        <TransformGroup name="clearArea1Start" translation="-6 0 -9" nodeId="33">
+          <TransformGroup name="clearArea1Width" translation="0 0 17" nodeId="34"/>
+          <TransformGroup name="clearArea1Height" translation="12 0 0" nodeId="35"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="levelAreas" nodeId="36">
+        <TransformGroup name="levelArea1Start" translation="-6 0 -9" nodeId="37">
+          <TransformGroup name="levelArea1Width" translation="0 0 17" nodeId="38"/>
+          <TransformGroup name="levelArea1Height" translation="12 0 0" nodeId="39"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="testAreas" nodeId="40">
+        <TransformGroup name="testAreaStart1" translation="-5 0 -8" nodeId="41">
+          <TransformGroup name="testAreaEnd1" translation="10 2.02052 15" nodeId="42"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="tipOcclusionUpdateAreas" nodeId="43">
+        <TransformGroup name="tipOcclusionUpdateArea1Start" translation="-6 0 -9" nodeId="44">
+          <TransformGroup name="tipOcclusionUpdateArea1End" translation="12 0 17" nodeId="45"/>
+        </TransformGroup>
+      </TransformGroup>
+      <Shape name="tipCollision" shapeId="7" visibility="false" static="true" collisionFilterGroup="0x8" collisionFilterMask="0x1" clipDistance="100" nodeId="46" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="6"/>
+    </TransformGroup>
+  </Scene>
+
+  <UserAttributes>
+    <UserAttribute nodeId="46">
+      <Attribute name="collisionHeight" type="float" value="2"/>
+    </UserAttribute>
+  </UserAttributes>
+
+</i3D>

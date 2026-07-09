@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8" standalone="no" ?>
+<l10n>
+    <texts>
+<!--animal-->
+        <text name="storeItem_cowBarnOld"                text="Alter Kuhstall"/>
+<!--barn-->
+        <text name="storeItem_barnOld01"                 text="Scheune 1"/>
+        <text name="storeItem_barnOld02"                 text="Scheune 2 mit Dachboden"/>
+        <text name="function_objectStorageBarn"          text="Lager für Ballen im Dachboden"/>
+        <text name="storeItem_barnOld03"                 text="Scheune 3"/>
+        <text name="storeItem_barnOld04"                 text="Scheune 4"/>
+<!--drivingSilo-->
+        <text name="storeItem_bunkerSilo01"              text="Durchfahrsilo"/>
+        <text name="storeItem_bunkerSilo02"              text="KeilSilo"/>
+<!--manureHeap-->
+        <text name="storeItem_manureHeap01"              text="Kleiner Mistplatz"/>
+        <text name="storeItem_manureHeap02"              text="Großer Mistplatz"/>
+        <text name="storeItem_manureHeapExtension01"     text="Mistplatz Erweiterung Klein"/>
+        <text name="storeItem_manureHeapExtension02"     text="Mistplatz Erweiterung Groß"/>
+<!--manureStorage-->
+        <text name="storeItem_manurePit01"               text="Güllegrube 1"/>
+        <text name="storeItem_manurePit02"               text="Güllegrube 2"/>
+        <text name="storeItem_manureTank01"              text="Gülletank Klein"/>
+        <text name="storeItem_manureTank02"              text="Gülletank Mittel"/>
+        <text name="storeItem_manureTank03"              text="Gülletank Groß"/>
+        <text name="storeItem_manureTankExtension02"     text="Gülletank Erweiterung"/>
+<!--objectStorage-->
+        <text name="storeItem_barnOldBaleStorage01"      text="Scheune 1 mit Objektelager"/>
+        <text name="storeItem_barnOldBaleStorage02"      text="Scheune 2 mit Objektelager"/>
+<!--shelters-->
+        <text name="storeItem_shelter01"                 text="Unterstand 1"/>
+        <text name="storeItem_shelter02"                 text="Unterstand 2"/>
+        <text name="storeItem_shelter03"                 text="Unterstand 3"/>
+        <text name="storeItem_shelter04"                 text="Unterstand 4"/>
+        <text name="storeItem_shelter05"                 text="Unterstand 5"/>
+<!--silo-->
+        <text name="storeItem_barnSilo01"                text="Scheune 1 mit Hofsilo"/>
+        <text name="storeItem_barnSilo02"                text="Scheune 2 mit Hofsilo"/>
+    </texts>
+</l10n>

@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+
+<i3D name="manureTank01.i3d" version="1.6" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://i3d.giants.ch/schema/i3d-1.6.xsd">
+  <Asset>
+    <Export program="GIANTS Editor 64bit" version="10.0.11"/>
+  </Asset>
+
+  <Files>
+    <File fileId="1" filename="$data/fillPlanes/liquidManure_diffuse.dds"/>
+    <File fileId="2" filename="$data/fillPlanes/liquidManure_normal.png"/>
+    <File fileId="3" filename="$data/fillPlanes/liquidManure_specular.png"/>
+    <File fileId="21" filename="$data/placeables/brandless/fences/US/fence07/fence08fAlpha_diffuse.png"/>
+    <File fileId="22" filename="$data/placeables/brandless/fences/US/fence07/fence08fAlpha_normal.png"/>
+    <File fileId="23" filename="$data/placeables/brandless/fences/US/fence07/fence08fAlpha_specular.png"/>
+    <File fileId="17" filename="$data/placeables/brandless/fences/US/fence08/fence08_diffuse.png"/>
+    <File fileId="18" filename="$data/placeables/brandless/fences/US/fence08/fence08_normal.png"/>
+    <File fileId="19" filename="$data/placeables/brandless/fences/US/fence08/fence08_specular.png"/>
+    <File fileId="10" filename="$data/shaders/buildingShader.xml"/>
+    <File fileId="20" filename="$data/shaders/placeableShader.xml"/>
+    <File fileId="16" filename="../../textures/SBmanurePipe_mask.dds"/>
+    <File fileId="11" filename="../../textures/SBmanurePool_mask.dds"/>
+    <File fileId="7" filename="../../textures/SBmanure_diffuse.dds"/>
+    <File fileId="8" filename="../../textures/SBmanure_normal.dds"/>
+    <File fileId="9" filename="../../textures/SBmanure_specular.dds"/>
+  </Files>
+
+
+  <Materials>
+    <Material name="fence08_01_mat" materialId="5" customShaderId="20">
+      <Texture fileId="17"/>
+      <Normalmap fileId="18"/>
+      <Glossmap fileId="19"/>
+    </Material>
+    <Material name="fence08_02_mat" materialId="6" customShaderId="20" customShaderVariation="vertexOffset">
+      <Texture fileId="17"/>
+      <Normalmap fileId="18"/>
+      <Glossmap fileId="19"/>
+    </Material>
+    <Material name="fence08fAlpha_02_mat" materialId="7" alphaBlending="true" customShaderId="20" customShaderVariation="vertexOffset">
+      <Texture fileId="21"/>
+      <Normalmap fileId="22"/>
+      <Glossmap fileId="23"/>
+    </Material>
+    <Material name="lambert1" materialId="8" diffuseColor="0.494118 0.494118 0.494118 1">
+    </Material>
+    <Material name="lambert1" materialId="9" diffuseColor="0.498039 0.498039 0.498039 1">
+    </Material>
+    <Material name="liquidManure_mat" materialId="10">
+      <Texture fileId="1"/>
+      <Normalmap fileId="2"/>
+      <Glossmap fileId="3"/>
+    </Material>
+    <Material name="manurePool_mat" materialId="11" customShaderId="10">
+      <Texture fileId="7"/>
+      <Normalmap fileId="8"/>
+      <Glossmap fileId="9"/>
+      <Custommap name="mMaskMap" fileId="11"/>
+    </Material>
+    <Material name="pipeMS_mat" materialId="12" customShaderId="10" customShaderVariation="colorScale">
+      <Texture fileId="7"/>
+      <Normalmap fileId="8"/>
+      <Glossmap fileId="9"/>
+      <Custommap name="mMaskMap" fileId="16"/>
+      <CustomParameter name="dirtMossSmoothness" value="0.15 0.15"/>
+      <CustomParameter name="dirtMossMix" value="0 1"/>
+      <CustomParameter name="colorScale0" value="0.7379 0.7379 0.7379 1"/>
+    </Material>
+    <Material name="UnnamedMaterial" materialId="13" diffuseColor="1 1 1 1">
+    </Material>
+  </Materials>
+
+
+  <PerInstanceMaterialParameters>
+  </PerInstanceMaterialParameters>
+
+
+  <Shapes externalShapesFile="manureTank01.i3d.shapes">
+  </Shapes>
+
+  <Scene>
+    <TransformGroup name="liquidManureTank" nodeId="30">
+      <TransformGroup name="silo" nodeId="31">
+        <TransformGroup name="mapPosition" translation="-0.178355 0 6.82527" nodeId="32"/>
+        <TransformGroup name="storage" nodeId="33">
+          <Shape name="slurryPit_fillPlane" translation="-2.75652e-07 0.147 -0.000318897" shapeId="1" clipDistance="200" nodeId="34" castsShadows="true" receiveShadows="true" materialIds="10"/>
+        </TransformGroup>
+        <TransformGroup name="loadingStation" translation="-0.01187 5.21914 5.78823" nodeId="35">
+          <TransformGroup name="loadingTriggers" translation="-0 -0.215055 -0" nodeId="36">
+            <Shape name="loadingTrigger" shapeId="2" static="true" trigger="true" collisionFilterGroup="0x20000000" collisionFilterMask="0x40000000" nodeId="37" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="8"/>
+            <TransformGroup name="dischargeNode" nodeId="38"/>
+          </TransformGroup>
+          <TransformGroup name="aiLoadingNode" translation="-0.054136 -5.02156 1.1948" rotation="0 -90 0" nodeId="39"/>
+          <Shape name="aiSpline" translation="-0.043236 -4.90074 1.20133" shapeId="3" nodeId="40" castsShadows="false" receiveShadows="false"/>
+        </TransformGroup>
+        <TransformGroup name="unloadingStation" translation="0 -0.024887 5.8323" nodeId="42">
+          <Shape name="exactFillRootNode" shapeId="4" visibility="false" static="true" trigger="true" collisionFilterGroup="0x40000000" collisionFilterMask="0x20000000" density="0.0001" nodeId="43" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="8"/>
+        </TransformGroup>
+        <Shape name="infoTrigger" translation="0 1.376 0" shapeId="5" static="true" trigger="true" collisionFilterGroup="0x20000000" collisionFilterMask="0x100000" nodeId="44" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="8"/>
+      </TransformGroup>
+      <TransformGroup name="clearAreas" nodeId="45">
+        <TransformGroup name="clearArea1Start" translation="-3 0 5.5" nodeId="46">
+          <TransformGroup name="clearArea1Width" translation="0 0 3" nodeId="47"/>
+          <TransformGroup name="clearArea1Height" translation="6 0 4.54747e-15" nodeId="48"/>
+        </TransformGroup>
+        <TransformGroup name="clearAreaGroup" nodeId="49">
+          <TransformGroup name="clearArea1Start" translation="-4.5 0 -1.5" nodeId="50">
+            <TransformGroup name="clearArea1Width" translation="0 0 3" nodeId="51"/>
+            <TransformGroup name="clearArea1Height" translation="9 0 4.54747e-15" nodeId="52"/>
+          </TransformGroup>
+        </TransformGroup>
+        <TransformGroup name="clearAreaGroup" rotation="0 -30 0" nodeId="53">
+          <TransformGroup name="clearArea1Start" translation="-4.5 0 -1.5" nodeId="54">
+            <TransformGroup name="clearArea1Width" translation="0 0 3" nodeId="55"/>
+            <TransformGroup name="clearArea1Height" translation="9 0 4.54747e-15" nodeId="56"/>
+          </TransformGroup>
+        </TransformGroup>
+        <TransformGroup name="clearAreaGroup" rotation="0 -60 0" nodeId="57">
+          <TransformGroup name="clearArea1Start" translation="-4.5 0 -1.5" nodeId="58">
+            <TransformGroup name="clearArea1Width" translation="0 0 3" nodeId="59"/>
+            <TransformGroup name="clearArea1Height" translation="9 0 4.54747e-15" nodeId="60"/>
+          </TransformGroup>
+        </TransformGroup>
+        <TransformGroup name="clearAreaGroup" rotation="0 -90 0" nodeId="61">
+          <TransformGroup name="clearArea1Start" translation="-4.5 0 -1.5" nodeId="62">
+            <TransformGroup name="clearArea1Width" translation="0 0 3" nodeId="63"/>
+            <TransformGroup name="clearArea1Height" translation="9 0 4.54747e-15" nodeId="64"/>
+          </TransformGroup>
+        </TransformGroup>
+        <TransformGroup name="clearAreaGroup" rotation="0 -120 0" nodeId="65">
+          <TransformGroup name="clearArea1Start" translation="-4.5 0 -1.5" nodeId="66">
+            <TransformGroup name="clearArea1Width" translation="0 0 3" nodeId="67"/>
+            <TransformGroup name="clearArea1Height" translation="9 0 4.54747e-15" nodeId="68"/>
+          </TransformGroup>
+        </TransformGroup>
+        <TransformGroup name="clearAreaGroup" rotation="0 -150 0" nodeId="69">
+          <TransformGroup name="clearArea1Start" translation="-4.5 0 -1.5" nodeId="70">
+            <TransformGroup name="clearArea1Width" translation="0 0 3" nodeId="71"/>
+            <TransformGroup name="clearArea1Height" translation="9 0 4.54747e-15" nodeId="72"/>
+          </TransformGroup>
+        </TransformGroup>
+        <TransformGroup name="clearAreaGroup" rotation="0 -180 0" nodeId="73">
+          <TransformGroup name="clearArea1Start" translation="-4.5 0 -1.5" nodeId="74">
+            <TransformGroup name="clearArea1Width" translation="0 0 3" nodeId="75"/>
+            <TransformGroup name="clearArea1Height" translation="9 0 4.54747e-15" nodeId="76"/>
+          </TransformGroup>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="testAreas" rotation="0 90 0" nodeId="77">
+        <TransformGroup name="testArea1Start" translation="4.5 0 -9.60986" rotation="0 -90 0" nodeId="78">
+          <TransformGroup name="testArea1End" translation="21.3645 4.5 9" nodeId="79"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="tipOcclusionUpdateAreas" nodeId="80">
+        <TransformGroup name="tipOcclusionUpdateArea1Start" translation="-12 0 -12" nodeId="81">
+          <TransformGroup name="tipOcclusionUpdateArea1End" translation="25 0 25" nodeId="82"/>
+        </TransformGroup>
+      </TransformGroup>
+      <TransformGroup name="markerUnloading" translation="1.24921 0 5.5" rotation="0 -90 0" nodeId="83"/>
+      <TransformGroup name="markerLoading" translation="-1.14388 0 5.5" rotation="0 -90 0" nodeId="84"/>
+      <TransformGroup name="collisions" nodeId="85">
+        <Shape name="coli" shapeId="6" static="true" collisionFilterGroup="0x1034" collisionFilterMask="0xfffffbff" nodeId="86" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="9"/>
+        <Shape name="coli" translation="0 1.16393 3.31102" shapeId="7" static="true" collisionFilterGroup="0x1034" collisionFilterMask="0xfffffbff" nodeId="87" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="13"/>
+        <Shape name="tipCollision" shapeId="8" static="true" collisionFilterGroup="0x8" collisionFilterMask="0x1" nodeId="88" castsShadows="true" receiveShadows="true" nonRenderable="true" materialIds="9"/>
+      </TransformGroup>
+      <TransformGroup name="teleportNode" translation="-2.52133 0 9.99038" rotation="0 51.8097 0" nodeId="89"/>
+      <TransformGroup name="slurryPit" nodeId="90">
+        <Shape name="manure07" translation="-6.08496e-14 7.07373e-07 0" rotation="-180 90 -180" shapeId="9" clipDistance="500" nodeId="91" castsShadows="true" receiveShadows="true" distanceBlending="false" materialIds="11"/>
+        <Shape name="manureAsset02" translation="-1.0379e-06 0.629063 3.18529" rotation="-180 90 -180" shapeId="10" clipDistance="50" nodeId="92" castsShadows="true" receiveShadows="true" distanceBlending="false" materialIds="12"/>
+        <TransformGroup name="fance" nodeId="93">
+          <TransformGroup name="poles" translation="1.00006 1.02074 3.76025" rotation="-180 68.5 -180" scale="0.505051 0.505051 0.505051" nodeId="94">
+            <TransformGroup name="pole01" nodeId="95">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="96">
+                <Shape name="LOD0" shapeId="11" nodeId="97" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="98" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="99">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="100">
+                <Shape name="LOD0" shapeId="13" nodeId="101" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="102" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="103" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="104" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="1.95432 1.02074 3.38436" rotation="-180 52.5 -180" scale="0.505051 0.505051 0.505051" nodeId="105">
+            <TransformGroup name="pole01" nodeId="106">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="107">
+                <Shape name="LOD0" shapeId="11" nodeId="108" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="109" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="110">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="111">
+                <Shape name="LOD0" shapeId="13" nodeId="112" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="113" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="114" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="115" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="2.76492 1.02074 2.76236" rotation="-180 38 -180" scale="0.505051 0.505051 0.505051" nodeId="116">
+            <TransformGroup name="pole01" nodeId="117">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="118">
+                <Shape name="LOD0" shapeId="11" nodeId="119" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="120" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="121">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="122">
+                <Shape name="LOD0" shapeId="13" nodeId="123" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="124" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="125" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="126" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="3.3899 1.02074 1.96242" rotation="-180 21.5 -180" scale="0.505051 0.505051 0.505051" nodeId="127">
+            <TransformGroup name="pole01" nodeId="128">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="129">
+                <Shape name="LOD0" shapeId="11" nodeId="130" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="131" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="132">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="133">
+                <Shape name="LOD0" shapeId="13" nodeId="134" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="135" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="136" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="137" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="3.76475 1.02074 1.0108" rotation="-180 9.5 -180" scale="0.505051 0.505051 0.505051" nodeId="138">
+            <TransformGroup name="pole01" nodeId="139">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="140">
+                <Shape name="LOD0" shapeId="11" nodeId="141" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="142" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="143">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="144">
+                <Shape name="LOD0" shapeId="13" nodeId="145" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="146" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="147" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="148" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="3.93286 1.02074 0.0062422" rotation="-180 -9 -180" scale="0.505051 0.505051 0.505051" nodeId="149">
+            <TransformGroup name="pole01" nodeId="150">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="151">
+                <Shape name="LOD0" shapeId="11" nodeId="152" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="153" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="154">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="155">
+                <Shape name="LOD0" shapeId="13" nodeId="156" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="157" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="158" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="159" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="3.77282 1.02074 -1.0042" rotation="-180 -21.5 -180" scale="0.505051 0.505051 0.505051" nodeId="160">
+            <TransformGroup name="pole01" nodeId="161">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="162">
+                <Shape name="LOD0" shapeId="11" nodeId="163" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="164" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="165">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="166">
+                <Shape name="LOD0" shapeId="13" nodeId="167" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="168" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="169" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="170" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="3.39614 1.02074 -1.96045" rotation="-180 -37.146 -180" scale="0.505051 0.505051 0.505051" nodeId="171">
+            <TransformGroup name="pole01" nodeId="172">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="173">
+                <Shape name="LOD0" shapeId="11" nodeId="174" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="175" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="176">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="177">
+                <Shape name="LOD0" shapeId="13" nodeId="178" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="179" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="180" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="181" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="2.77863 1.02074 -2.77991" rotation="-180 -54 -180" scale="0.505051 0.505051 0.505051" nodeId="182">
+            <TransformGroup name="pole01" nodeId="183">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="184">
+                <Shape name="LOD0" shapeId="11" nodeId="185" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="186" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="187">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="188">
+                <Shape name="LOD0" shapeId="13" nodeId="189" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="190" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="191" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="192" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="1.95662 1.02074 -3.37364" rotation="-180 -67 -180" scale="0.505051 0.505051 0.505051" nodeId="193">
+            <TransformGroup name="pole01" nodeId="194">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="195">
+                <Shape name="LOD0" shapeId="11" nodeId="196" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="197" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="198">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="199">
+                <Shape name="LOD0" shapeId="13" nodeId="200" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="201" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="202" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="203" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="1.00819 1.02074 -3.77622" rotation="-180 -83 -180" scale="0.505051 0.505051 0.505051" nodeId="204">
+            <TransformGroup name="pole01" nodeId="205">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="206">
+                <Shape name="LOD0" shapeId="11" nodeId="207" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="208" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="209">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="210">
+                <Shape name="LOD0" shapeId="13" nodeId="211" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="212" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="213" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="214" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="0.00334764 1.02074 -3.89096" rotation="0.000101383 -83.4427 -0.000106904" scale="0.505051 0.505051 0.505051" nodeId="215">
+            <TransformGroup name="pole01" nodeId="216">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="217">
+                <Shape name="LOD0" shapeId="11" nodeId="218" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="219" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="220">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="221">
+                <Shape name="LOD0" shapeId="13" nodeId="222" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="223" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="224" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="225" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="-1.01557 1.02074 -3.77384" rotation="3.62568e-05 -67.4427 -4.0273e-05" scale="0.505051 0.505051 0.505051" nodeId="226">
+            <TransformGroup name="pole01" nodeId="227">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="228">
+                <Shape name="LOD0" shapeId="11" nodeId="229" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="230" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="231">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="232">
+                <Shape name="LOD0" shapeId="13" nodeId="233" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="234" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="235" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="236" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="-1.95914 1.02074 -3.38189" rotation="2.62243e-05 -52.9427 -2.88032e-05" scale="0.505051 0.505051 0.505051" nodeId="237">
+            <TransformGroup name="pole01" nodeId="238">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="239">
+                <Shape name="LOD0" shapeId="11" nodeId="240" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="241" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="242">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="243">
+                <Shape name="LOD0" shapeId="13" nodeId="244" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="245" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="246" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="247" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="-2.76926 1.02074 -2.77015" rotation="2.18152e-05 -36.4427 -2.2599e-05" scale="0.505051 0.505051 0.505051" nodeId="248">
+            <TransformGroup name="pole01" nodeId="249">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="250">
+                <Shape name="LOD0" shapeId="11" nodeId="251" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="252" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="253">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="254">
+                <Shape name="LOD0" shapeId="13" nodeId="255" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="256" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="257" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="258" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="-3.37681 1.02074 -1.94737" rotation="2.02836e-05 -24.4426 -1.95927e-05" scale="0.505051 0.505051 0.505051" nodeId="259">
+            <TransformGroup name="pole01" nodeId="260">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="261">
+                <Shape name="LOD0" shapeId="11" nodeId="262" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="263" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="264">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="265">
+                <Shape name="LOD0" shapeId="13" nodeId="266" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="267" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="268" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="269" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="-3.79826 1.02074 -1.02013" rotation="1.92983e-05 -5.94264 -1.58818e-05" scale="0.505051 0.505051 0.505051" nodeId="270">
+            <TransformGroup name="pole01" nodeId="271">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="272">
+                <Shape name="LOD0" shapeId="11" nodeId="273" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="274" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="275">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="276">
+                <Shape name="LOD0" shapeId="13" nodeId="277" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="278" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="279" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="280" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="-3.90417 1.02074 -0.00258702" rotation="1.93108e-05 6.55736 -1.35622e-05" scale="0.505051 0.505051 0.505051" nodeId="281">
+            <TransformGroup name="pole01" nodeId="282">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="283">
+                <Shape name="LOD0" shapeId="11" nodeId="284" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="285" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="286">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="287">
+                <Shape name="LOD0" shapeId="13" nodeId="288" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="289" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="290" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="291" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="-3.78681 1.02074 1.01845" rotation="2.00892e-05 22.2034 -1.04572e-05" scale="0.505051 0.505051 0.505051" nodeId="292">
+            <TransformGroup name="pole01" nodeId="293">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="294">
+                <Shape name="LOD0" shapeId="11" nodeId="295" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="296" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="297">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="298">
+                <Shape name="LOD0" shapeId="13" nodeId="299" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="300" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="301" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="302" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="-3.40148 1.02074 1.96943" rotation="2.22888e-05 39.0574 -6.1866e-06" scale="0.505051 0.505051 0.505051" nodeId="303">
+            <TransformGroup name="pole01" nodeId="304">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="305">
+                <Shape name="LOD0" shapeId="11" nodeId="306" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="307" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="308">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="309">
+                <Shape name="LOD0" shapeId="13" nodeId="310" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="311" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="312" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="313" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="-2.76035 1.02074 2.75504" rotation="2.5874e-05 52.0574 -1.19735e-06" scale="0.505051 0.505051 0.505051" nodeId="314">
+            <TransformGroup name="pole01" nodeId="315">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="316">
+                <Shape name="LOD0" shapeId="11" nodeId="317" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="318" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="319">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="320">
+                <Shape name="LOD0" shapeId="13" nodeId="321" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="322" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="323" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="324" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+          <TransformGroup name="poles" translation="-1.9478 1.02074 3.38856" rotation="3.63906e-05 67.5574 1.08588e-05" scale="0.505051 0.505051 0.505051" nodeId="325">
+            <TransformGroup name="pole01" nodeId="326">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="327">
+                <Shape name="LOD0" shapeId="11" nodeId="328" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="329" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="panel01" nodeId="330">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="331">
+                <Shape name="LOD0" shapeId="13" nodeId="332" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="333" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+                <Shape name="LOD1" shapeId="15" nodeId="334" castsShadows="true" receiveShadows="true" materialIds="6">
+                  <Shape name="transparent" shapeId="14" clipDistance="80" nodeId="335" castsShadows="true" receiveShadows="true" materialIds="7"/>
+                </Shape>
+              </TransformGroup>
+            </TransformGroup>
+            <TransformGroup name="pole01" translation="-1.32772e-07 -1.21812e-13 2.02533" nodeId="336">
+              <TransformGroup name="visual_lod" lodDistance="0 15" lodBlending="false" clipDistance="200" nodeId="337">
+                <Shape name="LOD0" shapeId="11" nodeId="338" castsShadows="true" receiveShadows="true" materialIds="5"/>
+                <Shape name="LOD1" shapeId="12" nodeId="339" castsShadows="true" receiveShadows="true" materialIds="5"/>
+              </TransformGroup>
+            </TransformGroup>
+          </TransformGroup>
+        </TransformGroup>
+      </TransformGroup>
+    </TransformGroup>
+  </Scene>
+
+</i3D>
