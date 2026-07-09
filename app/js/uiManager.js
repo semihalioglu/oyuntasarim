@@ -1,7 +1,15 @@
 import GameManager from './gameManager.js?v=1.042';
 import Drawing from './drawing.js?v=1.042';
 
-const S = GameManager.S;
+const _rawS = GameManager.S;
+const S = new Proxy({}, {
+  get(_, prop) { return GameManager.S[prop]; },
+  set(_, prop, value) { GameManager.S[prop] = value; return true; },
+  has(_, prop) { return prop in GameManager.S; },
+  ownKeys() { return Object.keys(GameManager.S); },
+  getOwnPropertyDescriptor(_, prop) { return Object.getOwnPropertyDescriptor(GameManager.S, prop); }
+});
+const _GS = () => GameManager.S;
 const CROPS = GameManager.CROPS;
 const ANIM = GameManager.ANIM;
 const ROWS = 5;
@@ -674,16 +682,17 @@ const UIManager = {
 
   buyBuilding: function(k, price, name) {
     try {
-      if (S.built[k]) { UIManager.toast('Zaten inşa edildi!'); return }
-      if (S.money < price) { UIManager.toast('Yeterli paran yok! (' + price + ' TL)'); return }
-      S.money -= price; S.built[k] = true;
+      let GS = _GS();
+      if (GS.built[k]) { UIManager.toast('Zaten inşa edildi!'); return }
+      if (GS.money < price) { UIManager.toast('Yeterli paran yok! (' + price + ' TL)'); return }
+      GS.money -= price; GS.built[k] = true;
       if (k === 'grid') {
         for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
-          if (!S.plots.find(p => p.r === r && p.c === c)) S.plots.push({ r, c, crop: null, age: 0, w: false, p: false, nextHarvest: 0, harvestCount: 0, plowTimer: 1080, wetTimer: 0 });
-          if (!S.plowed.includes(r * COLS + c)) S.plowed.push(r * COLS + c);
+          if (!GS.plots.find(p => p.r === r && p.c === c)) GS.plots.push({ r, c, crop: null, age: 0, w: false, p: false, nextHarvest: 0, harvestCount: 0, plowTimer: 1080, wetTimer: 0 });
+          if (!GS.plowed.includes(r * COLS + c)) GS.plowed.push(r * COLS + c);
         }
       }
-      S.animateBuilding = { key: k, t: Date.now() };
+      GS.animateBuilding = { key: k, t: Date.now() };
       UIManager.closeM('tesisler');
       UIManager.updateHUD(); window.draw();
       if (k === 'grid') {
