@@ -170,6 +170,10 @@ function draw(){
   }
   window.barnX=barnX;window.barnY=barnY;window.barnS=barnS;
   if(S.built.ahır){
+    if(!window._barnLog){
+      window._barnLog=true;
+      console.log('AHİR built=true, barnX='+barnX.toFixed(0)+' barnY='+barnY.toFixed(0)+' barnS='+barnS.toFixed(0)+' W='+W+' H='+H+' CL='+CL+' X='+typeof X);
+    }
     Drawing.drawBarn(barnX,barnY,barnS);
   }
 
