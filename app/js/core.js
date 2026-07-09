@@ -164,9 +164,8 @@ function draw(){
   if(S.buildingPos.ahır){
     barnX=S.buildingPos.ahır.x;barnY=S.buildingPos.ahır.y;
   }else{
-    let barnMinX=gridRight+CL*1.0;
-    barnX=S.built.grid?Math.max(barnMinX,Math.min(W*0.88,gridRight+barnS+CL*0.5)):W*0.88;
-    barnY=sceneTop+Math.floor((H-86)*0.02);
+    barnX=W-barnS-CL*1.2;
+    barnY=sceneTop+CL*1.5;
   }
   window.barnX=barnX;window.barnY=barnY;window.barnS=barnS;
   if(S.built.ahır){
@@ -178,7 +177,7 @@ function draw(){
     kümesX=S.buildingPos.kümes.x;kümesY=S.buildingPos.kümes.y;
   }else{
     kümesX=barnX;
-    kümesY=barnY+barnS*2.2;
+    kümesY=barnY+barnS*2.0;
   }
   window.kümesX=kümesX;window.kümesY=kümesY;window.kümesS=kümesS;
   if(S.built.kümes){
@@ -262,7 +261,7 @@ function draw(){
   if(S.buildingPos.degirmen){
     wmX=S.buildingPos.degirmen.x;wmY=S.buildingPos.degirmen.y;
   }else{
-    wmX=houseX;wmY=houseY+houseS*1.5;
+    wmX=houseX-houseS*0.2;wmY=houseY+houseS*1.5;
   }
   window.wmX=wmX;window.wmY=wmY;window.wmS=wmS;
   if(S.built.degirmen){
@@ -271,9 +270,8 @@ function draw(){
 
   if(!S.buildingPos||!S.buildingPos.fırın){
     firinS=CL*(ISLANDSCAPE?2.0:1.6);
-    firinX=gridRight+firinS*1.2;
-    firinY=sceneTop+firinS*1.8;
-    if(firinX+firinS>W-firinS){firinX=houseX+houseS*1.5;firinY=houseY+houseS*1.8}
+    firinX=barnX;
+    firinY=kümesY+kümesS*2.0;
   }else{
     firinX=S.buildingPos.fırın.x;firinY=S.buildingPos.fırın.y;firinS=CL*(ISLANDSCAPE?2.0:1.6);
   }
@@ -284,19 +282,19 @@ function draw(){
 
   sutIslemS=CL*(ISLANDSCAPE?1.8:1.4);
   if(S.buildingPos.sutislem){sutIslemX=S.buildingPos.sutislem.x;sutIslemY=S.buildingPos.sutislem.y}
-  else{let gx=gridRight+CL*2;sutIslemX=gx;sutIslemY=sceneTop+CL*2}
+  else{let floorY=H-48;sutIslemX=CL*1.5;sutIslemY=floorY-sutIslemS*1.8}
   window.sutIslemX=sutIslemX;window.sutIslemY=sutIslemY;window.sutIslemS=sutIslemS;
   if(S.built.sutislem){Drawing.drawSutIslem(sutIslemX,sutIslemY,sutIslemS)}
 
   peynirS=CL*(ISLANDSCAPE?1.8:1.4);
   if(S.buildingPos.peynirfab){peynirX=S.buildingPos.peynirfab.x;peynirY=S.buildingPos.peynirfab.y}
-  else{let gx=gridRight+CL*2;peynirX=gx;peynirY=sceneTop+CL*5}
+  else{let floorY=H-48;peynirX=sutIslemX+sutIslemS*1.5;peynirY=floorY-peynirS*1.8}
   window.peynirX=peynirX;window.peynirY=peynirY;window.peynirS=peynirS;
   if(S.built.peynirfab){Drawing.drawPeynirFab(peynirX,peynirY,peynirS)}
 
   salcaS=CL*(ISLANDSCAPE?1.8:1.4);
   if(S.buildingPos.salçafab){salcaX=S.buildingPos.salçafab.x;salcaY=S.buildingPos.salçafab.y}
-  else{let gx=gridRight+CL*2;salcaX=gx;salcaY=sceneTop+CL*8}
+  else{let floorY=H-48;salcaX=peynirX+peynirS*1.5;salcaY=floorY-salcaS*1.8}
   window.salcaX=salcaX;window.salcaY=salcaY;window.salcaS=salcaS;
   if(S.built.salçafab){Drawing.drawSalcaFab(salcaX,salcaY,salcaS)}
 
