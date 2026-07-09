@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.022c';
-import UIManager from './uiManager.js?v=1.022c';
-import GameManager from './gameManager.js?v=1.022c';
-import Drawing from './drawing.js?v=1.022c';
+import StorageManager from './storageManager.js?v=1.023';
+import UIManager from './uiManager.js?v=1.023';
+import GameManager from './gameManager.js?v=1.023';
+import Drawing from './drawing.js?v=1.023';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
@@ -104,6 +104,7 @@ function draw(){
   if(!X){return;}
   X.clearRect(0,0,W,H);
   calcLayout();
+  window.W=W;window.H=H;window.CL=CL;window.GX=GX;window.GY=GY;window.sceneTop=sceneTop;window.ISLANDSCAPE=ISLANDSCAPE;
   zoomLevel+=(zoomTarget-zoomLevel)*0.15;
   if(Math.abs(zoomLevel-zoomTarget)<0.005)zoomLevel=zoomTarget;
   if(S.buildingPos.grid){
@@ -313,7 +314,6 @@ function draw(){
   Drawing.drawFenceSegment(W*0.7,fenceY2,W,fenceY2);
 
 if(S.built.grid){
-  console.log('[draw] GRID RENDER START, GX=', GX, 'GY=', GY, 'CL=', CL, 'ROWS=', ROWS, 'COLS=', COLS);
   X.fillStyle='#5d4037';
   X.fillRect(GX-5,GY-5,COLS*CL+10,ROWS*CL+10);
   X.fillStyle='#6d4c41';
@@ -570,7 +570,6 @@ if(S.built.grid){
   X.fillText('EV: Dinlen | MAGAZA: Alışveriş | HAYVAN: Bakım | DEPO: Ürünler | Traktör: Sur',16,H-22);
 
     if(S.dragging){
-    console.log('[draw] rendering drag ghost: key=', S.dragging, 'dx=', S.dragX, 'dy=', S.dragY);
     let dx=S.dragX,dy=S.dragY;
     let valid=GameManager.isValidPlacement(S.dragging,dx,dy);
     X.globalAlpha=0.5;

@@ -404,8 +404,7 @@ buySeed(k,cr){
 
 buyBuilding(k,price,name){
   const S=this.S;
-  const{ROWS,COLS,CROPS}=this;
-  console.log('[GM.buyBuilding] called:', k, price, name);
+  const{ROWS,COLS,CROPS,BUILDING_NAMES}=this;
   try {
     if(S.built[k]){window.toast('Zaten inşa edildi!');return}
     if(S.money<price){window.toast('Yeterli paran yok! ('+price+' TL)');return}
@@ -422,9 +421,7 @@ buyBuilding(k,price,name){
     if(k==='grid'){
       this.checkTutorialAction('build_grid');
     }else{
-      window.startDrag(k);
-      S.dragX=window.W/2;S.dragY=window.H/2;
-      window.draw();
+      window.toast(BUILDING_NAMES[k]+' inşa edildi! Taşıma Modu ile yerini değiştirebilirsin.');
     }
     if(k==='kuyu')this.checkTutorialAction('build_kuyu');
     if(k==='degirmen')this.checkTutorialAction('build_degirmen');
@@ -434,9 +431,7 @@ buyBuilding(k,price,name){
     if(k==='sutislem')this.checkTutorialAction('build_sutislem');
     if(k==='peynirfab')this.checkTutorialAction('build_peynirfab');
     if(k==='salçafab')this.checkTutorialAction('build_salçafab');
-    console.log('[GM.buyBuilding] completed');
   } catch(e) {
-    console.error('[GM.buyBuilding] ERROR:', e.message, e.stack);
     window.toast('Hata: ' + e.message);
   }
 },

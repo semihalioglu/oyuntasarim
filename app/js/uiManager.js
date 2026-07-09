@@ -672,12 +672,10 @@ const UIManager = {
   },
 
   buyBuilding: function(k, price, name) {
-    console.log('[buyBuilding] called:', k, price, name, 'S.built[k]=', S.built[k], 'S.money=', S.money);
     try {
       if (S.built[k]) { UIManager.toast('Zaten inşa edildi!'); return }
       if (S.money < price) { UIManager.toast('Yeterli paran yok! (' + price + ' TL)'); return }
       S.money -= price; S.built[k] = true;
-      console.log('[buyBuilding] built set, money=', S.money);
       if (k === 'grid') {
         for (let r = 0; r < ROWS; r++) for (let c = 0; c < COLS; c++) {
           if (!S.plots.find(p => p.r === r && p.c === c)) S.plots.push({ r, c, crop: null, age: 0, w: false, p: false, nextHarvest: 0, harvestCount: 0, plowTimer: 1080, wetTimer: 0 });
@@ -686,17 +684,11 @@ const UIManager = {
       }
       S.animateBuilding = { key: k, t: Date.now() };
       UIManager.closeM('tesisler');
-      console.log('[buyBuilding] modal closed, calling updateHUD+draw');
       UIManager.updateHUD(); window.draw();
       if (k === 'grid') {
         UIManager.checkTutorialAction('build_grid');
       } else {
-        console.log('[buyBuilding] starting drag for', k);
-        UIManager.startDrag(k);
-        S.dragX = window.W / 2; S.dragY = window.H / 2;
-        console.log('[buyBuilding] dragX=', S.dragX, 'dragY=', S.dragY, 'W=', window.W, 'H=', window.H);
-        window.draw();
-        console.log('[buyBuilding] draw after drag called');
+        UIManager.toast(BUILDING_NAMES[k] + ' inşa edildi! Taşıma Modu ile yerini değiştirebilirsin.');
       }
       if (k === 'kuyu') UIManager.checkTutorialAction('build_kuyu');
       if (k === 'degirmen') UIManager.checkTutorialAction('build_degirmen');
@@ -706,9 +698,7 @@ const UIManager = {
       if (k === 'sutislem') UIManager.checkTutorialAction('build_sutislem');
       if (k === 'peynirfab') UIManager.checkTutorialAction('build_peynirfab');
       if (k === 'salçafab') UIManager.checkTutorialAction('build_salçafab');
-      console.log('[buyBuilding] completed successfully');
     } catch (e) {
-      console.error('[buyBuilding] ERROR:', e.message, e.stack);
       UIManager.toast('Hata oluştu: ' + e.message);
     }
   },
@@ -901,7 +891,7 @@ const UIManager = {
 
   isValidPlacement: function(key, x, y) {
     let pad = window.CL * 0.5;
-    if (x < pad || x > window.W - pad || y < pad || y > window.H - 48 - pad) { console.log('[isValidPlacement] FAIL bounds: x=', x, 'y=', y, 'pad=', pad, 'W=', window.W, 'H=', window.H); return false; }
+    if (x < pad || x > window.W - pad || y < pad || y > window.H - 48 - pad) { return false; }
     let hx = (function () {
       let hs = window.CL * (window.ISLANDSCAPE ? 2.8 : 2.0);
       let hg = window.CL * 1.2;
