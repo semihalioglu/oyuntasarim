@@ -1,5 +1,5 @@
-import GameManager from './gameManager.js?v=1.043';
-import Drawing from './drawing.js?v=1.043';
+import GameManager from './gameManager.js?v=1.044';
+import Drawing from './drawing.js?v=1.044';
 
 const _rawS = GameManager.S;
 const S = new Proxy({}, {

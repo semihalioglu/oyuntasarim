@@ -25,14 +25,24 @@ drawSpriteLabel(key,x,y,s,label,labelColor){
   let w=s*1.6,h=w/aspect;
   X.drawImage(img,x-w/2,y-h/2,w,h);
   if(label){
-    let fs=Math.max(s*0.12,8);
+    let fs=Math.max(s*0.11,7);
     X.save();
     X.font=`bold ${fs}px "Nunito",Arial,sans-serif`;
     X.textAlign='center';X.textBaseline='middle';
-    X.fillStyle='rgba(0,0,0,0.5)';
-    X.fillRect(x-fs*label.length*0.32,y-h/2-fs*1.4,fs*label.length*0.64,fs*1.3);
+    let labelY=y-h*0.12;
+    X.fillStyle='rgba(0,0,0,0.45)';
+    let rw=fs*label.length*0.34;
+    let rh=fs*1.2;
+    X.beginPath();
+    let rr=fs*0.2;
+    let rx=x-rw,ry=labelY-rh/2;
+    X.moveTo(rx+rr,ry);X.lineTo(rx+rw*2-rr,ry);X.quadraticCurveTo(rx+rw*2,ry,rx+rw*2,ry+rr);
+    X.lineTo(rx+rw*2,ry+rh-rr);X.quadraticCurveTo(rx+rw*2,ry+rh,rx+rw*2-rr,ry+rh);
+    X.lineTo(rx+rr,ry+rh);X.quadraticCurveTo(rx,ry+rh,rx,ry+rh-rr);
+    X.lineTo(rx,ry+rr);X.quadraticCurveTo(rx,ry,rx+rr,ry);
+    X.fill();
     X.fillStyle=labelColor||'#ffd54f';
-    X.fillText(label,x,y-h/2-fs*0.75);
+    X.fillText(label,x,labelY);
     X.restore();
   }
   return true;
@@ -67,10 +77,10 @@ drawSky(){
     g.addColorStop(0.5,`rgba(190,205,220,${0.5+dl*0.5})`);
     g.addColorStop(1,`rgba(200,215,200,${0.5+dl*0.5})`);
   }else{
-    g.addColorStop(0,`rgba(40,60,${80+dl*100},${0.3+dl*0.7})`);
-    g.addColorStop(0.3,`rgba(135,206,235,${0.3+dl*0.7})`);
-    g.addColorStop(0.7,`rgba(176,224,255,${0.3+dl*0.7})`);
-    g.addColorStop(1,`rgba(200,230,200,${0.3+dl*0.7})`);
+    g.addColorStop(0,`rgba(135,180,220,${0.3+dl*0.7})`);
+    g.addColorStop(0.25,`rgba(160,200,235,${0.3+dl*0.7})`);
+    g.addColorStop(0.6,`rgba(190,215,200,${0.3+dl*0.7})`);
+    g.addColorStop(1,`rgba(200,220,180,${0.3+dl*0.7})`);
   }
   X.fillStyle=g;X.fillRect(0,0,W,skyH);
   // Gunes veya ay
@@ -143,13 +153,13 @@ drawSky(){
 
 drawMountains(){
   let baseY=sceneTop+5;
-  X.fillStyle='#5a8a4a';
+  X.fillStyle='#6a9a55';
   X.beginPath();X.moveTo(0,baseY);
   for(let x=0;x<=W;x+=W/8){
     X.lineTo(x,baseY-30-Math.sin(x*0.003)*25-Math.cos(x*0.007)*15);
   }
   X.lineTo(W,baseY);X.closePath();X.fill();
-  X.fillStyle='#4a7a3a';
+  X.fillStyle='#5a8a45';
   X.beginPath();X.moveTo(0,baseY);
   for(let x=0;x<=W;x+=W/12){
     X.lineTo(x,baseY-15-Math.sin(x*0.005+1)*18-Math.cos(x*0.003)*10);
@@ -159,11 +169,11 @@ drawMountains(){
 
 drawGrassBackground(){
   let g=X.createLinearGradient(0,sceneTop-5,0,H);
-  g.addColorStop(0,'#5da832');g.addColorStop(0.05,'#4e9a2e');g.addColorStop(1,'#3d8a22');
+  g.addColorStop(0,'#6aad45');g.addColorStop(0.05,'#5a9d3a');g.addColorStop(0.4,'#4a8d30');g.addColorStop(1,'#3e7d28');
   X.fillStyle=g;X.fillRect(0,sceneTop-5,W,H-sceneTop+5);
   for(let i=0;i<80;i++){
     let gx=(i*173+23)%W,gy=sceneTop+((i*293+47)%(H-sceneTop-50));
-    X.strokeStyle=i%3?'rgba(80,180,50,0.3)':'rgba(60,140,30,0.25)';
+    X.strokeStyle=i%3?'rgba(100,190,60,0.3)':'rgba(70,150,40,0.25)';
     X.lineWidth=0.8;
     X.beginPath();X.moveTo(gx,gy);X.lineTo(gx+1,gy-4-i%3);X.stroke();
   }

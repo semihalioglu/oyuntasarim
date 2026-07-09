@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.043';
-import UIManager from './uiManager.js?v=1.043';
-import GameManager from './gameManager.js?v=1.043';
-import Drawing from './drawing.js?v=1.043';
+import StorageManager from './storageManager.js?v=1.044';
+import UIManager from './uiManager.js?v=1.044';
+import GameManager from './gameManager.js?v=1.044';
+import Drawing from './drawing.js?v=1.044';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
@@ -124,12 +124,12 @@ function draw(){
   }else if(S.weather==='bulutlu'){
     bgG.addColorStop(0,`rgba(170,190,210,${0.5+bgDl*0.5})`);bgG.addColorStop(0.15,`rgba(200,215,200,${0.5+bgDl*0.5})`);
   }else{
-    bgG.addColorStop(0,`rgba(40,60,${80+bgDl*100},${0.3+bgDl*0.7})`);
-    bgG.addColorStop(0.12,`rgba(135,206,235,${0.3+bgDl*0.7})`);
-    bgG.addColorStop(0.2,`rgba(176,224,255,${0.3+bgDl*0.7})`);
-    bgG.addColorStop(0.25,`rgba(200,230,200,${0.3+bgDl*0.7})`);
+    bgG.addColorStop(0,`rgba(135,180,220,${0.3+bgDl*0.7})`);
+    bgG.addColorStop(0.12,`rgba(160,200,235,${0.3+bgDl*0.7})`);
+    bgG.addColorStop(0.2,`rgba(190,215,200,${0.3+bgDl*0.7})`);
+    bgG.addColorStop(0.25,`rgba(200,220,180,${0.3+bgDl*0.7})`);
   }
-  bgG.addColorStop(0.3,'#5da832');bgG.addColorStop(1,'#3d8a22');
+  bgG.addColorStop(0.3,'#6aad45');bgG.addColorStop(1,'#3e7d28');
   X.fillStyle=bgG;X.fillRect(0,0,W,H);
 
   X.save();
@@ -331,10 +331,10 @@ function draw(){
 
   let forestTop=H-48-CL*0.3;
   let g2=X.createLinearGradient(0,forestTop,0,H-48);
-  g2.addColorStop(0,'#5a8a3a');g2.addColorStop(1,'#4a7a2a');
+  g2.addColorStop(0,'#5a9a40');g2.addColorStop(1,'#4a8a30');
   X.fillStyle=g2;X.fillRect(0,forestTop,W,H-48-forestTop);
 
-  X.strokeStyle='#6a9a4a';X.lineWidth=2;
+  X.strokeStyle='#6aaa50';X.lineWidth=2;
   X.beginPath();X.moveTo(0,forestTop);X.lineTo(W,forestTop);X.stroke();
 
   let fenceY2=forestTop-CL*0.15;
