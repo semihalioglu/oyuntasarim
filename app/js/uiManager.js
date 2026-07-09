@@ -968,7 +968,6 @@ const UIManager = {
   },
 
   handleCanvasClick: function(e) {
-    console.log('[handleCanvasClick] S.dragging=', S.dragging, 'S.buildingMenu=', !!S.buildingMenu, 'wasPanning=', window.wasPanning);
     if (S.dragging || S.buildingMenu || window.wasPanning) { window.wasPanning = false; return }
     window.wasPanning = false;
     let mx = e.clientX, my = e.clientY;

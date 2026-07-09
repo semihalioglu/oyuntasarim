@@ -167,6 +167,7 @@ function draw(){
     barnX=S.built.grid?Math.max(barnMinX,Math.min(W*0.88,gridRight+barnS+CL*0.5)):W*0.88;
     barnY=sceneTop+Math.floor((H-86)*0.02);
   }
+  window.barnX=barnX;window.barnY=barnY;window.barnS=barnS;
   if(S.built.ahır){
     Drawing.drawBarn(barnX,barnY,barnS);
   }
@@ -178,6 +179,7 @@ function draw(){
     kümesX=barnX;
     kümesY=barnY+barnS*2.2;
   }
+  window.kümesX=kümesX;window.kümesY=kümesY;window.kümesS=kümesS;
   if(S.built.kümes){
     Drawing.drawKümes(kümesX,kümesY,kümesS);
   }
@@ -250,6 +252,7 @@ function draw(){
   }else{
     wellX=W*0.5;wellY=GY+CL*3;
   }
+  window.wellX=wellX;window.wellY=wellY;window.wellS=wellS;
   if(S.built.kuyu){
     Drawing.drawWell(wellX,wellY,wellS);
   }
@@ -260,6 +263,7 @@ function draw(){
   }else{
     wmX=houseX;wmY=houseY+houseS*1.5;
   }
+  window.wmX=wmX;window.wmY=wmY;window.wmS=wmS;
   if(S.built.degirmen){
     Drawing.drawWindmill(wmX,wmY,wmS);
   }
@@ -272,6 +276,7 @@ function draw(){
   }else{
     firinX=S.buildingPos.fırın.x;firinY=S.buildingPos.fırın.y;firinS=CL*(ISLANDSCAPE?2.0:1.6);
   }
+  window.firinX=firinX;window.firinY=firinY;window.firinS=firinS;
   if(S.built.fırın){
     Drawing.drawFırın(firinX,firinY,firinS);
   }
@@ -279,16 +284,19 @@ function draw(){
   sutIslemS=CL*(ISLANDSCAPE?1.8:1.4);
   if(S.buildingPos.sutislem){sutIslemX=S.buildingPos.sutislem.x;sutIslemY=S.buildingPos.sutislem.y}
   else{let gx=gridRight+CL*2;sutIslemX=gx;sutIslemY=sceneTop+CL*2}
+  window.sutIslemX=sutIslemX;window.sutIslemY=sutIslemY;window.sutIslemS=sutIslemS;
   if(S.built.sutislem){Drawing.drawSutIslem(sutIslemX,sutIslemY,sutIslemS)}
 
   peynirS=CL*(ISLANDSCAPE?1.8:1.4);
   if(S.buildingPos.peynirfab){peynirX=S.buildingPos.peynirfab.x;peynirY=S.buildingPos.peynirfab.y}
   else{let gx=gridRight+CL*2;peynirX=gx;peynirY=sceneTop+CL*5}
+  window.peynirX=peynirX;window.peynirY=peynirY;window.peynirS=peynirS;
   if(S.built.peynirfab){Drawing.drawPeynirFab(peynirX,peynirY,peynirS)}
 
   salcaS=CL*(ISLANDSCAPE?1.8:1.4);
   if(S.buildingPos.salçafab){salcaX=S.buildingPos.salçafab.x;salcaY=S.buildingPos.salçafab.y}
   else{let gx=gridRight+CL*2;salcaX=gx;salcaY=sceneTop+CL*8}
+  window.salcaX=salcaX;window.salcaY=salcaY;window.salcaS=salcaS;
   if(S.built.salçafab){Drawing.drawSalcaFab(salcaX,salcaY,salcaS)}
 
   let forestTop=H-48-CL*0.3;
