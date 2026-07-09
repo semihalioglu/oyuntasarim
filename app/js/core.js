@@ -170,6 +170,7 @@ function draw(){
   }
   window.barnX=barnX;window.barnY=barnY;window.barnS=barnS;
   if(S.built.ahır){
+    if(!draw._barnLogged){draw._barnLogged=true;console.log('[v1.024] BARN DRAW: x='+barnX.toFixed(0)+' y='+barnY.toFixed(0)+' s='+barnS.toFixed(0)+' W='+W+' H='+H+' CL='+CL+' GX='+GX+' built='+S.built.ahır+' pos='+JSON.stringify(S.buildingPos.ahır));}
     Drawing.drawBarn(barnX,barnY,barnS);
   }
 
