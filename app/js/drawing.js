@@ -514,7 +514,6 @@ drawHouse(x,y,s){
 },
 
 drawBarn(x,y,s){
-  if(this.drawSprite('barn',x,y,s))return;
   X.save();X.translate(x,y);
 
   // Gölge
@@ -643,7 +642,6 @@ drawBarn(x,y,s){
 },
 
 drawKümes(x,y,s){
-  if(this.drawSprite('kümes',x,y,s))return;
   X.save();X.translate(x,y);
 
   // Gölge
@@ -1143,7 +1141,6 @@ drawHayBale(x,y,s){
 },
 
 drawWindmill(x,y,s){
-  if(this.drawSprite('degirmen',x,y,s))return;
   X.save();X.translate(x,y);
   X.fillStyle='rgba(0,0,0,0.12)';X.beginPath();X.ellipse(0,s*0.6,s*0.45,s*0.08,0,0,Math.PI*2);X.fill();
   // Gövde - beyaz taş
@@ -1542,7 +1539,6 @@ drawMiniKümes(ctx,s){
 },
 
 drawWell(x,y,s){
-  if(this.drawSprite('kuyu',x,y,s))return;
   X.save();X.translate(x,y);
 
   // Gölge
