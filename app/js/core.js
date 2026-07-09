@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.023';
-import UIManager from './uiManager.js?v=1.023';
-import GameManager from './gameManager.js?v=1.023';
-import Drawing from './drawing.js?v=1.023';
+import StorageManager from './storageManager.js';
+import UIManager from './uiManager.js';
+import GameManager from './gameManager.js';
+import Drawing from './drawing.js';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
@@ -170,10 +170,6 @@ function draw(){
   }
   window.barnX=barnX;window.barnY=barnY;window.barnS=barnS;
   if(S.built.ahır){
-    if(!window._barnLog){
-      window._barnLog=true;
-      console.log('AHİR built=true, barnX='+barnX.toFixed(0)+' barnY='+barnY.toFixed(0)+' barnS='+barnS.toFixed(0)+' W='+W+' H='+H+' CL='+CL+' X='+typeof X);
-    }
     Drawing.drawBarn(barnX,barnY,barnS);
   }
 
