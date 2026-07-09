@@ -164,6 +164,14 @@ drawFenceSegment(x1,y1,x2,y2){
 
 drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
   let targets=[];
+  let floorY2=H-48;
+  let rCol1X2=gridRight+CL*1.0;
+  let rCol2X2=W-CL*2.5;
+  let rAvailH2=floorY2-sceneTop;
+  let rRowH2=rAvailH2/3.5;
+  let rRow1Y2=sceneTop+CL*0.3;
+  let rRow2Y2=rRow1Y2+rRowH2;
+  let rRow3Y2=rRow2Y2+rRowH2;
   if(S.built.kuyu){
     let kx,ky;
     if(S.buildingPos.kuyu){kx=S.buildingPos.kuyu.x;ky=S.buildingPos.kuyu.y}
@@ -174,47 +182,43 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
   if(S.built.ahır){
     let ax,ay;
     if(S.buildingPos.ahır){ax=S.buildingPos.ahır.x;ay=S.buildingPos.ahır.y}
-    else{ax=S.built.grid?Math.max(gridRight+CL*1.0,Math.min(W*0.88,gridRight+CL*2.5+CL*0.5)):W*0.88;ay=sceneTop+Math.floor((H-86)*0.02)}
+    else{ax=rCol2X2;ay=rRow1Y2}
     targets.push({x:ax,y:ay,k:'ahır'});
   }
   if(S.built.kümes){
     let kx,ky;
     if(S.buildingPos.kümes){kx=S.buildingPos.kümes.x;ky=S.buildingPos.kümes.y}
-    else{
-      let ax2;if(S.buildingPos.ahır)ax2=S.buildingPos.ahır.x;else ax2=S.built.grid?Math.max(gridRight+CL,Math.min(W*0.88,gridRight+CL*3)):W*0.88;
-      let ay2;if(S.buildingPos.ahır)ay2=S.buildingPos.ahır.y;else ay2=sceneTop+2;
-      kx=ax2;ky=ay2+CL*5;
-    }
+    else{kx=rCol1X2;ky=rRow1Y2}
     targets.push({x:kx,y:ky,k:'kümes'});
   }
   if(S.built.degirmen){
     let dx,dy;
     if(S.buildingPos.degirmen){dx=S.buildingPos.degirmen.x;dy=S.buildingPos.degirmen.y}
-    else{dx=hx;dy=hy+houseS*1.5}
+    else{dx=hx-houseS*0.2;dy=hy+houseS*1.5}
     targets.push({x:dx,y:dy,k:'degirmen'});
   }
   if(S.built.fırın){
     let fx,fy;
     if(S.buildingPos.fırın){fx=S.buildingPos.fırın.x;fy=S.buildingPos.fırın.y}
-    else{let fs=CL*(ISLANDSCAPE?2.0:1.6);fx=gridRight+fs*1.2;fy=sceneTop+fs*1.8;if(fx+fs>W-fs){fx=hx+houseS*1.5;fy=hy+houseS*1.8}}
+    else{fx=rCol2X2;fy=rRow2Y2}
     targets.push({x:fx,y:fy,k:'fırın'});
   }
   if(S.built.sutislem){
     let sx,sy;
     if(S.buildingPos.sutislem){sx=S.buildingPos.sutislem.x;sy=S.buildingPos.sutislem.y}
-    else{sx=gridRight+CL*2;sy=sceneTop+CL*2}
+    else{sx=rCol1X2;sy=rRow2Y2}
     targets.push({x:sx,y:sy,k:'sutislem'});
   }
   if(S.built.peynirfab){
     let px,py;
     if(S.buildingPos.peynirfab){px=S.buildingPos.peynirfab.x;py=S.buildingPos.peynirfab.y}
-    else{px=gridRight+CL*2;py=sceneTop+CL*5}
+    else{px=rCol2X2;py=rRow3Y2}
     targets.push({x:px,y:py,k:'peynirfab'});
   }
   if(S.built.salçafab){
     let sx,sy;
     if(S.buildingPos.salçafab){sx=S.buildingPos.salçafab.x;sy=S.buildingPos.salçafab.y}
-    else{sx=gridRight+CL*2;sy=sceneTop+CL*8}
+    else{sx=rCol1X2;sy=rRow3Y2}
     targets.push({x:sx,y:sy,k:'salçafab'});
   }
   if(targets.length===0)return;
