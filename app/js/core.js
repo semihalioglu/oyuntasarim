@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.026';
-import UIManager from './uiManager.js?v=1.026';
-import GameManager from './gameManager.js?v=1.026';
-import Drawing from './drawing.js?v=1.026';
+import StorageManager from './storageManager.js?v=1.027';
+import UIManager from './uiManager.js?v=1.027';
+import GameManager from './gameManager.js?v=1.027';
+import Drawing from './drawing.js?v=1.027';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
@@ -161,15 +161,29 @@ function draw(){
   }
 
   let floorY=H-48;
-  let rCol1X=gridRight+CL*1.0;
-  let rCol2X=W-CL*2.5;
+  let rightW=W-gridRight;
   let rAvailH=floorY-sceneTop;
-  let rRowH=rAvailH/3.5;
-  let rRow1Y=sceneTop+CL*0.3;
-  let rRow2Y=rRow1Y+rRowH;
-  let rRow3Y=rRow2Y+rRowH;
+  let useTwoCols=rightW>CL*5.5;
+  let rCol1X,rCol2X,rRow1Y,rRow2Y,rRow3Y,rRowH;
 
-  barnS=CL*2.5;
+  if(useTwoCols){
+    rCol1X=gridRight+CL*1.0;
+    rCol2X=W-CL*2.5;
+    rRowH=rAvailH/3.5;
+    rRow1Y=sceneTop+CL*0.3;
+    rRow2Y=rRow1Y+rRowH;
+    rRow3Y=rRow2Y+rRowH;
+  }else{
+    rCol1X=gridRight+CL*0.5;
+    rCol2X=rCol1X;
+    rRowH=rAvailH/4.0;
+    rRow1Y=sceneTop+CL*0.2;
+    rRow2Y=rRow1Y+rRowH;
+    rRow3Y=rRow2Y+rRowH;
+  }
+
+  let bScale=useTwoCols?1:0.75;
+  barnS=CL*2.5*bScale;
   if(S.buildingPos.ahır){
     barnX=S.buildingPos.ahır.x;barnY=S.buildingPos.ahır.y;
   }else{
@@ -180,7 +194,7 @@ function draw(){
     Drawing.drawBarn(barnX,barnY,barnS);
   }
 
-  kümesS=CL*2.0;
+  kümesS=CL*2.0*bScale;
   if(S.buildingPos.kümes){
     kümesX=S.buildingPos.kümes.x;kümesY=S.buildingPos.kümes.y;
   }else{
@@ -212,20 +226,20 @@ function draw(){
   if(S.built.ahır){
     for(let i=0;i<Math.min(S.co,3);i++){
       let cx=fYX+fYW*0.2+i*fYW*0.25;
-      let cy=fYY+fYH*0.35+Math.sin(Date.now()/1500+i)*CL*0.08;
-      Drawing.drawCow(cx,cy,CL*1.1,i%2===0);
+      let cy=fYY+fYH*0.35+Math.sin(Date.now()/1500+i)*CL*0.08*bScale;
+      Drawing.drawCow(cx,cy,CL*1.1*bScale,i%2===0);
     }
     for(let i=0;i<Math.min(S.sh,3);i++){
       let cx=fYX+fYW*0.15+i*fYW*0.2;
-      let cy=fYY+fYH*0.65+Math.sin(Date.now()/1800+i*2)*CL*0.05;
-      Drawing.drawSheep(cx,cy,CL*0.6,i%2===0);
+      let cy=fYY+fYH*0.65+Math.sin(Date.now()/1800+i*2)*CL*0.05*bScale;
+      Drawing.drawSheep(cx,cy,CL*0.6*bScale,i%2===0);
     }
   }
   if(S.built.kümes){
     for(let i=0;i<Math.min(S.ch,6);i++){
       let cx=kFfX+kFfW*0.15+i*kFfW*0.14;
-      let cy=kFfY+kFfH*0.4+Math.sin(Date.now()/800+i*1.5)*CL*0.05;
-      Drawing.drawChicken(cx,cy,CL*0.42,i%2===0,i%3);
+      let cy=kFfY+kFfH*0.4+Math.sin(Date.now()/800+i*1.5)*CL*0.05*bScale;
+      Drawing.drawChicken(cx,cy,CL*0.42*bScale,i%2===0,i%3);
     }
   }
 
@@ -249,7 +263,7 @@ function draw(){
   X.fillStyle='#2d2d2d';X.beginPath();X.arc(dogX+CL*0.22,dogY-CL*0.04,CL*0.015,0,Math.PI*2);X.fill();
   X.fillStyle='#e57373';X.beginPath();X.ellipse(dogX+CL*0.2,dogY-CL*0.01,CL*0.01,CL*0.02,.2,0,Math.PI*2);X.fill();
 
-  wellS=CL*2.1;
+  wellS=CL*2.1*bScale;
   if(S.buildingPos.kuyu){
     wellX=S.buildingPos.kuyu.x;wellY=S.buildingPos.kuyu.y;
   }else if(S.built.grid){
@@ -275,7 +289,7 @@ function draw(){
     Drawing.drawWindmill(wmX,wmY,wmS);
   }
 
-  firinS=CL*(ISLANDSCAPE?2.0:1.6);
+  firinS=CL*(ISLANDSCAPE?2.0:1.6)*bScale;
   if(S.buildingPos.fırın){
     firinX=S.buildingPos.fırın.x;firinY=S.buildingPos.fırın.y;
   }else{
@@ -286,19 +300,19 @@ function draw(){
     Drawing.drawFırın(firinX,firinY,firinS);
   }
 
-  sutIslemS=CL*(ISLANDSCAPE?1.8:1.4);
+  sutIslemS=CL*(ISLANDSCAPE?1.8:1.4)*bScale;
   if(S.buildingPos.sutislem){sutIslemX=S.buildingPos.sutislem.x;sutIslemY=S.buildingPos.sutislem.y}
   else{sutIslemX=rCol1X;sutIslemY=rRow2Y}
   window.sutIslemX=sutIslemX;window.sutIslemY=sutIslemY;window.sutIslemS=sutIslemS;
   if(S.built.sutislem){Drawing.drawSutIslem(sutIslemX,sutIslemY,sutIslemS)}
 
-  peynirS=CL*(ISLANDSCAPE?1.8:1.4);
+  peynirS=CL*(ISLANDSCAPE?1.8:1.4)*bScale;
   if(S.buildingPos.peynirfab){peynirX=S.buildingPos.peynirfab.x;peynirY=S.buildingPos.peynirfab.y}
   else{peynirX=rCol2X;peynirY=rRow3Y}
   window.peynirX=peynirX;window.peynirY=peynirY;window.peynirS=peynirS;
   if(S.built.peynirfab){Drawing.drawPeynirFab(peynirX,peynirY,peynirS)}
 
-  salcaS=CL*(ISLANDSCAPE?1.8:1.4);
+  salcaS=CL*(ISLANDSCAPE?1.8:1.4)*bScale;
   if(S.buildingPos.salçafab){salcaX=S.buildingPos.salçafab.x;salcaY=S.buildingPos.salçafab.y}
   else{salcaX=rCol1X;salcaY=rRow3Y}
   window.salcaX=salcaX;window.salcaY=salcaY;window.salcaS=salcaS;

@@ -165,13 +165,17 @@ drawFenceSegment(x1,y1,x2,y2){
 drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
   let targets=[];
   let floorY2=H-48;
-  let rCol1X2=gridRight+CL*1.0;
-  let rCol2X2=W-CL*2.5;
+  let rightW2=W-gridRight;
   let rAvailH2=floorY2-sceneTop;
-  let rRowH2=rAvailH2/3.5;
-  let rRow1Y2=sceneTop+CL*0.3;
-  let rRow2Y2=rRow1Y2+rRowH2;
-  let rRow3Y2=rRow2Y2+rRowH2;
+  let use2C=rightW2>CL*5.5;
+  let rCol1X2,rCol2X2,rRow1Y2,rRow2Y2,rRow3Y2;
+  if(use2C){
+    rCol1X2=gridRight+CL*1.0;rCol2X2=W-CL*2.5;
+    let rRowH2=rAvailH2/3.5;rRow1Y2=sceneTop+CL*0.3;rRow2Y2=rRow1Y2+rRowH2;rRow3Y2=rRow2Y2+rRowH2;
+  }else{
+    rCol1X2=gridRight+CL*0.5;rCol2X2=rCol1X2;
+    let rRowH2=rAvailH2/4.0;rRow1Y2=sceneTop+CL*0.2;rRow2Y2=rRow1Y2+rRowH2;rRow3Y2=rRow2Y2+rRowH2;
+  }
   if(S.built.kuyu){
     let kx,ky;
     if(S.buildingPos.kuyu){kx=S.buildingPos.kuyu.x;ky=S.buildingPos.kuyu.y}
