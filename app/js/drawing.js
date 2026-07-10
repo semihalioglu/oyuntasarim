@@ -65,22 +65,22 @@ drawSky(){
   let nightAlpha=1-dl;
   let g=X.createLinearGradient(0,0,0,skyH);
   if(S.weather==='karlı'){
-    g.addColorStop(0,`rgba(180,195,210,${0.3+dl*0.7})`);
-    g.addColorStop(0.5,`rgba(200,210,220,${0.3+dl*0.7})`);
-    g.addColorStop(1,`rgba(210,220,215,${0.3+dl*0.7})`);
+    g.addColorStop(0,`rgba(80,85,95,${0.3+dl*0.7})`);
+    g.addColorStop(0.5,`rgba(95,100,108,${0.3+dl*0.7})`);
+    g.addColorStop(1,`rgba(108,110,112,${0.3+dl*0.7})`);
   }else if(S.weather==='yağmurlu'){
-    g.addColorStop(0,`rgba(120,130,145,${0.4+dl*0.6})`);
-    g.addColorStop(0.5,`rgba(140,150,160,${0.4+dl*0.6})`);
-    g.addColorStop(1,`rgba(160,170,165,${0.4+dl*0.6})`);
+    g.addColorStop(0,`rgba(55,60,70,${0.4+dl*0.6})`);
+    g.addColorStop(0.5,`rgba(68,72,80,${0.4+dl*0.6})`);
+    g.addColorStop(1,`rgba(78,82,78,${0.4+dl*0.6})`);
   }else if(S.weather==='bulutlu'){
-    g.addColorStop(0,`rgba(170,190,210,${0.5+dl*0.5})`);
-    g.addColorStop(0.5,`rgba(190,205,220,${0.5+dl*0.5})`);
-    g.addColorStop(1,`rgba(200,215,200,${0.5+dl*0.5})`);
+    g.addColorStop(0,`rgba(65,75,88,${0.5+dl*0.5})`);
+    g.addColorStop(0.5,`rgba(80,88,95,${0.5+dl*0.5})`);
+    g.addColorStop(1,`rgba(88,92,85,${0.5+dl*0.5})`);
   }else{
-    g.addColorStop(0,`rgba(135,180,220,${0.3+dl*0.7})`);
-    g.addColorStop(0.25,`rgba(160,200,235,${0.3+dl*0.7})`);
-    g.addColorStop(0.6,`rgba(190,215,200,${0.3+dl*0.7})`);
-    g.addColorStop(1,`rgba(200,220,180,${0.3+dl*0.7})`);
+    g.addColorStop(0,`rgba(50,70,100,${0.3+dl*0.7})`);
+    g.addColorStop(0.25,`rgba(70,90,115,${0.3+dl*0.7})`);
+    g.addColorStop(0.6,`rgba(90,98,80,${0.3+dl*0.7})`);
+    g.addColorStop(1,`rgba(98,100,72,${0.3+dl*0.7})`);
   }
   X.fillStyle=g;X.fillRect(0,0,W,skyH);
   // Gunes veya ay
@@ -118,8 +118,8 @@ drawSky(){
   for(let i=0;i<cloudCount;i++){
     let cx=(W*0.1+i*W*0.12+Math.sin(t+i*0.8)*15)%W;
     let cy=12+Math.sin(t*0.5+i*2)*6+i%3*10;
-    X.fillStyle=S.weather==='yağmurlu'?`rgba(120,130,140,${cloudAlpha})`:
-                S.weather==='karlı'?`rgba(190,200,210,${cloudAlpha})`:`rgba(255,255,255,${cloudAlpha})`;
+    X.fillStyle=S.weather==='yağmurlu'?`rgba(70,75,80,${cloudAlpha})`:
+                S.weather==='karlı'?`rgba(120,125,130,${cloudAlpha})`:`rgba(180,175,170,${cloudAlpha})`;
     X.beginPath();X.arc(cx,cy,12+i%3*3,0,Math.PI*2);X.fill();
     X.beginPath();X.arc(cx-10,cy+3,10+i%2*2,0,Math.PI*2);X.fill();
     X.beginPath();X.arc(cx+10,cy+3,10+i%2*2,0,Math.PI*2);X.fill();
@@ -153,41 +153,47 @@ drawSky(){
 
 drawMountains(){
   let baseY=sceneTop+5;
-  X.fillStyle='#6a9a55';
+  X.fillStyle='#4a4a48';
   X.beginPath();X.moveTo(0,baseY);
   for(let x=0;x<=W;x+=W/8){
     X.lineTo(x,baseY-30-Math.sin(x*0.003)*25-Math.cos(x*0.007)*15);
   }
   X.lineTo(W,baseY);X.closePath();X.fill();
-  X.fillStyle='#5a8a45';
+  X.fillStyle='#3e3e3c';
   X.beginPath();X.moveTo(0,baseY);
   for(let x=0;x<=W;x+=W/12){
     X.lineTo(x,baseY-15-Math.sin(x*0.005+1)*18-Math.cos(x*0.003)*10);
+  }
+  X.lineTo(W,baseY);X.closePath();X.fill();
+  X.fillStyle='#343432';
+  X.beginPath();X.moveTo(0,baseY);
+  for(let x=0;x<=W;x+=W/20){
+    X.lineTo(x,baseY-5-Math.sin(x*0.008+2)*10-Math.cos(x*0.004)*6);
   }
   X.lineTo(W,baseY);X.closePath();X.fill();
 },
 
 drawGrassBackground(){
   let g=X.createLinearGradient(0,sceneTop-5,0,H);
-  g.addColorStop(0,'#6aad45');g.addColorStop(0.05,'#5a9d3a');g.addColorStop(0.4,'#4a8d30');g.addColorStop(1,'#3e7d28');
+  g.addColorStop(0,'#3a4428');g.addColorStop(0.08,'#343c22');g.addColorStop(0.3,'#2e361e');g.addColorStop(0.7,'#283018');g.addColorStop(1,'#222a14');
   X.fillStyle=g;X.fillRect(0,sceneTop-5,W,H-sceneTop+5);
   for(let i=0;i<80;i++){
     let gx=(i*173+23)%W,gy=sceneTop+((i*293+47)%(H-sceneTop-50));
-    X.strokeStyle=i%3?'rgba(100,190,60,0.3)':'rgba(70,150,40,0.25)';
+    X.strokeStyle=i%3?'rgba(70,85,40,0.2)':'rgba(50,65,30,0.15)';
     X.lineWidth=0.8;
     X.beginPath();X.moveTo(gx,gy);X.lineTo(gx+1,gy-4-i%3);X.stroke();
   }
 },
 
 drawDirtPath(x1,y1,x2,y2,width){
-  X.fillStyle='rgba(160,120,70,0.6)';
+  X.fillStyle='rgba(80,65,45,0.6)';
   let dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy);
   let nx=-dy/len*width/2,ny=dx/len*width/2;
   X.beginPath();
   X.moveTo(x1+nx,y1+ny);X.lineTo(x2+nx,y2+ny);
   X.lineTo(x2-nx,y2-ny);X.lineTo(x1-nx,y1-ny);
   X.closePath();X.fill();
-  X.fillStyle='rgba(140,100,55,0.3)';
+  X.fillStyle='rgba(65,50,35,0.3)';
   for(let i=0;i<len;i+=12){
     let t=i/len;
     let px=x1+dx*t+(Math.sin(i*0.5)*3);
@@ -199,14 +205,14 @@ drawDirtPath(x1,y1,x2,y2,width){
 drawFenceSegment(x1,y1,x2,y2){
   let dx=x2-x1,dy=y2-y1,len=Math.sqrt(dx*dx+dy*dy);
   let ux=dx/len,uy=dy/len;
-  X.strokeStyle='#6d4c41';X.lineWidth=2;
+  X.strokeStyle='#504840';X.lineWidth=2;
   X.beginPath();X.moveTo(x1,y1);X.lineTo(x2,y2);X.stroke();
   X.beginPath();X.moveTo(x1,y1-4);X.lineTo(x2,y2-4);X.stroke();
   let posts=Math.floor(len/15);
   for(let i=0;i<=posts;i++){
     let px=x1+ux*i*15,py=y1+uy*i*15;
-    X.fillStyle='#5d4037';X.fillRect(px-1.5,py-6,3,8);
-    X.fillStyle='#4e342e';X.beginPath();X.arc(px,py-6,2,0,Math.PI*2);X.fill();
+    X.fillStyle='#4a4038';X.fillRect(px-1.5,py-6,3,8);
+    X.fillStyle='#3a3430';X.beginPath();X.arc(px,py-6,2,0,Math.PI*2);X.fill();
   }
 },
 
@@ -291,55 +297,55 @@ drawRoads(hx,hy,gridCX,gridCY,gridRight,gridBottom,houseS){
     let nx=-uy,ny=ux;
     let hw=roadW/2;
     if(rl===0){
-      X.fillStyle='#a0825a';
+      X.fillStyle='#5a4a35';
       X.beginPath();
       X.moveTo(x1+nx*hw,y1+ny*hw);
       X.lineTo(x2+nx*hw,y2+ny*hw);
       X.lineTo(x2-nx*hw,y2-ny*hw);
       X.lineTo(x1-nx*hw,y1-ny*hw);
       X.closePath();X.fill();
-      X.strokeStyle='#8a6e42';X.lineWidth=1;
+      X.strokeStyle='#4a3a28';X.lineWidth=1;
       X.beginPath();X.moveTo(x1+nx*hw,y1+ny*hw);X.lineTo(x2+nx*hw,y2+ny*hw);X.stroke();
       X.beginPath();X.moveTo(x1-nx*hw,y1-ny*hw);X.lineTo(x2-nx*hw,y2-ny*hw);X.stroke();
       let dots=Math.floor(len/(stoneS*1.5));
       for(let i=0;i<dots;i++){
         let t=(i+0.3)/dots;
         let cx=x1+dx*t,cy=y1+dy*t;
-        let sh=((i*5+2)%7)/7*20-10;
-        X.fillStyle=`rgb(${145+sh},${115+sh},${75+sh})`;
+        let sh=((i*5+2)%7)/7*15-7;
+        X.fillStyle=`rgb(${80+sh},${65+sh},${45+sh})`;
         X.beginPath();X.arc(cx+nx*((i%3-1)*hw*0.3),cy+ny*((i%3-1)*hw*0.3),stoneS*0.18,0,Math.PI*2);X.fill();
       }
     }else if(rl===1){
-      X.fillStyle='#8d8d8d';
+      X.fillStyle='#505050';
       X.beginPath();
       X.moveTo(x1+nx*hw,y1+ny*hw);
       X.lineTo(x2+nx*hw,y2+ny*hw);
       X.lineTo(x2-nx*hw,y2-ny*hw);
       X.lineTo(x1-nx*hw,y1-ny*hw);
       X.closePath();X.fill();
-      X.strokeStyle='#6d6d6d';X.lineWidth=1;
+      X.strokeStyle='#3a3a3a';X.lineWidth=1;
       X.beginPath();X.moveTo(x1+nx*hw,y1+ny*hw);X.lineTo(x2+nx*hw,y2+ny*hw);X.stroke();
       X.beginPath();X.moveTo(x1-nx*hw,y1-ny*hw);X.lineTo(x2-nx*hw,y2-ny*hw);X.stroke();
       let tiles=Math.floor(len/stoneS);
       for(let i=0;i<tiles;i++){
         let t=i/tiles;
         let cx=x1+dx*t,cy=y1+dy*t;
-        let shade=((i*7+3)%5)/5*30-15;
-        X.fillStyle=`rgb(${160+shade},${155+shade},${145+shade})`;
+        let shade=((i*7+3)%5)/5*20-10;
+        X.fillStyle=`rgb(${80+shade},${78+shade},${72+shade})`;
         X.fillRect(cx-stoneS*0.42,cy-stoneS*0.35,stoneS*0.84,stoneS*0.7);
-        X.strokeStyle='#999';X.lineWidth=0.5;
+        X.strokeStyle='#666';X.lineWidth=0.5;
         X.strokeRect(cx-stoneS*0.42,cy-stoneS*0.35,stoneS*0.84,stoneS*0.7);
       }
     }else{
       hw=roadW*0.55/2;
-      X.fillStyle='#3a3a3a';
+      X.fillStyle='#2a2a2a';
       X.beginPath();
       X.moveTo(x1+nx*hw,y1+ny*hw);
       X.lineTo(x2+nx*hw,y2+ny*hw);
       X.lineTo(x2-nx*hw,y2-ny*hw);
       X.lineTo(x1-nx*hw,y1-ny*hw);
       X.closePath();X.fill();
-      X.strokeStyle='#555';X.lineWidth=1.5;
+      X.strokeStyle='#3a3a3a';X.lineWidth=1.5;
       X.beginPath();X.moveTo(x1+nx*hw,y1+ny*hw);X.lineTo(x2+nx*hw,y2+ny*hw);X.stroke();
       X.beginPath();X.moveTo(x1-nx*hw,y1-ny*hw);X.lineTo(x2-nx*hw,y2-ny*hw);X.stroke();
       let dashLen=CL*0.3,dashGap=CL*0.2;
@@ -403,63 +409,60 @@ drawHouse(x,y,s){
   X.save();X.translate(x,y);
 
   // Gölge
-  X.fillStyle='rgba(0,0,0,0.15)';X.beginPath();X.ellipse(0,s*0.82,s*0.85,s*0.1,0,0,Math.PI*2);X.fill();
+  X.fillStyle='rgba(0,0,0,0.2)';X.beginPath();X.ellipse(0,s*0.82,s*0.85,s*0.1,0,0,Math.PI*2);X.fill();
 
   // Taş temel
-  let stoneColors=['#9e9e9e','#bdbdbd','#8d8d8d','#a8a8a8'];
+  let stoneColors=['#707068','#808078','#606058','#787870'];
   for(let i=0;i<Math.ceil(s*0.6/6);i++){
     for(let j=0;j<4;j++){
       let sx=-s*0.52+j*s*0.27+(i%2)*s*0.13;
       let sy=s*0.78-i*6;
       X.fillStyle=stoneColors[(i+j)%4];
       X.beginPath();X.roundRect(sx,sy,s*0.25,5,1);X.fill();
-      X.strokeStyle='rgba(0,0,0,0.15)';X.lineWidth=0.5;X.stroke();
+      X.strokeStyle='rgba(0,0,0,0.2)';X.lineWidth=0.5;X.stroke();
     }
   }
 
-  // Ahşap gövde - tahta desenli
-  let wallColors=['#8B6914','#9B7924','#7B5904','#a08930','#8B7514','#9a7820','#7d6010','#a89040'];
+  // Taş duvar
+  let wallColors=['#5a5a52','#62625a','#505048','#686860','#585850','#606058','#545448','#6a6a62'];
   for(let i=0;i<10;i++){
     X.fillStyle=wallColors[i%wallColors.length];
     X.fillRect(-s*0.5,s*0.1+i*s*0.07,s,s*0.07);
-    X.strokeStyle='rgba(0,0,0,0.08)';X.lineWidth=0.5;
+    X.strokeStyle='rgba(0,0,0,0.1)';X.lineWidth=0.5;
     X.beginPath();X.moveTo(-s*0.5,s*0.1+i*s*0.07);X.lineTo(s*0.5,s*0.1+i*s*0.07);X.stroke();
   }
 
-  // Tahta kenar çerçevesi
-  X.fillStyle='#5d4037';X.fillRect(-s*0.52,s*0.08,s*1.04,s*0.03);
+  // Taş kenar çerçevesi
+  X.fillStyle='#404038';X.fillRect(-s*0.52,s*0.08,s*1.04,s*0.03);
   X.fillRect(-s*0.52,s*0.78,s*1.04,s*0.03);
   X.fillRect(-s*0.52,s*0.08,s*0.03,s*0.73);
   X.fillRect(s*0.49,s*0.08,s*0.03,s*0.73);
 
-  // Çatı - kiremit desenli
-  X.fillStyle='#8B4513';
+  // Çatı - koyu kiremit
+  X.fillStyle='#3a3028';
   X.beginPath();X.moveTo(-s*0.62,s*0.1);X.lineTo(0,-s*0.32);X.lineTo(s*0.62,s*0.1);X.closePath();X.fill();
-  // Çatı katmanları - kiremit sıraları
   for(let i=0;i<6;i++){
     let ry=s*0.1-i*s*0.068;
     let rw=s*(0.62-i*0.08);
-    X.fillStyle=i%2?'#A0522D':'#7B3F00';
+    X.fillStyle=i%2?'#453828':'#3a3020';
     X.beginPath();X.moveTo(-rw,ry);X.lineTo(rw,ry);X.lineTo(rw-s*0.02,ry-s*0.065);X.lineTo(-rw+s*0.02,ry-s*0.065);X.closePath();X.fill();
-    // Kiremit dikey çizgileri
-    X.strokeStyle='rgba(0,0,0,0.12)';X.lineWidth=0.5;
+    X.strokeStyle='rgba(0,0,0,0.15)';X.lineWidth=0.5;
     for(let j=-rw+s*0.04;j<rw;j+=s*0.08){
       X.beginPath();X.moveTo(j,ry);X.lineTo(j-s*0.01,ry-s*0.065);X.stroke();
     }
   }
-  // Çatı kenar bordür
-  X.strokeStyle='#5d4037';X.lineWidth=2;
+  X.strokeStyle='#353028';X.lineWidth=2;
   X.beginPath();X.moveTo(-s*0.62,s*0.1);X.lineTo(0,-s*0.32);X.lineTo(s*0.62,s*0.1);X.stroke();
 
-  // Bacak - tuğla desenli
-  X.fillStyle='#8B4513';X.fillRect(s*0.15,-s*0.28,s*0.1,s*0.32);
+  // Bacak - koyu taş
+  X.fillStyle='#3a3028';X.fillRect(s*0.15,-s*0.28,s*0.1,s*0.32);
   for(let i=0;i<4;i++){
-    X.fillStyle=i%2?'#9B5B43':'#7B3523';
+    X.fillStyle=i%2?'#453830':'#3a3025';
     X.fillRect(s*0.15,-s*0.25+i*s*0.08,s*0.1,s*0.07);
-    X.strokeStyle='rgba(0,0,0,0.15)';X.lineWidth=0.5;
+    X.strokeStyle='rgba(0,0,0,0.2)';X.lineWidth=0.5;
     X.strokeRect(s*0.15,-s*0.25+i*s*0.08,s*0.1,s*0.07);
   }
-  X.fillStyle='#555';X.beginPath();X.arc(s*0.2,-s*0.3,s*0.045,0,Math.PI*2);X.fill();
+  X.fillStyle='#444';X.beginPath();X.arc(s*0.2,-s*0.3,s*0.045,0,Math.PI*2);X.fill();
   // Duman animasyonu
   let t=Date.now()/1000;
   for(let i=0;i<3;i++){
@@ -471,70 +474,63 @@ drawHouse(x,y,s){
     X.beginPath();X.arc(dx,dy,dr+Math.sin(t*2+i)*1.5,0,Math.PI*2);X.fill();
   }
 
-  // Kapı - detaylı
-  X.fillStyle='#5d4037';X.fillRect(-s*0.12,s*0.35,s*0.24,s*0.43);
-  X.fillStyle='#4e342e';X.fillRect(-s*0.1,s*0.37,s*0.2,s*0.39);
-  // Kapı çerçevesi
-  X.strokeStyle='#8d6e63';X.lineWidth=1.5;X.strokeRect(-s*0.1,s*0.37,s*0.2,s*0.39);
-  // Kapı paneelleri
-  X.strokeStyle='rgba(0,0,0,0.15)';X.lineWidth=0.8;
+  // Kapı - taş
+  X.fillStyle='#3a3530';X.fillRect(-s*0.12,s*0.35,s*0.24,s*0.43);
+  X.fillStyle='#2e2a25';X.fillRect(-s*0.1,s*0.37,s*0.2,s*0.39);
+  X.strokeStyle='#5a5550';X.lineWidth=1.5;X.strokeRect(-s*0.1,s*0.37,s*0.2,s*0.39);
+  X.strokeStyle='rgba(0,0,0,0.2)';X.lineWidth=0.8;
   X.strokeRect(-s*0.07,s*0.39,s*0.14,s*0.15);
   X.strokeRect(-s*0.07,s*0.56,s*0.14,s*0.15);
-  // Kapı kulpu
-  X.fillStyle='#ffe082';X.beginPath();X.arc(s*0.06,s*0.58,2,0,Math.PI*2);X.fill();
+  X.fillStyle='#8a8060';X.beginPath();X.arc(s*0.06,s*0.58,2,0,Math.PI*2);X.fill();
   // Kapı üstü sundurma
-  X.fillStyle='#654321';
+  X.fillStyle='#353028';
   X.beginPath();X.moveTo(-s*0.2,s*0.35);X.lineTo(0,s*0.28);X.lineTo(s*0.2,s*0.35);X.closePath();X.fill();
-  X.strokeStyle='#5d4037';X.lineWidth=1;X.beginPath();X.moveTo(-s*0.2,s*0.35);X.lineTo(0,s*0.28);X.lineTo(s*0.2,s*0.35);X.stroke();
+  X.strokeStyle='#404038';X.lineWidth=1;X.beginPath();X.moveTo(-s*0.2,s*0.35);X.lineTo(0,s*0.28);X.lineTo(s*0.2,s*0.35);X.stroke();
 
   // Pencereler - sol
   let winW=s*0.13,winH=s*0.1;
-  X.fillStyle='#87CEEB';X.fillRect(-s*0.42,s*0.22,winW,winH);
+  X.fillStyle='#2a4a5a';X.fillRect(-s*0.42,s*0.22,winW,winH);
   X.fillStyle='rgba(255,255,255,0.25)';X.fillRect(-s*0.4,s*0.24,winW*0.4,winH*0.4);
   X.strokeStyle='#5d4037';X.lineWidth=1.5;X.strokeRect(-s*0.42,s*0.22,winW,winH);
   X.beginPath();X.moveTo(-s*0.42+winW/2,s*0.22);X.lineTo(-s*0.42+winW/2,s*0.22+winH);X.stroke();
   X.beginPath();X.moveTo(-s*0.42,s*0.22+winH/2);X.lineTo(-s*0.42+winW,s*0.22+winH/2);X.stroke();
   // Çiçek kutusu - sol pencere
-  X.fillStyle='#6d4c41';X.fillRect(-s*0.44,s*0.22+winH+2,winW+4,6);
-  let cf1=['#e91e63','#ff9800','#ffeb3b','#9c27b0'];
+  X.fillStyle='#404038';X.fillRect(-s*0.44,s*0.22+winH+2,winW+4,6);
+  let cf1=['#8a4a50','#8a6a3a','#7a7a40','#6a4a6a'];
   for(let i=0;i<4;i++){
     let cfx=-s*0.43+i*(winW+2)/4+3;
-    X.fillStyle='#4caf50';X.fillRect(cfx,s*0.22+winH-2,1.5,4);
+    X.fillStyle='#3a5a28';X.fillRect(cfx,s*0.22+winH-2,1.5,4);
     X.fillStyle=cf1[i];
     X.beginPath();X.arc(cfx,s*0.22+winH-3,2.5,0,Math.PI*2);X.fill();
   }
 
   // Pencereler - sağ
-  X.fillStyle='#87CEEB';X.fillRect(s*0.29,s*0.22,winW,winH);
-  X.fillStyle='rgba(255,255,255,0.25)';X.fillRect(s*0.31,s*0.24,winW*0.4,winH*0.4);
-  X.strokeStyle='#5d4037';X.lineWidth=1.5;X.strokeRect(s*0.29,s*0.22,winW,winH);
+  X.fillStyle='#2a4a5a';X.fillRect(s*0.29,s*0.22,winW,winH);
+  X.fillStyle='rgba(255,255,255,0.15)';X.fillRect(s*0.31,s*0.24,winW*0.4,winH*0.4);
+  X.strokeStyle='#404038';X.lineWidth=1.5;X.strokeRect(s*0.29,s*0.22,winW,winH);
   X.beginPath();X.moveTo(s*0.29+winW/2,s*0.22);X.lineTo(s*0.29+winW/2,s*0.22+winH);X.stroke();
   X.beginPath();X.moveTo(s*0.29,s*0.22+winH/2);X.lineTo(s*0.29+winW,s*0.22+winH/2);X.stroke();
   // Çiçek kutusu - sağ pencere
-  X.fillStyle='#6d4c41';X.fillRect(s*0.27,s*0.22+winH+2,winW+4,6);
+  X.fillStyle='#404038';X.fillRect(s*0.27,s*0.22+winH+2,winW+4,6);
   for(let i=0;i<4;i++){
     let cfx=s*0.28+i*(winW+2)/4+3;
-    X.fillStyle='#4caf50';X.fillRect(cfx,s*0.22+winH-2,1.5,4);
+    X.fillStyle='#3a5a28';X.fillRect(cfx,s*0.22+winH-2,1.5,4);
     X.fillStyle=cf1[(i+2)%4];
     X.beginPath();X.arc(cfx,s*0.22+winH-3,2.5,0,Math.PI*2);X.fill();
   }
 
-  // Veranda / teras - evin onu
-  X.fillStyle='#8d6e63';X.fillRect(-s*0.35,s*0.8,s*0.7,s*0.08);
-  // Ahşap döşeme çizgileri
-  X.strokeStyle='rgba(0,0,0,0.1)';X.lineWidth=0.5;
+  // Veranda / teras
+  X.fillStyle='#505048';X.fillRect(-s*0.35,s*0.8,s*0.7,s*0.08);
+  X.strokeStyle='rgba(0,0,0,0.12)';X.lineWidth=0.5;
   for(let i=0;i<7;i++){X.beginPath();X.moveTo(-s*0.35+i*s*0.1,s*0.8);X.lineTo(-s*0.35+i*s*0.1,s*0.88);X.stroke()}
-  // Veranda sütunları
-  X.fillStyle='#a1887f';X.fillRect(-s*0.33,s*0.35,3,s*0.45);
+  X.fillStyle='#606058';X.fillRect(-s*0.33,s*0.35,3,s*0.45);
   X.fillRect(s*0.3,s*0.35,3,s*0.45);
-  // Sütun başlıkları
-  X.fillStyle='#8d6e63';X.fillRect(-s*0.35,s*0.34,7,3);X.fillRect(s*0.28,s*0.34,7,3);
+  X.fillStyle='#505048';X.fillRect(-s*0.35,s*0.34,7,3);X.fillRect(s*0.28,s*0.34,7,3);
 
-  // Kapı yanında çiçek saksıları
-  // Sol saksı
-  X.fillStyle='#a1887f';X.beginPath();X.moveTo(-s*0.22,s*0.8);X.lineTo(-s*0.18,s*0.8);X.lineTo(-s*0.19,s*0.72);X.lineTo(-s*0.21,s*0.72);X.closePath();X.fill();
-  X.fillStyle='#e91e63';X.beginPath();X.arc(-s*0.2,s*0.7,s*0.03,0,Math.PI*2);X.fill();
-  X.fillStyle='#4caf50';X.fillRect(-s*0.2,s*0.7,1.5,s*0.04);
+  // Çiçek saksıları
+  X.fillStyle='#606058';X.beginPath();X.moveTo(-s*0.22,s*0.8);X.lineTo(-s*0.18,s*0.8);X.lineTo(-s*0.19,s*0.72);X.lineTo(-s*0.21,s*0.72);X.closePath();X.fill();
+  X.fillStyle='#7a4048';X.beginPath();X.arc(-s*0.2,s*0.7,s*0.03,0,Math.PI*2);X.fill();
+  X.fillStyle='#3a5a28';X.fillRect(-s*0.2,s*0.7,1.5,s*0.04);
   // Sağ saksı
   X.fillStyle='#a1887f';X.beginPath();X.moveTo(s*0.18,s*0.8);X.lineTo(s*0.22,s*0.8);X.lineTo(s*0.21,s*0.72);X.lineTo(s*0.19,s*0.72);X.closePath();X.fill();
   X.fillStyle='#ff9800';X.beginPath();X.arc(s*0.2,s*0.7,s*0.03,0,Math.PI*2);X.fill();
@@ -1951,9 +1947,9 @@ drawSalcaFabToCanvas(c,s){
 
 drawGridToCanvas(c,s){
   c.save();c.translate(s/2,s/2);
-  c.fillStyle='#6d4c41';c.fillRect(-30,-22,60,44);
-  c.fillStyle='#3e2723';c.fillRect(-26,-18,52,36);
-  c.strokeStyle='#5d4037';c.lineWidth=2;
+  c.fillStyle='#3a3530';c.fillRect(-30,-22,60,44);
+  c.fillStyle='#1e1e1c';c.fillRect(-26,-18,52,36);
+  c.strokeStyle='#2a2a28';c.lineWidth=2;
   for(let i=0;i<10;i++){c.beginPath();c.moveTo(-26+i*5.2,-18);c.lineTo(-26+i*5.2,18);c.stroke()}
   for(let i=0;i<5;i++){c.beginPath();c.moveTo(-26,-18+i*9);c.lineTo(26,-18+i*9);c.stroke()}
   c.restore();

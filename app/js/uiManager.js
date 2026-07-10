@@ -1,5 +1,5 @@
-import GameManager from './gameManager.js?v=1.044';
-import Drawing from './drawing.js?v=1.044';
+import GameManager from './gameManager.js?v=1.046';
+import Drawing from './drawing.js?v=1.046';
 
 const _rawS = GameManager.S;
 const S = new Proxy({}, {
@@ -203,7 +203,7 @@ const UIManager = {
   renderM: function(id) {
     if (id === 'shop') {
       let l = document.getElementById('shopList'); l.innerHTML = '';
-      let tohumDiv = document.createElement('div'); tohumDiv.style.cssText = 'color:#ffe082;font-weight:bold;margin-bottom:5px;font-size:13px';
+      let tohumDiv = document.createElement('div'); tohumDiv.style.cssText = 'color:#c8b888;font-weight:bold;margin-bottom:5px;font-size:13px';
       tohumDiv.innerHTML = '&#127793; Tohumlar'; l.appendChild(tohumDiv);
       let grid = document.createElement('div'); grid.className = 'catalog-grid';
       Object.entries(CROPS).forEach(([k, cr]) => {
@@ -220,7 +220,7 @@ const UIManager = {
         grid.appendChild(d);
       });
       l.appendChild(grid);
-      let hayvanDiv = document.createElement('div'); hayvanDiv.style.cssText = 'color:#ffe082;font-weight:bold;margin:10px 0 5px;font-size:13px';
+      let hayvanDiv = document.createElement('div'); hayvanDiv.style.cssText = 'color:#c8b888;font-weight:bold;margin:10px 0 5px;font-size:13px';
       hayvanDiv.innerHTML = '&#128004; Hayvanlar'; l.appendChild(hayvanDiv);
       let agrid = document.createElement('div'); agrid.className = 'animal-grid';
       Object.entries(ANIM).forEach(([k, a]) => {
@@ -248,7 +248,7 @@ const UIManager = {
         let nm = document.createElement('div'); nm.className = 'ac-name'; nm.textContent = a.name; d.appendChild(nm);
         let info = document.createElement('div'); info.className = 'ac-info';
         info.innerHTML = `${cnt}/${cap}<br>${a.prod} | Her ${a.int} gun`; d.appendChild(info);
-        let btn = document.createElement('button'); btn.style.cssText = 'margin-top:4px;background:#5a8c3a;color:#fff;border:1px solid #8bc34a;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:9px;font-weight:bold';
+        let btn = document.createElement('button'); btn.style.cssText = 'margin-top:4px;background:#3a5a28;color:#d0ccc8;border:1px solid #5a7a40;padding:4px 8px;border-radius:4px;cursor:pointer;font-size:9px;font-weight:bold';
         btn.textContent = `Satın al ${a.price} TL`; btn.onclick = () => UIManager.buyA(k); d.appendChild(btn);
         agrid.appendChild(d);
       });
@@ -270,7 +270,7 @@ const UIManager = {
         d.appendChild(cv);
         let nm = document.createElement('div'); nm.className = 'catalog-name'; nm.textContent = it.n; d.appendChild(nm);
         let pr = document.createElement('div'); pr.className = 'catalog-price';
-        pr.textContent = amt > 0 ? amt.toFixed(0) + ' ' + it.u : 'Boş'; pr.style.color = amt > 0 ? '#8bc34a' : '#666'; d.appendChild(pr);
+        pr.textContent = amt > 0 ? amt.toFixed(0) + ' ' + it.u : 'Boş'; pr.style.color = amt > 0 ? '#7a9a60' : '#555'; d.appendChild(pr);
         grid.appendChild(d);
       });
       l.appendChild(grid);
@@ -282,7 +282,7 @@ const UIManager = {
 
   openPlantM: function(r, c) {
     let l = document.getElementById('plantList'); l.innerHTML = ''; let isWinter = S.sea === 3;
-    let tip = document.createElement('div'); tip.style.cssText = 'color:#ffe082;font-size:11px;margin-bottom:6px;padding:4px 8px;background:rgba(0,0,0,0.3);border-radius:4px';
+    let tip = document.createElement('div'); tip.style.cssText = 'color:#c8b888;font-size:11px;margin-bottom:6px;padding:4px 8px;background:rgba(0,0,0,0.3);border-radius:4px';
     tip.textContent = 'Tohum seç → tarlalara tıkla → boş yere tıkla = bitir'; l.appendChild(tip);
     let grid = document.createElement('div'); grid.className = 'catalog-grid';
     Object.entries(CROPS).forEach(([k, cr]) => {
@@ -312,7 +312,7 @@ const UIManager = {
     y = Math.max(y, y > 0 ? 0.1 : 0); let ys = y.toFixed(1);
     let harvestText = ''; let canHarvest = p.nextHarvest <= 0;
     if (!canHarvest) { let hrs = Math.floor(p.nextHarvest / 60); let mins = p.nextHarvest % 60; harvestText = `<div>Siradaki hasat: <b>${hrs}sa ${mins}dk</b></div>` }
-    else { harvestText = `<div style="color:#8bc34a;font-weight:bold">Hasat hazir!</div>` }
+    else { harvestText = `<div style="color:#7a9a60;font-weight:bold">Hasat hazir!</div>` }
     document.getElementById('plotT').textContent = cr.name;
     let hc = p.harvestCount || 0; let mh = cr.maxHarvest || 1;
     document.getElementById('plotI').innerHTML = `<div>Yas: <b>${age} yil</b></div><div>Tahmini: <b>${ys} kg</b></div>${harvestText}<div>Hasat: <b>${mh === 1 ? 'Tek seferlik' : (mh - hc) + '/' + mh + ' kaldi'}</b></div><div>Sulama: <b>${p.w ? 'Evet' : 'Yok'}</b></div><div>İlaçlama: <b>${p.p ? 'Evet' : 'Yok'}</b></div>`;
@@ -332,7 +332,7 @@ const UIManager = {
     document.getElementById('hWeather').textContent = WEATHER_ICONS[S.weather] + ' ' + wNames[S.weather];
     let windIcon = S.windSpeed < 5 ? '&#127794;' : S.windSpeed < 10 ? '&#127796;' : '&#127744;';
     document.getElementById('hWind').innerHTML = windIcon + ' Rüzgar: ' + S.windSpeed + ' km/h';
-    let ver=document.getElementById('hVersion');if(ver)ver.textContent='v1.042';
+    let ver=document.getElementById('hVersion');if(ver)ver.textContent='v1.046';
   },
 
   toast: function(m) { let t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); setTimeout(() => t.classList.remove('show'), 2500); },
@@ -368,7 +368,7 @@ const UIManager = {
         else { info.style.color = '#ef9a9a'; info.textContent = tesisFiyat[t.name] + ' TL' }
         d.appendChild(info);
         if (!built) {
-          let btn = document.createElement('button'); btn.style.cssText = 'background:#5a8c3a;color:#fff;border:1px solid #8bc34a;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:4px';
+          let btn = document.createElement('button'); btn.style.cssText = 'background:#3a5a28;color:#d0ccc8;border:1px solid #5a7a40;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:4px';
           btn.textContent = 'Satın al ' + tesisFiyat[t.name] + ' TL';
           btn.onclick = function(e) { e.stopPropagation(); UIManager.buyBuilding(key, tesisFiyat[t.name], t.name) };
           d.appendChild(btn);
@@ -390,7 +390,7 @@ const UIManager = {
               maxDiv.textContent = '⭐ Maks Seviye!';
               d.appendChild(maxDiv);
             }
-            let moveBtn = document.createElement('button'); moveBtn.style.cssText = 'background:#5d4037;color:#ffe082;border:1px solid #c8956c;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:4px';
+            let moveBtn = document.createElement('button'); moveBtn.style.cssText = 'background:#404038;color:#c8b888;border:1px solid #5a5550;padding:4px 12px;border-radius:4px;cursor:pointer;font-size:10px;font-weight:bold;margin-top:4px';
             moveBtn.textContent = '📍 Taşıma Modu';
             moveBtn.onclick = function(e) { e.stopPropagation(); UIManager.closeM('tesisler'); UIManager.startDrag(key) };
             d.appendChild(moveBtn);
@@ -738,7 +738,7 @@ const UIManager = {
     let unit = w.crop === 'YUMURTA' ? 'adet' : w.crop === 'SUT' ? 'litre' : w.crop === 'YUN' ? 'adet' : 'kg';
     document.getElementById('wholeI').innerHTML = `<div style="text-align:center;font-size:15px;margin-bottom:6px"><b>${w.name}</b> arıyorum!</div>
       <div style="font-size:13px">Miktar: <b>${w.kg} ${unit}</b></div><div style="font-size:13px">Fiyat: <b>${w.price} TL/${unit}</b></div>
-      <div style="font-size:15px;margin-top:4px">Toplam: <b style="color:#8bc34a">${tot.toLocaleString()} TL</b></div>
+      <div style="font-size:15px;margin-top:4px">Toplam: <b style="color:#7a9a60">${tot.toLocaleString()} TL</b></div>
       <div style="font-size:13px">Sende: <b>${av.toFixed(0)} ${unit}</b></div>`;
     let b = document.getElementById('btnSell'); if (av >= w.kg) { b.textContent = `Sat (${tot.toLocaleString()} TL)`; b.disabled = false; b.style.opacity = 1 }
     else { b.textContent = 'Yetersiz stok'; b.disabled = true; b.style.opacity = .4 } UIManager.openM('whole');
@@ -951,9 +951,9 @@ const UIManager = {
     if (bx < 10) bx = 10; if (bx + 120 > window.W - 10) bx = window.W - 130;
     if (by < 10) by = m.y + 10;
     window.X.fillStyle = 'rgba(40,25,10,0.95)';
-    window.X.strokeStyle = '#c8956c'; window.X.lineWidth = 2;
+    window.X.strokeStyle = '#5a5550'; window.X.lineWidth = 2;
     window.X.beginPath(); window.X.roundRect(bx, by, 120, 80, 8); window.X.fill(); window.X.stroke();
-    window.X.fillStyle = '#ffe082'; window.X.font = 'bold 11px "Nunito",Arial,sans-serif'; window.X.textAlign = 'center';
+    window.X.fillStyle = '#c8b888'; window.X.font = 'bold 11px "Nunito",Arial,sans-serif'; window.X.textAlign = 'center';
     window.X.fillText(BUILDING_NAMES[m.key], bx + 60, by + 16);
     let items = [
       { text: '📍 Kaydır', y: by + 30, action: 'drag' },

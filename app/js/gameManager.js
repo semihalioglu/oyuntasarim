@@ -1,4 +1,4 @@
-import StorageManager from './storageManager.js?v=1.044';
+import StorageManager from './storageManager.js?v=1.046';
 const GameManager={
 ROWS:5,COLS:10,
 SEASONS:['İlkbahar','Yaz','Sonbahar','Kış'],
@@ -349,7 +349,7 @@ showWholeDlg(){
   let unit=w.crop==='YUMURTA'?'adet':w.crop==='SUT'?'litre':w.crop==='YUN'?'adet':'kg';
   document.getElementById('wholeI').innerHTML=`<div style="text-align:center;font-size:15px;margin-bottom:6px"><b>${w.name}</b> arıyorum!</div>
     <div style="font-size:13px">Miktar: <b>${w.kg} ${unit}</b></div><div style="font-size:13px">Fiyat: <b>${w.price} TL/${unit}</b></div>
-    <div style="font-size:15px;margin-top:4px">Toplam: <b style="color:#8bc34a">${tot.toLocaleString()} TL</b></div>
+    <div style="font-size:15px;margin-top:4px">Toplam: <b style="color:#7a9a60">${tot.toLocaleString()} TL</b></div>
     <div style="font-size:13px">Sende: <b>${av.toFixed(0)} ${unit}</b></div>`;
   let b=document.getElementById('btnSell');if(av>=w.kg){b.textContent=`Sat (${tot.toLocaleString()} TL)`;b.disabled=false;b.style.opacity=1}
   else{b.textContent='Yetersiz stok';b.disabled=true;b.style.opacity=.4}window.openM('whole')

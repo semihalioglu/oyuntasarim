@@ -1,7 +1,7 @@
-import StorageManager from './storageManager.js?v=1.044';
-import UIManager from './uiManager.js?v=1.044';
-import GameManager from './gameManager.js?v=1.044';
-import Drawing from './drawing.js?v=1.044';
+import StorageManager from './storageManager.js?v=1.046';
+import UIManager from './uiManager.js?v=1.046';
+import GameManager from './gameManager.js?v=1.046';
+import Drawing from './drawing.js?v=1.046';
 
 const ROWS=5,COLS=10;
 const CF='"Nunito","Segoe UI",Arial,"Nunito",Arial,sans-serif';
@@ -79,10 +79,10 @@ function drawBuildingMenu(){
   let bx=m.x-60,by=m.y-90;
   if(bx<10)bx=10;if(bx+120>W-10)bx=W-130;
   if(by<10)by=m.y+10;
-  X.fillStyle='rgba(40,25,10,0.95)';
-  X.strokeStyle='#c8956c';X.lineWidth=2;
+  X.fillStyle='rgba(22,18,15,0.95)';
+  X.strokeStyle='#5a5550';X.lineWidth=2;
   X.beginPath();X.roundRect(bx,by,120,80,8);X.fill();X.stroke();
-  X.fillStyle='#ffe082';X.font='bold 11px "Nunito",Arial,sans-serif';X.textAlign='center';
+  X.fillStyle='#c8b888';X.font='bold 11px "Nunito",Arial,sans-serif';X.textAlign='center';
   X.fillText(GameManager.BUILDING_NAMES[m.key],bx+60,by+16);
   let items=[
     {text:'📍 Kaydır',y:by+30,action:'drag'},
@@ -118,18 +118,18 @@ function draw(){
   let skyH=sceneTop-5;
   let bgG=X.createLinearGradient(0,0,0,H);
   if(S.weather==='yağmurlu'){
-    bgG.addColorStop(0,`rgba(120,130,145,${0.4+bgDl*0.6})`);bgG.addColorStop(0.15,`rgba(160,170,165,${0.4+bgDl*0.6})`);
+    bgG.addColorStop(0,`rgba(55,60,70,${0.4+bgDl*0.6})`);bgG.addColorStop(0.15,`rgba(78,82,78,${0.4+bgDl*0.6})`);
   }else if(S.weather==='karlı'){
-    bgG.addColorStop(0,`rgba(180,195,210,${0.3+bgDl*0.7})`);bgG.addColorStop(0.15,`rgba(210,220,215,${0.3+bgDl*0.7})`);
+    bgG.addColorStop(0,`rgba(80,85,95,${0.3+bgDl*0.7})`);bgG.addColorStop(0.15,`rgba(108,110,112,${0.3+bgDl*0.7})`);
   }else if(S.weather==='bulutlu'){
-    bgG.addColorStop(0,`rgba(170,190,210,${0.5+bgDl*0.5})`);bgG.addColorStop(0.15,`rgba(200,215,200,${0.5+bgDl*0.5})`);
+    bgG.addColorStop(0,`rgba(65,75,88,${0.5+bgDl*0.5})`);bgG.addColorStop(0.15,`rgba(88,92,85,${0.5+bgDl*0.5})`);
   }else{
-    bgG.addColorStop(0,`rgba(135,180,220,${0.3+bgDl*0.7})`);
-    bgG.addColorStop(0.12,`rgba(160,200,235,${0.3+bgDl*0.7})`);
-    bgG.addColorStop(0.2,`rgba(190,215,200,${0.3+bgDl*0.7})`);
-    bgG.addColorStop(0.25,`rgba(200,220,180,${0.3+bgDl*0.7})`);
+    bgG.addColorStop(0,`rgba(50,70,100,${0.3+bgDl*0.7})`);
+    bgG.addColorStop(0.12,`rgba(70,90,115,${0.3+bgDl*0.7})`);
+    bgG.addColorStop(0.2,`rgba(90,98,80,${0.3+bgDl*0.7})`);
+    bgG.addColorStop(0.25,`rgba(98,100,72,${0.3+bgDl*0.7})`);
   }
-  bgG.addColorStop(0.3,'#6aad45');bgG.addColorStop(1,'#3e7d28');
+  bgG.addColorStop(0.3,'#3a4428');bgG.addColorStop(1,'#222a14');
   X.fillStyle=bgG;X.fillRect(0,0,W,H);
 
   X.save();
@@ -331,10 +331,10 @@ function draw(){
 
   let forestTop=H-48-CL*0.3;
   let g2=X.createLinearGradient(0,forestTop,0,H-48);
-  g2.addColorStop(0,'#5a9a40');g2.addColorStop(1,'#4a8a30');
+  g2.addColorStop(0,'#2a4020');g2.addColorStop(1,'#1a3018');
   X.fillStyle=g2;X.fillRect(0,forestTop,W,H-48-forestTop);
 
-  X.strokeStyle='#6aaa50';X.lineWidth=2;
+  X.strokeStyle='#3a5028';X.lineWidth=2;
   X.beginPath();X.moveTo(0,forestTop);X.lineTo(W,forestTop);X.stroke();
 
   let fenceY2=forestTop-CL*0.15;
@@ -343,11 +343,11 @@ function draw(){
   Drawing.drawFenceSegment(W*0.7,fenceY2,W,fenceY2);
 
 if(S.built.grid){
-  X.fillStyle='#5d4037';
+  X.fillStyle='#2a2a28';
   X.fillRect(GX-5,GY-5,COLS*GRID_CL+10,ROWS*GRID_CL+10);
-  X.fillStyle='#6d4c41';
+  X.fillStyle='#343430';
   X.fillRect(GX-3,GY-3,COLS*GRID_CL+6,ROWS*GRID_CL+6);
-  X.fillStyle='#3e2723';X.fillRect(GX,GY,COLS*GRID_CL,ROWS*GRID_CL);
+  X.fillStyle='#1e1e1c';X.fillRect(GX,GY,COLS*GRID_CL,ROWS*GRID_CL);
 
   let t=Date.now();
   for(let r=0;r<ROWS;r++){
@@ -356,15 +356,15 @@ if(S.built.grid){
       let p=GameManager.getP(r,c);
       let plowed=S.plowed.includes(r*COLS+c);
       if(!plowed){
-        X.fillStyle='#2e5a1e';X.fillRect(x,y,GRID_CL-1,GRID_CL-1);
-        if((r+c)%3===0){X.fillStyle='rgba(40,90,20,0.4)';X.fillRect(x+2,y+2,GRID_CL-5,GRID_CL-5)}
+        X.fillStyle='#2a3218';X.fillRect(x,y,GRID_CL-1,GRID_CL-1);
+        if((r+c)%3===0){X.fillStyle='rgba(30,50,18,0.4)';X.fillRect(x+2,y+2,GRID_CL-5,GRID_CL-5)}
       }else if(!p.crop){
         let wetSoil=p.w;
-        X.fillStyle=wetSoil?'#3e2723':'#6d4c41';X.fillRect(x,y,GRID_CL-1,GRID_CL-1);
-        X.fillStyle=wetSoil?'rgba(30,15,10,0.3)':'rgba(93,64,55,0.3)';X.fillRect(x+1,y+1,GRID_CL-3,GRID_CL-3);
-        for(let i=1;i<3;i++){X.strokeStyle=wetSoil?'rgba(50,30,20,0.3)':'rgba(80,60,40,0.3)';X.lineWidth=0.5;X.beginPath();X.moveTo(x+3,y+i*GRID_CL/3);X.lineTo(x+GRID_CL-4,y+i*GRID_CL/3);X.stroke()}
+        X.fillStyle=wetSoil?'#1e1a15':'#3a3530';X.fillRect(x,y,GRID_CL-1,GRID_CL-1);
+        X.fillStyle=wetSoil?'rgba(15,10,8,0.3)':'rgba(50,45,40,0.3)';X.fillRect(x+1,y+1,GRID_CL-3,GRID_CL-3);
+        for(let i=1;i<3;i++){X.strokeStyle=wetSoil?'rgba(30,20,15,0.3)':'rgba(60,50,40,0.3)';X.lineWidth=0.5;X.beginPath();X.moveTo(x+3,y+i*GRID_CL/3);X.lineTo(x+GRID_CL-4,y+i*GRID_CL/3);X.stroke()}
       }else{
-        X.fillStyle=p.w?'#351c15':'#4e342e';X.fillRect(x,y,GRID_CL-1,GRID_CL-1);
+        X.fillStyle=p.w?'#1a1510':'#2a2520';X.fillRect(x,y,GRID_CL-1,GRID_CL-1);
         let cr=GameManager.CROPS[p.crop];
         if(cr){
           let age=p.age/365;let g=Math.min(1,age/cr.my);
@@ -385,7 +385,7 @@ if(S.built.grid){
           X.beginPath();X.roundRect(x-0.5,y-0.5,GRID_CL,GRID_CL,4);X.stroke();
         }
       }
-      if(S.sel===r*COLS+c){X.strokeStyle='#ffe082';X.lineWidth=2;X.strokeRect(x+1,y+1,GRID_CL-2,GRID_CL-2)}
+      if(S.sel===r*COLS+c){X.strokeStyle='#c8b888';X.lineWidth=2;X.strokeRect(x+1,y+1,GRID_CL-2,GRID_CL-2)}
       if(p.crop&&!p.p){
         let t=Date.now()/1000;
         let seed=p.r*17+p.c*31;
@@ -593,9 +593,9 @@ if(S.built.grid){
     }
   });
 
-  X.fillStyle='rgba(0,0,0,0.4)';
-  X.fillRect(8,H-42,W-16,36);X.strokeStyle='#c8956c';X.lineWidth=1;X.strokeRect(8,H-42,W-16,36);
-  X.fillStyle='#ffe082';X.font='11px "Nunito",Arial,sans-serif';X.textAlign='left';
+  X.fillStyle='rgba(0,0,0,0.5)';
+  X.fillRect(8,H-42,W-16,36);X.strokeStyle='#5a5550';X.lineWidth=1;X.strokeRect(8,H-42,W-16,36);
+  X.fillStyle='#c8b888';X.font='11px "Nunito",Arial,sans-serif';X.textAlign='left';
   X.fillText('EV: Dinlen | MAGAZA: Alışveriş | HAYVAN: Bakım | DEPO: Ürünler | Traktör: Sur',16,H-22);
 
     if(S.dragging){
